@@ -23,22 +23,27 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional
 
+import httplib2
 from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
+from google_auth_httplib2 import AuthorizedHttp
 from googleapiclient.discovery import build
-
 
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 TOKEN_URI = "https://oauth2.googleapis.com/token"
 YELLOW_TAG_RE = re.compile(r"\[/?黄色\]")
+_CA_CERTS = os.environ.get("SSL_CERT_FILE", "/etc/ssl/certs/ca-certificates.crt")
 
 
 class GmailDraftClient:
     def __init__(self, user_email: Optional[str] = None):
         self.user_email = (user_email or os.getenv("GMAIL_IMPERSONATE_USER", "")).strip()
-        self.auth_mode = "domain_wide_delegation" if _load_service_account_info() else "oauth_user"
+        _has_oauth = bool(os.getenv("GOOGLE_OAUTH_REFRESH_TOKEN"))
+        self.auth_mode = "oauth_user" if _has_oauth else ("domain_wide_delegation" if _load_service_account_info() else "none")
         creds = _build_credentials(self.user_email)
-        self.service = build("gmail", "v1", credentials=creds, cache_discovery=False)
+        http = httplib2.Http(ca_certs=_CA_CERTS)
+        auth_http = AuthorizedHttp(creds, http=http)
+        self.service = build("gmail", "v1", http=auth_http, cache_discovery=False)
 
     def create_draft(self, subject: str, body: str, to_email: Optional[str] = None) -> dict:
         message = EmailMessage()
@@ -98,6 +103,20 @@ def _clean_customer_body(text: str) -> str:
 
 
 def _build_credentials(user_email: str):
+    # OAuth user credentials (refresh token) are preferred when available,
+    # as service account domain-wide delegation may not be configured.
+    refresh_token = os.getenv("GOOGLE_OAUTH_REFRESH_TOKEN")
+    client_id = os.getenv("GOOGLE_OAUTH_CLIENT_ID")
+    client_secret = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
+    if refresh_token and client_id and client_secret:
+        return Credentials(
+            token=None,
+            refresh_token=refresh_token,
+            client_id=client_id,
+            client_secret=client_secret,
+            token_uri=TOKEN_URI,
+        )
+
     service_account_info = _load_service_account_info()
     if service_account_info:
         if not user_email:
@@ -110,19 +129,6 @@ def _build_credentials(user_email: str):
             scopes=GMAIL_SCOPES,
         )
         return creds.with_subject(user_email)
-
-    refresh_token = os.getenv("GOOGLE_OAUTH_REFRESH_TOKEN")
-    client_id = os.getenv("GOOGLE_OAUTH_CLIENT_ID")
-    client_secret = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
-    if refresh_token and client_id and client_secret:
-        return Credentials(
-            token=None,
-            refresh_token=refresh_token,
-            client_id=client_id,
-            client_secret=client_secret,
-            token_uri=TOKEN_URI,
-            scopes=GMAIL_SCOPES,
-        )
 
     raise RuntimeError(
         "Gmail credentials not found. Set GOOGLE_SERVICE_ACCOUNT_JSON or "

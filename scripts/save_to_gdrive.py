@@ -52,17 +52,28 @@ def main() -> None:
     )
 
     # [黄色]...[/黄色] を実際の黄色ハイライトに変換（主に社内確認用。顧客用は通常0件）
-    gdrive.apply_yellow_highlights(customer_doc_id)
-    highlight_count = gdrive.apply_yellow_highlights(internal_doc_id)
+    # Docs API が無効の場合は警告のみ（Drive保存・Gmail下書きは継続）
+    highlight_count = 0
+    try:
+        gdrive.apply_yellow_highlights(customer_doc_id)
+        highlight_count = gdrive.apply_yellow_highlights(internal_doc_id)
+    except Exception as e:
+        print(f"[WARNING] 黄色ハイライト変換スキップ（Docs API 未有効化）: {e}", flush=True)
 
     gmail_draft = None
+    gmail_error = None
+    gmail_auth_mode = None
     if args.gmail_user:
-        subject, body = build_draft_content(customer_md, args.customer)
-        gmail = GmailDraftClient(args.gmail_user)
-        gmail_draft = gmail.create_draft(subject, body, args.draft_to)
+        try:
+            subject, body = build_draft_content(customer_md, args.customer)
+            gmail = GmailDraftClient(args.gmail_user)
+            gmail_auth_mode = gmail.auth_mode
+            gmail_draft = gmail.create_draft(subject, body, args.draft_to)
+        except Exception as e:
+            gmail_error = str(e)
+            print(f"[WARNING] Gmail下書き作成スキップ: {e}", flush=True)
 
-    # Drive保存とGmail下書き成功 → ここで初めて処理済みにする
-    # 途中失敗は未処理のまま次回再処理される。
+    # Drive保存が成功したら処理済みにする（Gmail失敗でも台帳更新する）
     gdrive.add_to_ledger(args.meeting_id)
 
     result = {
@@ -71,9 +82,10 @@ def main() -> None:
         "internal_url": internal_url,
         "yellow_highlights": highlight_count,
         "gmail_user": args.gmail_user,
-        "gmail_auth_mode": gmail.auth_mode if gmail_draft else None,
+        "gmail_auth_mode": gmail_auth_mode,
         "gmail_draft_id": gmail_draft.get("id") if gmail_draft else None,
         "gmail_message_id": gmail_draft.get("message", {}).get("id") if gmail_draft else None,
+        "gmail_error": gmail_error,
         "meeting_id": args.meeting_id,
         "marked_processed": True,
     }
