@@ -20,9 +20,18 @@ import io
 import os
 import json
 
+import httplib2
 from google.oauth2.credentials import Credentials
+from google_auth_httplib2 import AuthorizedHttp
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
+
+_CA_CERTS = os.environ.get("SSL_CERT_FILE", "/etc/ssl/certs/ca-certificates.crt")
+
+
+def _authorized_http(creds):
+    http = httplib2.Http(ca_certs=_CA_CERTS)
+    return AuthorizedHttp(creds, http=http)
 
 LEDGER_NAME = "processed_meetings.json"
 FOLDER_MIME = "application/vnd.google-apps.folder"
@@ -44,10 +53,10 @@ class GoogleDriveClient:
             client_id=os.environ["GOOGLE_OAUTH_CLIENT_ID"],
             client_secret=os.environ["GOOGLE_OAUTH_CLIENT_SECRET"],
             token_uri=TOKEN_URI,
-            scopes=SCOPES,
         )
-        self.service = build("drive", "v3", credentials=creds, cache_discovery=False)
-        self.docs = build("docs", "v1", credentials=creds, cache_discovery=False)
+        auth_http = _authorized_http(creds)
+        self.service = build("drive", "v3", http=auth_http, cache_discovery=False)
+        self.docs = build("docs", "v1", http=auth_http, cache_discovery=False)
 
     # ------------------------------------------------------------------
     # フォルダ
