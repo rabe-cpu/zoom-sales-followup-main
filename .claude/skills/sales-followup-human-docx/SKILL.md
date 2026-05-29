@@ -24,7 +24,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 ## Workflow
 
 1. Source inventory
-   - 入力ファイル、雛形、動画カタログ、出力先を列挙する。
+   - 入力ファイル、雛形、knowledge/video_catalog.md、出力先を列挙する。
    - 元ファイルは変更しない。
    - 多数の商談がある場合は、ユーザー指定がなければ3件を選んで処理する。
 
@@ -46,8 +46,10 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 5. Draft email
    - 冒頭に、顧客と実際に話した内容を2から4文入れる。
    - 雛形の流れを尊重する。
-   - 参考動画は `なぜ選んだか` → `URL` → `どこを見ると判断材料になるか` の順で短く書く。
-   - ZOOMが必要な場合は `ZOOM URL：〇〇〇` を残す。
+   - 社内確認用には候補動画を 動画タイトル / YouTube URL / 顧客に合う理由 で列挙してから1本選ぶ。
+   - 参考動画は knowledge/video_catalog.md から選び、なぜ選んだか → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く
+   -参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
+   -ZOOMが必要な場合は ZOOM URL：〇〇〇 を残す。
 
 6. Evaluate and repair
    - Claude Codeで `.claude/agents/` が使える場合は、`references/orchestration.md` のTeam Assignmentに従ってサブエージェントを並列または段階実行する。

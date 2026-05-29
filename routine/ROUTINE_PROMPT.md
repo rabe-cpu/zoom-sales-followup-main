@@ -27,16 +27,17 @@ cd scripts && python fetch_vtt.py
 
 `unprocessed` の各商談について、1件ずつ順番に:
 1. `vtt_path` のVTTファイルを読む。
-2. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
+2. `knowledge/video_catalog.md` を読み、候補動画を `動画タイトル / YouTube URL / 顧客に合う理由` で列挙してから1本選び、参考動画は `理由 → 実際のYouTube URL → 見る観点1文` で出す。
+3. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
    - 季語は送付日で毎回調査。6エージェント評価で全員90点以上（Source-Fact / Risk は95点以上）になるまで改善。
    - 最後に Final-Whole-Check Agent で横断確認。
    - 3回改善しても90点に届かない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
-3. 出力を `/tmp/output/{customer_name}/` に保存:
+4. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
    - `01_{customer_name}_社内確認用.md`（[黄色]タグ・評価ログを含む）
-4. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
+5. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新
 

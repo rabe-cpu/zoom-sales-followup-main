@@ -17,7 +17,7 @@ description: Analyze Japanese sales meeting transcripts, Zoom/JamRoll CSVs, txt 
 - 参加者名
 - 営業担当名
 - 送付日
-- 雛形・動画カタログがあれば参照可
+- 雛形・knowledge/video_catalog.md があれば参照可
 
 ## Workflow
 

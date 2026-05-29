@@ -24,7 +24,7 @@ Claude Codeで、評価エージェント付きの自己改善ループを明示
 
 Step 1. 入力確認
 - 商談文字起こし
-- 営業メール雛形
+- `knowledge/video_catalog.md` 
 - 動画カタログ
 - 送付日
 - 出力形式

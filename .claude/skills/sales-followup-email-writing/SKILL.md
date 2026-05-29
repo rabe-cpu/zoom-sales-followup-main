@@ -15,7 +15,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - Salesperson tone evidence
 - Seasonal greeting result
 - Human template or reference email
-- Video catalog / selected video
+- knowledge/video_catalog.md / selected video
 - Next action information
 
 ## Workflow
@@ -35,9 +35,12 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 金額、日数、時間、回数、割合は原則アラビア数字で書く。特に金額は `7万円`、`330万円`、`22,000円` のようにし、`七万円`、`三百三十万円`、`二万二千円` と書かない。
 
 4. Video Section
-   - URL前: なぜこの動画を選んだか。
-   - URL
+   - knowledge/video_catalog.md から顧客の属性・不安・判断軸に近い動画を1本選ぶ。
+   - 下書き前の社内確認用には候補動画を 動画タイトル / YouTube URL / 顧客に合う理由 で列挙する。
+   - URL前: なぜこの動画を選んだか
+   - URL: カタログ内の実際のYouTube URLをそのまま入れる。
    - URL後: どこを見ると判断材料になるかを1文。
+   -参考動画URL：〇〇〇 やURL未確定のまま出さない。
 
 5. Human Edit Marking
    - 黄色箇所は営業が最後に触るべきところだけ。
