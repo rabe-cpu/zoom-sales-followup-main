@@ -7,7 +7,7 @@ get_refresh_token.py - Google Drive用 refresh_token を1回だけ取得
 
 実行すると:
   1. 認証URLが表示される（ブラウザが自動で開くことも）
-  2. まなさんのGoogleアカウントでログイン＆Drive権限を許可
+  2. まなさんのGoogleアカウントでログイン＆Drive/Docs権限を許可
   3. 取得した3つの値を scripts/.oauth_secrets.env に保存（.gitignore済み・画面には出さない）
 → そのファイルの値を Routine の環境変数に登録すれば完了。
 
@@ -21,7 +21,10 @@ import sys
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-SCOPES = ["https://www.googleapis.com/auth/drive"]
+SCOPES = [
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/documents",
+]
 DEFAULT_KEYS = "/Users/mana/gcp-oauth.keys.json"
 
 

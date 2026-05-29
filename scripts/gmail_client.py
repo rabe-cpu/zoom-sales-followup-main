@@ -25,7 +25,9 @@ from typing import Optional
 
 from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
+from google_auth_httplib2 import AuthorizedHttp
 from googleapiclient.discovery import build
+import httplib2
 
 
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
@@ -38,7 +40,7 @@ class GmailDraftClient:
         self.user_email = (user_email or os.getenv("GMAIL_IMPERSONATE_USER", "")).strip()
         self.auth_mode = "domain_wide_delegation" if _load_service_account_info() else "oauth_user"
         creds = _build_credentials(self.user_email)
-        self.service = build("gmail", "v1", credentials=creds, cache_discovery=False)
+        self.service = build("gmail", "v1", http=_authorized_http(creds), cache_discovery=False)
 
     def create_draft(self, subject: str, body: str, to_email: Optional[str] = None) -> dict:
         message = EmailMessage()
@@ -154,3 +156,14 @@ def _load_service_account_info() -> Optional[dict]:
             return json.loads(candidate.read_text(encoding="utf-8"))
 
     return None
+
+
+def _authorized_http(creds):
+    ca_certs = (
+        os.getenv("HTTPLIB2_CA_CERTS")
+        or os.getenv("SSL_CERT_FILE")
+        or os.getenv("REQUESTS_CA_BUNDLE")
+    )
+    if ca_certs and os.path.exists(ca_certs):
+        return AuthorizedHttp(creds, http=httplib2.Http(ca_certs=ca_certs))
+    return AuthorizedHttp(creds)
