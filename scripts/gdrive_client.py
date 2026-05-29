@@ -20,15 +20,27 @@ import io
 import os
 import json
 
+import httplib2
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
+
+# google-api-python-client は httplib2 を使う。httplib2 は certifi の CA を見るため、
+# TLS インターセプト proxy（自己署名CAを挟む環境）では証明書検証に失敗する。
+# 実行環境が SSL_CERT_FILE / REQUESTS_CA_BUNDLE（proxyのCAを含むシステムバンドル）を
+# 指定している場合は、それを httplib2 にも使わせる。
+_CA_BUNDLE = os.environ.get("SSL_CERT_FILE") or os.environ.get("REQUESTS_CA_BUNDLE")
+if _CA_BUNDLE and os.path.exists(_CA_BUNDLE):
+    httplib2.CA_CERTS = _CA_BUNDLE
 
 LEDGER_NAME = "processed_meetings.json"
 FOLDER_MIME = "application/vnd.google-apps.folder"
 DOC_MIME = "application/vnd.google-apps.document"
 TOKEN_URI = "https://oauth2.googleapis.com/token"
-SCOPES = ["https://www.googleapis.com/auth/drive"]  # Docs APIもこのスコープで動く
+SCOPES = [
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/documents",
+]  # refresh_tokenに付与されている実スコープに合わせる（drive.file + documents）
 
 YELLOW_OPEN = "[黄色]"
 YELLOW_CLOSE = "[/黄色]"

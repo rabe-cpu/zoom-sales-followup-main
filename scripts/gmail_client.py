@@ -23,9 +23,16 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional
 
+import httplib2
 from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+
+# TLS インターセプト proxy 環境では httplib2 が certifi のCAしか見ず検証に失敗するため、
+# 実行環境が指定するシステムCAバンドル（proxyのCAを含む）を httplib2 にも使わせる。
+_CA_BUNDLE = os.environ.get("SSL_CERT_FILE") or os.environ.get("REQUESTS_CA_BUNDLE")
+if _CA_BUNDLE and os.path.exists(_CA_BUNDLE):
+    httplib2.CA_CERTS = _CA_BUNDLE
 
 
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
