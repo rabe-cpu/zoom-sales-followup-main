@@ -32,6 +32,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 営業担当の実発話にある表現だけ使う。
    - `かと` 系は、発話にある場合のみ0〜1回。
    - 依頼文は途中で止めず、自然に着地させる。
+   - 金額、日数、時間、回数、割合は原則アラビア数字で書く。特に金額は `7万円`、`330万円`、`22,000円` のようにし、`七万円`、`三百三十万円`、`二万二千円` と書かない。
 
 4. Video Section
    - URL前: なぜこの動画を選んだか。
@@ -55,6 +56,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 成果保証をしない。
 - `伝わってまいりました` は根拠がある場合だけ使う。根拠が薄い場合は、営業担当の口調に合わせて `伝わってきました` などに寄せる。
 - 営業発話にない余白表現を足さない。
+- 金額を漢数字で書かない。
 
 ## When Not To Use
 
@@ -67,3 +69,4 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 営業担当の実発話にない余白表現を足していない。
 - 動画URLの前後に、選定理由と見る観点が短く入っている。
 - 営業が最後に触る箇所だけが黄色候補として明記されている。
+- 金額表記がアラビア数字に統一されている。
