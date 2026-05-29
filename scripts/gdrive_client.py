@@ -28,7 +28,12 @@ LEDGER_NAME = "processed_meetings.json"
 FOLDER_MIME = "application/vnd.google-apps.folder"
 DOC_MIME = "application/vnd.google-apps.document"
 TOKEN_URI = "https://oauth2.googleapis.com/token"
-SCOPES = ["https://www.googleapis.com/auth/drive"]  # Docs APIもこのスコープで動く
+# refresh_token に実際に付与されているスコープに合わせる。
+# 広いスコープ（auth/drive）を要求すると、リフレッシュ時に invalid_scope で拒否される。
+SCOPES = [
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/documents",
+]
 
 YELLOW_OPEN = "[黄色]"
 YELLOW_CLOSE = "[/黄色]"
