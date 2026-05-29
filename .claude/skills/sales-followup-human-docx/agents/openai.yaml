@@ -1,0 +1,4 @@
+interface:
+  display_name: "営業後送付メールDOCX"
+  short_description: "商談文字起こしから営業口調を反映した営業後送付メールとWord出力を作る"
+  default_prompt: "商談文字起こしと雛形を読み、営業後送付メールのWord出力を作成してください。黄色チェック欄、季語調査、営業口調抽出、評価改善まで実施してください。"

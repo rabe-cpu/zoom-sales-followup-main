@@ -1,0 +1,18 @@
+{
+  "name": "笠井",
+  "display_name": "笠井 理生",
+  "company": "NEXT セールス部",
+  "source_transcripts": ["商談_extracted/【物販システム アクセス】ウェビナー個別面談 上田 進太さま_all.csv"],
+  "features": ["一旦", "確認", "ご質問ご不明点"],
+  "first_person": "僕",
+  "customer_address": "〇〇さま",
+  "email_phrases": ["一旦こちらのメールにご返信いただいてもよろしいでしょうか"],
+  "closing": "引き続きどうぞよろしくお願いいたします",
+  "slack_expressions": {
+    "かなと": "あり（複数回）",
+    "かと": "限定的",
+    "できればと": "あり（着地必須）",
+    "見ていただけると": "なし"
+  },
+  "prohibitions": ["伝わってまいりました"]
+}

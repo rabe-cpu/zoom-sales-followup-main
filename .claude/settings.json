@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(rmdir:*)",
+      "Bash(rd:*)",
+      "Bash(del:*)",
+      "Bash(erase:*)",
+      "Bash(Remove-Item:*)",
+      "Bash(ri:*)",
+      "Bash(Clear-RecycleBin:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git checkout --:*)",
+      "Bash(git restore --staged:*)",
+      "Bash(git stash drop:*)",
+      "Bash(git stash clear:*)",
+      "Bash(format:*)",
+      "Bash(diskpart:*)",
+      "Bash(shutdown:*)",
+      "Bash(*--recurse-submodules*--force*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/stop_sales_followup_gate.py",
+            "timeout": 45
+          }
+        ]
+      }
+    ]
+  }
+}

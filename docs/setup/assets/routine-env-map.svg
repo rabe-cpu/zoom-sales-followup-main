@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Routineに登録する設定</title>
+  <desc id="desc">Claude Routineの基本設定、依存関係、環境変数、Run now検証</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #fff; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+      .strong { fill: #ecfdf5; stroke: #059669; stroke-width: 2; rx: 8; }
+      .title { font: 700 22px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #0f172a; }
+      .label { font: 700 17px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #0f172a; }
+      .small { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #334155; }
+      .body { font: 14px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #334155; }
+      .muted { font: 13px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #64748b; }
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text x="40" y="46" class="title">Claude Routine 設定カンペ</text>
+  <text x="40" y="72" class="muted">値は画面に出さず、変数名と登録有無だけ確認する。</text>
+
+  <rect x="40" y="110" width="320" height="135" class="panel"/>
+  <text x="65" y="145" class="label">基本設定</text>
+  <text x="65" y="173" class="body">Repository: zoom-sales-followupを含むrepo</text>
+  <text x="65" y="197" class="body">Branch: 本番運用ブランチ</text>
+  <text x="65" y="221" class="body">Prompt: routine/ROUTINE_PROMPT.md</text>
+
+  <rect x="400" y="110" width="320" height="135" class="panel"/>
+  <text x="425" y="145" class="label">Setup command</text>
+  <text x="425" y="176" class="small">cd zoom-sales-followup</text>
+  <text x="425" y="202" class="small">python -m pip install -r</text>
+  <text x="425" y="226" class="small">scripts/requirements.txt</text>
+
+  <rect x="760" y="110" width="320" height="135" class="strong"/>
+  <text x="785" y="145" class="label">初期Trigger</text>
+  <text x="785" y="173" class="body">まずRun nowのみ</text>
+  <text x="785" y="197" class="body">成功後に毎日/毎時へ変更</text>
+  <text x="785" y="221" class="body">緑ステータスだけで判断しない</text>
+
+  <rect x="40" y="285" width="500" height="185" class="panel"/>
+  <text x="65" y="320" class="label">Environment variables</text>
+  <text x="65" y="350" class="small">ZOOM_ACCOUNT_ID / ZOOM_CLIENT_ID / ZOOM_CLIENT_SECRET</text>
+  <text x="65" y="376" class="small">GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET</text>
+  <text x="65" y="402" class="small">GOOGLE_OAUTH_REFRESH_TOKEN / GOOGLE_DRIVE_FOLDER_ID</text>
+  <text x="65" y="428" class="small">GOOGLE_SERVICE_ACCOUNT_JSON(_B64)</text>
+  <text x="65" y="454" class="small">CHATWORK_API_TOKEN / CHATWORK_ROOM_ID / VTT_DIR</text>
+
+  <rect x="580" y="285" width="500" height="185" class="panel"/>
+  <text x="605" y="320" class="label">Run nowで見る結果</text>
+  <text x="605" y="350" class="body">1. fetch_vtt.pyで未処理VTTを検出</text>
+  <text x="605" y="376" class="body">2. 顧客送付用 / 社内確認用を生成</text>
+  <text x="605" y="402" class="body">3. Drive保存＋Gmail下書き作成</text>
+  <text x="605" y="428" class="body">4. 成功後に台帳更新、Chatwork通知</text>
+  <text x="605" y="454" class="body">5. 送信は人間が確認後に手動</text>
+</svg>

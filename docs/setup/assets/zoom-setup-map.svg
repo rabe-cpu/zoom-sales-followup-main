@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">Zoom設定で見る場所</title>
+  <desc id="desc">Zoom管理画面で確認する権限、録画設定、S2S OAuth、録画一覧の地図</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #fff; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+      .head { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; rx: 8; }
+      .title { font: 700 22px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #0f172a; }
+      .label { font: 700 17px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #0f172a; }
+      .small { font: 14px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #334155; }
+      .muted { font: 13px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; fill: #64748b; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="520"/>
+  <text x="40" y="46" class="title">Zoomで迷いやすい場所</text>
+  <text x="40" y="72" class="muted">全部Zoom Web Portal / App Marketplace内。Event subscriptionsは使わない。</text>
+
+  <rect x="40" y="115" width="250" height="120" class="head"/>
+  <text x="65" y="150" class="label">1. 管理者権限</text>
+  <text x="65" y="178" class="small">Admin > User Management</text>
+  <text x="65" y="202" class="small">Roles / Users</text>
+
+  <path d="M295 175 H390" class="arrow"/>
+
+  <rect x="395" y="115" width="310" height="120" class="panel"/>
+  <text x="420" y="150" class="label">2. 録画・文字起こし</text>
+  <text x="420" y="178" class="small">Account Management > Account Settings</text>
+  <text x="420" y="202" class="small">Recording & Transcript</text>
+
+  <path d="M710 175 H805" class="arrow"/>
+
+  <rect x="810" y="115" width="270" height="120" class="panel"/>
+  <text x="835" y="150" class="label">3. S2S OAuth App</text>
+  <text x="835" y="178" class="small">Marketplace > Develop</text>
+  <text x="835" y="202" class="small">Server-to-Server OAuth</text>
+
+  <path d="M945 240 V300 H165 V255" class="arrow"/>
+
+  <rect x="40" y="300" width="250" height="135" class="panel"/>
+  <text x="65" y="335" class="label">4. Scopes</text>
+  <text x="65" y="363" class="small">user read系</text>
+  <text x="65" y="387" class="small">recording read系</text>
+  <text x="65" y="411" class="muted">最小権限に絞る</text>
+
+  <path d="M295 368 H390" class="arrow"/>
+
+  <rect x="395" y="300" width="310" height="135" class="panel"/>
+  <text x="420" y="335" class="label">5. Activate</text>
+  <text x="420" y="363" class="small">Account ID</text>
+  <text x="420" y="387" class="small">Client ID</text>
+  <text x="420" y="411" class="small">Client Secretは表示しない</text>
+
+  <path d="M710 368 H805" class="arrow"/>
+
+  <rect x="810" y="300" width="270" height="135" class="panel"/>
+  <text x="835" y="335" class="label">6. 録画一覧で確認</text>
+  <text x="835" y="363" class="small">Recording and Transcript Management</text>
+  <text x="835" y="387" class="small">テスト録画 / Audio transcript</text>
+</svg>
