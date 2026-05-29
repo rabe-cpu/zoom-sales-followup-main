@@ -4,7 +4,7 @@ fetch_vtt.py - 未処理の商談録画VTTを取得（Routine Step1）
 ==========================================================
 処理の流れ:
   1. 共有ドライブの処理済み台帳 processed_meetings.json を読む
-  2. 全営業担当の録画を過去14日分まとめて取得（管理者権限）
+  2. 全営業担当の本日分録画を取得（管理者権限）
   3. 台帳にない（=未処理の）録画だけを抽出
   4. shouldProcess でフィルタ（パーソナルMTG/10分未満/キャンセル/TRANSCRIPT無し を除外）
   5. 顧客名を抽出し、VTTを /tmp/vtt/ に保存
@@ -24,7 +24,9 @@ from zoom_client import ZoomClient, get_transcript_file
 from gdrive_client import GoogleDriveClient
 
 JST = timezone(timedelta(hours=9))
-LOOKBACK_DAYS = 14  # 広めに見て、台帳で重複を防ぐ（エラー時の遡り取りこぼし防止）
+# 標準はJSTの本日分だけ。再処理や復旧時だけ環境変数で遡る。
+LOOKBACK_DAYS = int(os.getenv("LOOKBACK_DAYS", "0"))
+ONLY_TODAY = os.getenv("ONLY_TODAY", "1").lower() not in {"0", "false", "no"}
 VTT_DIR = Path(os.getenv("VTT_DIR", "/tmp/vtt"))
 
 # 顧客名抽出パターン（webhook_server/config/extractors.js から移植・空白入り名前対応に改善）
@@ -69,10 +71,23 @@ def _safe(name: str) -> str:
     return re.sub(r'[/\\:*?"<>|]', "_", name)
 
 
+def meeting_start_date_jst(meeting: dict) -> str:
+    raw = meeting.get("start_time", "") or ""
+    if not raw:
+        return ""
+    try:
+        # Zoom returns ISO8601 strings such as 2026-05-29T03:15:00Z.
+        dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        return dt.astimezone(JST).strftime("%Y-%m-%d")
+    except ValueError:
+        return raw[:10]
+
+
 def main() -> None:
     now = datetime.now(JST)
     from_date = (now - timedelta(days=LOOKBACK_DAYS)).strftime("%Y-%m-%d")
     to_date = now.strftime("%Y-%m-%d")
+    today_jst = now.strftime("%Y-%m-%d")
 
     zoom = ZoomClient()
     gdrive = GoogleDriveClient()
@@ -86,6 +101,9 @@ def main() -> None:
         meeting_id = m.get("uuid") or str(m.get("id"))
         if meeting_id in processed:
             continue
+        start_date = meeting_start_date_jst(m)
+        if ONLY_TODAY and start_date != today_jst:
+            continue
         if not should_process(m):
             continue
         transcript = get_transcript_file(m)
@@ -95,7 +113,6 @@ def main() -> None:
             warnings.append(f"VTT取得失敗 [{m.get('topic', '')}]: {e}")
             continue
         customer = extract_customer_name(m.get("topic", ""))
-        start_date = (m.get("start_time", "") or "")[:10]
         vtt_path = VTT_DIR / f"{start_date}_{_safe(customer)}.vtt"
         vtt_path.write_text(vtt_text, encoding="utf-8")
         results.append({

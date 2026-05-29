@@ -8,7 +8,7 @@
 
 ---
 
-## Step 1: 未処理の商談VTTを取得
+## Step 1: 本日分の未処理商談VTTを取得
 
 bash で実行:
 ```
@@ -16,6 +16,8 @@ cd scripts && python fetch_vtt.py
 ```
 
 標準出力のJSON（`unprocessed` 配列・`count`・`warnings`）を受け取る。
+- 標準ではJSTの本日分だけを処理する。古い未処理商談が台帳に残っていても、このRoutineではメール生成しない。
+- 復旧などで過去分を処理したい場合だけ、環境変数 `LOOKBACK_DAYS` と `ONLY_TODAY=0` を一時的に設定する。
 - `warnings` があれば記録しておき、Step4の通知に含める。
 - `count` が 0 でも**ここで打ち切らない**。Step2/3は0件ループで自動スキップされ、Step4で1回だけ `--empty` 通知される。Step1で `--empty` を呼ぶと Step4 と重複して通知が2件届くので絶対にやらない。
 - スクリプトがエラー終了したら: `python scripts/notify_chatwork.py --error "Step1 VTT取得失敗: <内容>"` で通知して終了。
