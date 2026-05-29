@@ -17,6 +17,7 @@ cd scripts && python fetch_vtt.py
 
 標準出力のJSON（`unprocessed` 配列・`count`・`warnings`）を受け取る。
 - 標準ではJSTの本日分だけを処理する。古い未処理商談が台帳に残っていても、このRoutineではメール生成しない。
+- 営業担当以外のZoom録画を処理しないため、環境変数 `ALLOWED_HOST_EMAILS` に含まれる `host_email` の商談だけを処理する。
 - 復旧などで過去分を処理したい場合だけ、環境変数 `LOOKBACK_DAYS` と `ONLY_TODAY=0` を一時的に設定する。
 - `warnings` があれば記録しておき、Step4の通知に含める。
 - `count` が 0 でも**ここで打ち切らない**。Step2/3は0件ループで自動スキップされ、Step4で1回だけ `--empty` 通知される。Step1で `--empty` を呼ぶと Step4 と重複して通知が2件届くので絶対にやらない。

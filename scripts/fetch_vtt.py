@@ -28,6 +28,11 @@ JST = timezone(timedelta(hours=9))
 LOOKBACK_DAYS = int(os.getenv("LOOKBACK_DAYS", "0"))
 ONLY_TODAY = os.getenv("ONLY_TODAY", "1").lower() not in {"0", "false", "no"}
 VTT_DIR = Path(os.getenv("VTT_DIR", "/tmp/vtt"))
+ALLOWED_HOST_EMAILS = {
+    email.strip().lower()
+    for email in os.getenv("ALLOWED_HOST_EMAILS", "").split(",")
+    if email.strip()
+}
 
 # 顧客名抽出パターン（webhook_server/config/extractors.js から移植・空白入り名前対応に改善）
 # `[^】]+?`（非貪欲）で「山口 宗大 様」のような姓名に空白が入る名前も拾う。
@@ -83,6 +88,10 @@ def meeting_start_date_jst(meeting: dict) -> str:
         return raw[:10]
 
 
+def meeting_host_email(meeting: dict) -> str:
+    return (meeting.get("_host_email") or meeting.get("host_email") or "").strip().lower()
+
+
 def main() -> None:
     now = datetime.now(JST)
     from_date = (now - timedelta(days=LOOKBACK_DAYS)).strftime("%Y-%m-%d")
@@ -100,6 +109,9 @@ def main() -> None:
     for m in meetings:
         meeting_id = m.get("uuid") or str(m.get("id"))
         if meeting_id in processed:
+            continue
+        host_email = meeting_host_email(m)
+        if ALLOWED_HOST_EMAILS and host_email not in ALLOWED_HOST_EMAILS:
             continue
         start_date = meeting_start_date_jst(m)
         if ONLY_TODAY and start_date != today_jst:
@@ -119,7 +131,7 @@ def main() -> None:
             "meeting_id": meeting_id,
             "topic": m.get("topic", ""),
             "customer_name": customer,
-            "host_email": m.get("_host_email", m.get("host_email", "")),
+            "host_email": host_email,
             "start_date": start_date,
             "duration_min": m.get("duration", 0),
             "vtt_path": str(vtt_path),
