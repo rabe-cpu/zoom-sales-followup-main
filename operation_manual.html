@@ -260,7 +260,7 @@
       <h2>3. 通常運用フロー</h2>
       <ol>
         <li>商談をZoomクラウド録画し、Audio transcriptが生成されるのを待ちます。</li>
-        <li>GitHub Actionsが9:00から22:00まで30分間隔でClaude RoutineのAPI triggerを呼び出します。</li>
+        <li>GitHub Actionsが9時台から22時台まで、09:07、09:37、10:07...22:07の30分間隔でClaude RoutineのAPI triggerを呼び出します。</li>
         <li>Claude Routineが起動したら、最初にPython依存関係をインストールします。</li>
         <li>Google Drive上の重複防止ロック <code>routine_running.lock.json</code> を取得します。前回実行中なら何も処理せず終了します。</li>
         <li><code>scripts/fetch_vtt.py</code> が未処理のVTTだけを取得し、営業担当別Google Driveフォルダへ保存します。</li>
@@ -274,7 +274,7 @@
       <table>
         <tr><th>ファイル</th><th>役割</th></tr>
         <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。依存関係準備、重複防止ロック、Step1からStep4までを定義します。</td></tr>
-        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>9:00から22:00まで30分間隔でClaude Routine API triggerを呼ぶGitHub Actions設定です。</td></tr>
+        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>09:07から22:07まで30分間隔でClaude Routine API triggerを呼ぶGitHub Actions設定です。</td></tr>
         <tr><td><code>scripts/routine_lock.py</code></td><td>Google Drive上のロックファイルで、30分間隔起動時の二重処理を防ぎます。</td></tr>
         <tr><td><code>CLAUDE.md</code></td><td>Claude Codeのプロジェクトメモリ。必須Skill、評価、最終回答条件を定義します。</td></tr>
         <tr><td><code>knowledge/video_catalog.md</code></td><td>顧客属性に合わせた参考動画の選定元です。</td></tr>
@@ -360,7 +360,7 @@
         <li>すでに <code>processed_meetings.json</code> に登録済みだった。</li>
       </ul>
       <div class="note">
-        9:00に商談が始まった場合、9:00や9:30のRoutineではまだ拾えないことがあります。Zoom録画が完了し、Audio transcript / VTT が生成された後の次回実行で取得されます。
+        9:00に商談が始まった場合、09:07や09:37のRoutineではまだ拾えないことがあります。Zoom録画が完了し、Audio transcript / VTT が生成された後の次回実行で取得されます。
       </div>
     </section>
 
