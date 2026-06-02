@@ -274,7 +274,7 @@
       <table>
         <tr><th>ファイル</th><th>役割</th></tr>
         <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。依存関係準備、重複防止ロック、Step1からStep4までを定義します。</td></tr>
-        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>09:07から22:07まで30分間隔でClaude Routine API triggerを呼ぶGitHub Actions設定です。</td></tr>
+        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>09:07から22:07まで30分間隔でClaude Routine API triggerを呼ぶGitHub Actions設定です。cronはタイムゾーン誤差を避けるためUTC時刻で記載しています。</td></tr>
         <tr><td><code>scripts/routine_lock.py</code></td><td>Google Drive上のロックファイルで、30分間隔起動時の二重処理を防ぎます。</td></tr>
         <tr><td><code>CLAUDE.md</code></td><td>Claude Codeのプロジェクトメモリ。必須Skill、評価、最終回答条件を定義します。</td></tr>
         <tr><td><code>knowledge/video_catalog.md</code></td><td>顧客属性に合わせた参考動画の選定元です。</td></tr>

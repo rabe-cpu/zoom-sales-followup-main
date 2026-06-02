@@ -3,12 +3,11 @@ name: Fire Claude Routine
 on:
   workflow_dispatch:
   schedule:
-    # 09:07-21:37 JST, every 30 minutes. Offset from :00/:30 to avoid peak scheduler load.
-    - cron: "7,37 9-21 * * *"
-      timezone: "Asia/Tokyo"
+    # 09:07-21:37 JST, every 30 minutes.
+    # GitHub cron is written in UTC here to avoid timezone ambiguity.
+    - cron: "7,37 0-12 * * *"
     # 22:07 JST final run.
-    - cron: "7 22 * * *"
-      timezone: "Asia/Tokyo"
+    - cron: "7 13 * * *"
 
 jobs:
   fire-routine:
