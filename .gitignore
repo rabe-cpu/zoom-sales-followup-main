@@ -15,6 +15,8 @@ vtt/
 output/
 *.vtt
 processed_meetings.json
+# Routine実行時のstderrキャプチャ等の一時ログ
+*.log
 
 # === Python ===
 __pycache__/
