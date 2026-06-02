@@ -3,11 +3,11 @@ name: Fire Claude Routine
 on:
   workflow_dispatch:
   schedule:
-    # 09:00-21:30 JST, every 30 minutes.
-    - cron: "0,30 9-21 * * *"
+    # 09:07-21:37 JST, every 30 minutes. Offset from :00/:30 to avoid peak scheduler load.
+    - cron: "7,37 9-21 * * *"
       timezone: "Asia/Tokyo"
-    # 22:00 JST final run.
-    - cron: "0 22 * * *"
+    # 22:07 JST final run.
+    - cron: "7 22 * * *"
       timezone: "Asia/Tokyo"
 
 jobs:
