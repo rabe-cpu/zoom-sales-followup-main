@@ -15,6 +15,7 @@ vtt/
 output/
 *.vtt
 processed_meetings.json
+*.log
 
 # === Python ===
 __pycache__/
