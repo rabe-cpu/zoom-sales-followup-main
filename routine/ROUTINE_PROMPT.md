@@ -8,6 +8,18 @@
 
 ---
 
+## Step 0-1: 依存関係を準備
+
+Routine環境では毎回クリーンな実行環境になる場合があるため、Google API / Zoom API連携に必要なPython依存関係を最初に入れる。
+このStepはロック取得より前に必ず実行する。
+
+```
+python -m pip install -r scripts/requirements.txt
+```
+
+- すでに入っている場合は短時間で終了する。
+- 失敗した場合は、まだロックを取得していないためロック解除は不要。可能なら `python scripts/notify_chatwork.py --error "Step-1 依存関係インストール失敗: <内容>"` で通知して終了する。
+
 ## Step 0: 重複実行防止ロックを取得
 
 30分間隔など外部スケジューラから起動される場合、前回実行がまだ処理中の可能性がある。
