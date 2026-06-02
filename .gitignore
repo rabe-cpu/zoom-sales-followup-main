@@ -14,6 +14,7 @@ oauth_token*.json
 vtt/
 output/
 *.vtt
+*.log
 processed_meetings.json
 
 # === Python ===
