@@ -1,10 +1,10 @@
-name: Fire Claude Routine
+name: Scheduled Claude Routine
 
 on:
   workflow_dispatch:
   schedule:
     # Run every hour at :07 and :37 UTC, then gate by JST business hours in the job.
-    # This keeps the cron expression simple and avoids timezone/range ambiguity.
+    # This simple cron helps GitHub register the schedule reliably.
     - cron: "7,37 * * * *"
 
 jobs:

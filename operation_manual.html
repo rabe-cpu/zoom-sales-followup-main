@@ -274,7 +274,7 @@
       <table>
         <tr><th>ファイル</th><th>役割</th></tr>
         <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。依存関係準備、重複防止ロック、Step1からStep4までを定義します。</td></tr>
-        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>GitHub Actionsは毎時07分/37分に起動し、ジョブ内で日本時間09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</td></tr>
+        <tr><td><code>.github/workflows/scheduled-claude-routine.yml</code></td><td>GitHub Actionsは毎時07分/37分に起動し、ジョブ内で日本時間09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</td></tr>
         <tr><td><code>scripts/routine_lock.py</code></td><td>Google Drive上のロックファイルで、30分間隔起動時の二重処理を防ぎます。</td></tr>
         <tr><td><code>CLAUDE.md</code></td><td>Claude Codeのプロジェクトメモリ。必須Skill、評価、最終回答条件を定義します。</td></tr>
         <tr><td><code>knowledge/video_catalog.md</code></td><td>顧客属性に合わせた参考動画の選定元です。</td></tr>
@@ -285,11 +285,11 @@
 
     <section>
       <h2>4. Run nowで手動実行する場合</h2>
-      <p>定期実行を待たずに処理したい場合は、Claude Routineの画面からRun nowを実行するか、GitHub Actionsの <code>Fire Claude Routine</code> から <code>Run workflow</code> を実行します。どちらも同時に押すと二重起動になるため、手動実行は片方だけにします。</p>
+      <p>定期実行を待たずに処理したい場合は、Claude Routineの画面からRun nowを実行するか、GitHub Actionsの <code>Scheduled Claude Routine</code> から <code>Run workflow</code> を実行します。どちらも同時に押すと二重起動になるため、手動実行は片方だけにします。</p>
       <ol>
         <li>Claude Code on the webで対象Routineを開きます。</li>
         <li><code>Run now</code> を押します。</li>
-        <li>GitHub Actionsから試す場合は、GitHubのActionsタブで <code>Fire Claude Routine</code> を選び、<code>Run workflow</code> を押します。</li>
+        <li>GitHub Actionsから試す場合は、GitHubのActionsタブで <code>Scheduled Claude Routine</code> を選び、<code>Run workflow</code> を押します。</li>
         <li>Routineログ冒頭で <code>python -m pip install -r scripts/requirements.txt</code> と <code>python scripts/routine_lock.py acquire</code> が実行されることを確認します。</li>
         <li>実行ログでStep1からStep4まで進んだか確認します。</li>
         <li>Chatwork通知が届いたか確認します。</li>

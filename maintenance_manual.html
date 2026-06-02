@@ -282,7 +282,7 @@ python -m pip install -r scripts/requirements.txt</code></pre>
     <section>
       <h2>5. API連携の処理順</h2>
       <ol>
-        <li>GitHub Actionsの <code>.github/workflows/fire-claude-routine.yml</code> が、毎時07分/37分にworkflowを起動します。ジョブ内のJST判定で、09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</li>
+        <li>GitHub Actionsの <code>.github/workflows/scheduled-claude-routine.yml</code> が、毎時07分/37分にworkflowを起動します。ジョブ内のJST判定で、09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</li>
         <li>Claude Routineは最初に <code>python -m pip install -r scripts/requirements.txt</code> を実行し、Google APIクライアントなどを準備します。</li>
         <li><code>scripts/routine_lock.py acquire</code> がGoogle Drive上に <code>routine_running.lock.json</code> を作成します。既に新しいロックがある場合は、前回実行中として本処理へ進みません。</li>
         <li><code>ZoomClient.list_users()</code> でアカウント内の有効ユーザーを取得します。</li>
@@ -476,7 +476,7 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
         <tr>
           <td>30分ごとの起動が動かない</td>
           <td>workflowがdefault branchにない、GitHub Actions無効、Secrets未登録、cron/timezone設定不備。</td>
-          <td><code>.github/workflows/fire-claude-routine.yml</code>、GitHub Actions画面、<code>ROUTINE_FIRE_URL</code> / <code>ROUTINE_FIRE_TOKEN</code>。</td>
+          <td><code>.github/workflows/scheduled-claude-routine.yml</code>、GitHub Actions画面、<code>ROUTINE_FIRE_URL</code> / <code>ROUTINE_FIRE_TOKEN</code>。</td>
         </tr>
         <tr>
           <td>前回実行中として止まる</td>
@@ -533,7 +533,7 @@ python save_to_gdrive.py \
     <section>
       <h2>13. 切り戻しと停止</h2>
       <ol>
-        <li>GitHub Actionsのworkflowを無効化、または <code>.github/workflows/fire-claude-routine.yml</code> を停止用に変更します。</li>
+        <li>GitHub Actionsのworkflowを無効化、または <code>.github/workflows/scheduled-claude-routine.yml</code> を停止用に変更します。</li>
         <li>Claude RoutineのAPI triggerを削除またはTokenを無効化します。</li>
         <li>Claude Routine側にSchedule triggerが残っていないか確認します。</li>
         <li>必要に応じてRoutine環境変数からシークレットを削除します。</li>
