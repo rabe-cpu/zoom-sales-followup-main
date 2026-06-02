@@ -186,6 +186,7 @@
       <p>
         このシステムは、Zoomクラウド録画のVTT文字起こしをもとに、商談後の営業フォローメールを自動生成します。
         Routineはメール送信までは行いません。顧客送付用Google Docs、社内確認用Google Docs、営業担当Gmailの下書き、Chatwork通知を作成し、最後の確認と送信は人間が行います。
+        現在の定期起動は、GitHub ActionsからClaude RoutineのAPI triggerを呼ぶ方式です。Claude Routine側のSchedule triggerは使わず、API triggerだけを有効にします。
       </p>
       <div class="diagram" aria-label="全体フロー図">
         <svg width="1040" height="360" viewBox="0 0 1040 360" role="img">
@@ -259,7 +260,9 @@
       <h2>3. 通常運用フロー</h2>
       <ol>
         <li>商談をZoomクラウド録画し、Audio transcriptが生成されるのを待ちます。</li>
-        <li>Claude Routineが定期実行またはRun nowで起動します。</li>
+        <li>GitHub Actionsが9:00から22:00まで30分間隔でClaude RoutineのAPI triggerを呼び出します。</li>
+        <li>Claude Routineが起動したら、最初にPython依存関係をインストールします。</li>
+        <li>Google Drive上の重複防止ロック <code>routine_running.lock.json</code> を取得します。前回実行中なら何も処理せず終了します。</li>
         <li><code>scripts/fetch_vtt.py</code> が未処理のVTTだけを取得し、営業担当別Google Driveフォルダへ保存します。</li>
         <li>商談ごとに、顧客送付用メールと社内確認用メールが生成されます。</li>
         <li><code>scripts/save_to_gdrive.py</code> がGoogle DriveへDocs保存し、Gmail下書きを作ります。</li>
@@ -270,7 +273,9 @@
       <h3>Routineで使う正本</h3>
       <table>
         <tr><th>ファイル</th><th>役割</th></tr>
-        <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。Step1からStep4までを定義します。</td></tr>
+        <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。依存関係準備、重複防止ロック、Step1からStep4までを定義します。</td></tr>
+        <tr><td><code>.github/workflows/fire-claude-routine.yml</code></td><td>9:00から22:00まで30分間隔でClaude Routine API triggerを呼ぶGitHub Actions設定です。</td></tr>
+        <tr><td><code>scripts/routine_lock.py</code></td><td>Google Drive上のロックファイルで、30分間隔起動時の二重処理を防ぎます。</td></tr>
         <tr><td><code>CLAUDE.md</code></td><td>Claude Codeのプロジェクトメモリ。必須Skill、評価、最終回答条件を定義します。</td></tr>
         <tr><td><code>knowledge/video_catalog.md</code></td><td>顧客属性に合わせた参考動画の選定元です。</td></tr>
         <tr><td><code>knowledge/sales_persons/</code></td><td>営業担当ごとの口調ナレッジです。</td></tr>
@@ -280,16 +285,18 @@
 
     <section>
       <h2>4. Run nowで手動実行する場合</h2>
-      <p>定期実行を待たずに処理したい場合は、Claude Routineの画面からRun nowを実行します。</p>
+      <p>定期実行を待たずに処理したい場合は、Claude Routineの画面からRun nowを実行するか、GitHub Actionsの <code>Fire Claude Routine</code> から <code>Run workflow</code> を実行します。どちらも同時に押すと二重起動になるため、手動実行は片方だけにします。</p>
       <ol>
         <li>Claude Code on the webで対象Routineを開きます。</li>
         <li><code>Run now</code> を押します。</li>
+        <li>GitHub Actionsから試す場合は、GitHubのActionsタブで <code>Fire Claude Routine</code> を選び、<code>Run workflow</code> を押します。</li>
+        <li>Routineログ冒頭で <code>python -m pip install -r scripts/requirements.txt</code> と <code>python scripts/routine_lock.py acquire</code> が実行されることを確認します。</li>
         <li>実行ログでStep1からStep4まで進んだか確認します。</li>
         <li>Chatwork通知が届いたか確認します。</li>
         <li>Driveに顧客別フォルダと2つのDocsができたか確認します。</li>
       </ol>
       <div class="ok">
-        緑の実行ステータスだけでは成功判断しません。Drive保存、Gmail下書き、台帳更新、Chatwork通知まで確認してください。
+        緑の実行ステータスだけでは成功判断しません。ロック取得、Drive保存、Gmail下書き、台帳更新、Chatwork通知、最後の <code>--release-lock</code> によるロック解除まで確認してください。
       </div>
     </section>
 
@@ -347,10 +354,14 @@
       <ul>
         <li>本日JSTの対象商談がなかった。</li>
         <li>Zoom録画はあるが、VTT文字起こしがまだ生成されていない。</li>
+        <li>商談直後で、クラウド録画やAudio transcriptの処理がまだ終わっていない。</li>
         <li>商談時間が10分未満だった。</li>
         <li>対象ホストが <code>ALLOWED_HOST_EMAILS</code> に含まれていない。</li>
         <li>すでに <code>processed_meetings.json</code> に登録済みだった。</li>
       </ul>
+      <div class="note">
+        9:00に商談が始まった場合、9:00や9:30のRoutineではまだ拾えないことがあります。Zoom録画が完了し、Audio transcript / VTT が生成された後の次回実行で取得されます。
+      </div>
     </section>
 
     <section>
@@ -419,7 +430,7 @@ python scripts/save_to_gdrive.py \
   --internal-md "/tmp/output/{顧客名}/01_{顧客名}_社内確認用.md" \
   --gmail-user "{Zoomのhost_email}"</code></pre>
       <div class="note">
-        手動実行でも、保存とGmail下書き作成が成功した後に台帳へ登録されるため、基本的には重複処理を避けられます。
+        手動実行でも、保存とGmail下書き作成が成功した後に台帳へ登録されるため、基本的には重複処理を避けられます。30分間隔運用では、台帳に加えて <code>routine_running.lock.json</code> により「前回実行中なら新しい実行を止める」制御も行います。
       </div>
     </section>
   </main>

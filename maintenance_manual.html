@@ -172,6 +172,7 @@
       <p>
         このリポジトリは、Pythonスクリプトによる外部API連携と、Claude CodeのProject Skills / Agents / Hooksによるメール品質制御で構成されています。
         Routineはポーリング方式でZoom録画を取りに行き、Webhookは使いません。
+        定期起動はGitHub ActionsからClaude RoutineのAPI triggerを呼び出す方式です。Claude Routine側のSchedule triggerは重複防止のため使わず、API triggerだけを有効にします。
       </p>
       <div class="diagram" aria-label="技術構成図">
         <svg width="1040" height="430" viewBox="0 0 1040 430" role="img">
@@ -233,6 +234,7 @@
         <tr><th>場所</th><th>責務</th><th>保守時の注意</th></tr>
         <tr><td><code>scripts/</code></td><td>Zoom、Google Drive、Gmail、Chatwork連携のPythonコード。</td><td>API仕様や認証方式の変更時に修正します。</td></tr>
         <tr><td><code>routine/</code></td><td>Claude Routineの実行手順。</td><td>実運用手順の正本です。Routine画面のPromptと同期してください。</td></tr>
+        <tr><td><code>.github/workflows/</code></td><td>GitHub Actionsの定期起動設定。</td><td>9:00から22:00まで30分間隔でClaude Routine API triggerを呼びます。</td></tr>
         <tr><td><code>.claude/skills/</code></td><td>商談分析、季語調査、メール生成、評価、Word出力のSkill。</td><td>品質ルールを変える場合、関連Knowledgeと整合させます。</td></tr>
         <tr><td><code>.claude/agents/</code></td><td>評価エージェント定義。</td><td>評価基準を変更したらStop Hookと最終回答条件も確認します。</td></tr>
         <tr><td><code>.claude/hooks/</code></td><td>最終回答の証跡不足を検出するStop Hook。</td><td>Hookが厳しすぎると納品が止まります。緩めすぎると品質証跡が欠落します。</td></tr>
@@ -250,6 +252,7 @@
         <tr><td>Google Drive / Docs</td><td><code>GOOGLE_OAUTH_CLIENT_ID</code><br><code>GOOGLE_OAUTH_CLIENT_SECRET</code><br><code>GOOGLE_OAUTH_REFRESH_TOKEN</code><br><code>GOOGLE_DRIVE_FOLDER_ID</code></td><td>Docs作成、黄色ハイライト、処理済み台帳の読み書き。</td></tr>
         <tr><td>Gmail</td><td><code>GOOGLE_SERVICE_ACCOUNT_JSON</code><br><code>GOOGLE_SERVICE_ACCOUNT_JSON_B64</code><br><code>GOOGLE_CREDENTIALS_PATH</code></td><td>Workspace domain-wide delegationで営業担当本人のGmailへ下書き作成。</td></tr>
         <tr><td>Chatwork</td><td><code>CHATWORK_API_TOKEN</code><br><code>CHATWORK_ROOM_ID</code></td><td>完了、0件、エラー通知。</td></tr>
+        <tr><td>GitHub Actions Secrets</td><td><code>ROUTINE_FIRE_URL</code><br><code>ROUTINE_FIRE_TOKEN</code></td><td>Claude RoutineのAPI triggerを呼び出すURLとToken。リポジトリへ直接書かず、GitHub Secretsに登録します。</td></tr>
         <tr><td>実行制御</td><td><code>VTT_DIR</code><br><code>ALLOWED_HOST_EMAILS</code><br><code>LOOKBACK_DAYS</code><br><code>ONLY_TODAY</code></td><td>VTTローカル保存先、対象ホスト、本日分処理、復旧時の遡り処理を制御。</td></tr>
         <tr><td>VTT担当別保存</td><td><code>VTT_DRIVE_FOLDER_BY_HOST</code><br><code>VTT_DRIVE_FOLDER_BY_SALES_PERSON</code><br><code>VTT_DRIVE_FALLBACK_FOLDER_ID</code></td><td>Zoom文字起こしVTTを営業担当別Google Driveフォルダへ振り分けます。</td></tr>
       </table>
@@ -260,7 +263,7 @@
 
     <section>
       <h2>4. 依存関係</h2>
-      <p>Routineまたはローカル実行前に、Python依存関係をインストールします。</p>
+      <p>Routineまたはローカル実行前に、Python依存関係をインストールします。Routine環境は実行ごとに依存関係が入っていない場合があるため、<code>routine/ROUTINE_PROMPT.md</code> のStep -1でも同じコマンドを最初に実行します。</p>
       <pre><code>cd zoom-sales-followup-main
 python -m pip install -r scripts/requirements.txt</code></pre>
       <table>
@@ -279,6 +282,9 @@ python -m pip install -r scripts/requirements.txt</code></pre>
     <section>
       <h2>5. API連携の処理順</h2>
       <ol>
+        <li>GitHub Actionsの <code>.github/workflows/fire-claude-routine.yml</code> が、9:00から22:00まで30分間隔でClaude Routine API triggerを呼びます。</li>
+        <li>Claude Routineは最初に <code>python -m pip install -r scripts/requirements.txt</code> を実行し、Google APIクライアントなどを準備します。</li>
+        <li><code>scripts/routine_lock.py acquire</code> がGoogle Drive上に <code>routine_running.lock.json</code> を作成します。既に新しいロックがある場合は、前回実行中として本処理へ進みません。</li>
         <li><code>ZoomClient.list_users()</code> でアカウント内の有効ユーザーを取得します。</li>
         <li><code>ZoomClient.list_user_recordings()</code> でユーザーごとの録画を取得します。</li>
         <li><code>fetch_vtt.py</code> が対象外トピック、10分未満、VTTなし、処理済みを除外し、VTTを営業担当別Driveフォルダへ保存します。</li>
@@ -317,11 +323,17 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
     </section>
 
     <section>
-      <h2>7. 台帳と冪等性</h2>
+      <h2>7. 台帳、ロック、冪等性</h2>
       <p>
         重複処理防止はGoogle Drive上の <code>processed_meetings.json</code> で行います。
         <code>meeting_id</code> が台帳に登録済みなら、次回以降は処理対象から外れます。
+        30分間隔起動では、これに加えて <code>routine_running.lock.json</code> を使い、前回Routineがまだ実行中の場合に新しい実行を止めます。
       </p>
+      <ul>
+        <li><code>processed_meetings.json</code>: 商談単位の再処理防止。Drive保存とGmail下書きが成功した後に更新します。</li>
+        <li><code>routine_running.lock.json</code>: Routine実行単位の重複防止。開始時に作成し、Chatwork通知後の <code>--release-lock</code> で削除します。</li>
+        <li><code>ROUTINE_LOCK_TTL_MINUTES</code>: ロックの事故残りを破棄するまでの分数です。未指定時は90分です。</li>
+      </ul>
       <div class="diagram" aria-label="台帳更新タイミング図">
         <svg width="1040" height="230" viewBox="0 0 1040 230" role="img">
           <defs>
@@ -458,8 +470,18 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
         </tr>
         <tr>
           <td>Routineだけ失敗</td>
-          <td>環境変数不足、ネットワーク許可不足、依存関係未インストール。</td>
-          <td>Routine Run log、Setup command、Environment。</td>
+          <td>環境変数不足、ネットワーク許可不足、依存関係未インストール、API trigger token不一致。</td>
+          <td>Routine Run log、Setup command、Environment、GitHub Actions Secrets。</td>
+        </tr>
+        <tr>
+          <td>30分ごとの起動が動かない</td>
+          <td>workflowがdefault branchにない、GitHub Actions無効、Secrets未登録、cron/timezone設定不備。</td>
+          <td><code>.github/workflows/fire-claude-routine.yml</code>、GitHub Actions画面、<code>ROUTINE_FIRE_URL</code> / <code>ROUTINE_FIRE_TOKEN</code>。</td>
+        </tr>
+        <tr>
+          <td>前回実行中として止まる</td>
+          <td>正常な重複防止、または <code>routine_running.lock.json</code> の事故残り。</td>
+          <td>Drive上のロックファイル、Routineログの <code>status: locked</code>、<code>ROUTINE_LOCK_TTL_MINUTES</code>。</td>
         </tr>
       </table>
     </section>
@@ -469,6 +491,10 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
       <p>認証情報が手元にある場合、Step単位で切り分けできます。</p>
       <pre><code># 依存関係
 python -m pip install -r scripts/requirements.txt
+
+# Routine重複防止ロックの状態確認
+cd scripts
+python routine_lock.py status
 
 # Zoomから未処理VTT取得
 cd scripts
@@ -497,6 +523,7 @@ python save_to_gdrive.py \
         <li>シークレットや一時出力が差分に含まれていないか確認します。</li>
         <li>可能ならローカルで該当スクリプトを単体確認します。</li>
         <li>Claude RoutineのPromptを変更した場合は、Routine画面側にも反映します。</li>
+        <li>GitHub ActionsやAPI triggerを変更した場合は、GitHub SecretsとClaude RoutineのAPI trigger設定を確認します。</li>
         <li>Run nowで1件だけ検証します。</li>
         <li>Drive保存、Gmail下書き、Chatwork通知、台帳更新を確認します。</li>
         <li>初回運用分は人間が出力Docsを目視確認します。</li>
@@ -506,7 +533,9 @@ python save_to_gdrive.py \
     <section>
       <h2>13. 切り戻しと停止</h2>
       <ol>
-        <li>Claude RoutineのTriggerを停止します。</li>
+        <li>GitHub Actionsのworkflowを無効化、または <code>.github/workflows/fire-claude-routine.yml</code> を停止用に変更します。</li>
+        <li>Claude RoutineのAPI triggerを削除またはTokenを無効化します。</li>
+        <li>Claude Routine側にSchedule triggerが残っていないか確認します。</li>
         <li>必要に応じてRoutine環境変数からシークレットを削除します。</li>
         <li>Zoom S2S OAuth AppをDeactivateします。</li>
         <li>Google OAuth refresh tokenを無効化します。</li>
@@ -548,7 +577,7 @@ python save_to_gdrive.py \
         <div class="card">
           <strong>事故時</strong>
           <ul>
-            <li>Routine Triggerを止める。</li>
+            <li>GitHub ActionsとClaude Routine API triggerを止める。</li>
             <li>送信済みメールの有無を確認。</li>
             <li>シークレット漏えいの可能性があれば即時ローテーション。</li>
           </ul>
