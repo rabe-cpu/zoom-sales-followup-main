@@ -8,6 +8,20 @@
 
 ---
 
+## Step 0: 重複実行防止ロックを取得
+
+30分間隔など外部スケジューラから起動される場合、前回実行がまだ処理中の可能性がある。
+最初に共有Google Drive上のロックを取得する。
+
+```
+python scripts/routine_lock.py acquire
+```
+
+- 終了コードが `0` の場合だけ Step 1 へ進む。
+- 終了コードが `75` の場合は、前回Routineがまだ実行中なので**正常扱いで終了**する。Step1以降、Chatwork通知、ロック解除は実行しない。
+- その他のエラーの場合は、可能なら `python scripts/notify_chatwork.py --error "Step0 ロック取得失敗: <内容>"` で通知して終了する。
+- ロックの事故残りは `ROUTINE_LOCK_TTL_MINUTES`（既定90分）を超えると次回取得時に自動破棄される。
+
 ## Step 1: 本日分の未処理商談VTTを取得
 
 bash で実行:
@@ -23,7 +37,7 @@ cd scripts && python fetch_vtt.py
 - 復旧などで過去分を処理したい場合だけ、環境変数 `LOOKBACK_DAYS` と `ONLY_TODAY=0` を一時的に設定する。
 - `warnings` があれば記録しておき、Step4の通知に含める。
 - `count` が 0 でも**ここで打ち切らない**。Step2/3は0件ループで自動スキップされ、Step4で1回だけ `--empty` 通知される。Step1で `--empty` を呼ぶと Step4 と重複して通知が2件届くので絶対にやらない。
-- スクリプトがエラー終了したら: `python scripts/notify_chatwork.py --error "Step1 VTT取得失敗: <内容>"` で通知して終了。
+- スクリプトがエラー終了したら: `python scripts/notify_chatwork.py --error "Step1 VTT取得失敗: <内容>" --release-lock` で通知して終了。
 
 ## Step 2: 各商談のメールを生成（1件ずつ直列）
 
@@ -62,10 +76,10 @@ python scripts/save_to_gdrive.py \
 ## Step 4: Chatwork通知
 
 全商談の処理が終わったら、**1回だけ**通知する（Step1で `--empty` を呼ばないこと。Step1とStep4の両方で呼ぶと2件届く）：
-- **0件のとき**: `python scripts/notify_chatwork.py --empty`
+- **0件のとき**: `python scripts/notify_chatwork.py --empty --release-lock`
 - **1件以上のとき**: 下記コマンドで `--results` を通知
 ```
-python scripts/notify_chatwork.py --results '<results JSON>'
+python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 ```
 `results JSON` の形式:
 ```json
@@ -93,5 +107,6 @@ python scripts/notify_chatwork.py --results '<results JSON>'
 
 - **1件ずつ直列**で処理する（並列にしない。セッションのリソース・安定性のため）。
 - **1件の失敗で全体を止めない**。失敗した商談は台帳に載らず次回再処理される。
+- **重複実行しない**。Step0でロックが取れない場合は、前回実行中として何も処理しない。
 - 最終送信はしない（メール生成・Docs保存・Gmail下書き作成・通知まで。送信は人間が手動）。
 - 通知には必ず「送信前に黄色箇所・ZOOM URL・固有情報を確認」を含める。

@@ -21,6 +21,7 @@ import sys
 from pathlib import Path
 
 import requests
+from routine_lock import release as release_routine_lock
 
 CHATWORK_API = "https://api.chatwork.com/v2"
 
@@ -94,17 +95,22 @@ def main() -> None:
     ap.add_argument("--results", help="結果JSONファイルのパス or JSON文字列")
     ap.add_argument("--empty", action="store_true", help="処理対象0件の通知")
     ap.add_argument("--error", help="エラーメッセージ")
+    ap.add_argument("--release-lock", action="store_true", help="通知後にRoutine重複防止ロックを解除")
     args = ap.parse_args()
 
-    if args.error:
-        send(f"[info][title]営業フォローメール 自動生成 エラー[/title]{args.error}[/info]")
-        return
-    if args.empty:
-        send("[info][title]営業フォローメール 自動生成[/title]処理対象の商談はありませんでした。[/info]")
-        return
+    try:
+        if args.error:
+            send(f"[info][title]営業フォローメール 自動生成 エラー[/title]{args.error}[/info]")
+            return
+        if args.empty:
+            send("[info][title]営業フォローメール 自動生成[/title]処理対象の商談はありませんでした。[/info]")
+            return
 
-    results, warnings = _load_results(args.results or "{}")
-    send(build_completion_message(results, warnings))
+        results, warnings = _load_results(args.results or "{}")
+        send(build_completion_message(results, warnings))
+    finally:
+        if args.release_lock:
+            release_routine_lock()
 
 
 if __name__ == "__main__":
