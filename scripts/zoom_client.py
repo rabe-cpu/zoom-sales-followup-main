@@ -125,10 +125,16 @@ class ZoomClient:
         for user in self.list_users():
             uid = user.get("id")
             email = user.get("email", "")
+            host_name = (
+                user.get("display_name")
+                or " ".join(part for part in [user.get("last_name", ""), user.get("first_name", "")] if part).strip()
+                or user.get("name", "")
+            )
             try:
                 user_meetings = self.list_user_recordings(uid, from_date, to_date)
                 for m in user_meetings:
                     m["_host_email"] = email  # 後段で営業担当特定に使う
+                    m["_host_name"] = host_name
                 meetings.extend(user_meetings)
             except RuntimeError as e:
                 warnings.append(f"user={email}: {e}")

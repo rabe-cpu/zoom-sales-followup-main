@@ -18,6 +18,8 @@ cd scripts && python fetch_vtt.py
 標準出力のJSON（`unprocessed` 配列・`count`・`warnings`）を受け取る。
 - 標準ではJSTの本日分だけを処理する。古い未処理商談が台帳に残っていても、このRoutineではメール生成しない。
 - 営業担当以外のZoom録画を処理しないため、環境変数 `ALLOWED_HOST_EMAILS` に含まれる `host_email` の商談だけを処理する。
+- VTT文字起こしは `/tmp/vtt/` に保存し、同時に営業担当別Google Driveフォルダへ保存する。`vtt_drive_url` / `vtt_drive_folder_source` が出力に含まれる場合は、Step4の通知結果へ引き継ぐ。
+- 営業担当別フォルダは `host_email` が取れる場合は `VTT_DRIVE_FOLDER_BY_HOST`、Zoomユーザー名で判定できる場合は `VTT_DRIVE_FOLDER_BY_SALES_PERSON`、どちらも合わない場合は `VTT_DRIVE_FALLBACK_FOLDER_ID` または既定の未割当フォルダを使う。
 - 復旧などで過去分を処理したい場合だけ、環境変数 `LOOKBACK_DAYS` と `ONLY_TODAY=0` を一時的に設定する。
 - `warnings` があれば記録しておき、Step4の通知に含める。
 - `count` が 0 でも**ここで打ち切らない**。Step2/3は0件ループで自動スキップされ、Step4で1回だけ `--empty` 通知される。Step1で `--empty` を呼ぶと Step4 と重複して通知が2件届くので絶対にやらない。
@@ -71,6 +73,7 @@ python scripts/notify_chatwork.py --results '<results JSON>'
   "results": [
     {"customer_name": "...", "topic": "...", "host_email": "...", "duration_min": 60,
      "evaluation_summary": "...", "remaining_risks": ["...", "..."],
+     "vtt_drive_url": "...",
      "customer_url": "...", "internal_url": "...",
      "gmail_user": "...", "gmail_draft_id": "...", "gmail_auth_mode": "..."}
   ],

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>営業フォローメール自動生成システム 運用マニュアル</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5d6d7e;
+      --line: #d8dee8;
+      --paper: #ffffff;
+      --bg: #f5f7fa;
+      --blue: #1f6feb;
+      --green: #16865a;
+      --amber: #9a6700;
+      --red: #c62828;
+      --soft-blue: #edf4ff;
+      --soft-green: #edf8f2;
+      --soft-amber: #fff7df;
+      --soft-red: #fff0f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.75;
+    }
+    header {
+      background: #102033;
+      color: #fff;
+      padding: 42px 28px;
+    }
+    header .wrap, main {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 0;
+      color: #c8d5e5;
+      font-size: 16px;
+    }
+    main {
+      padding: 28px;
+    }
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px;
+      margin: 0 0 22px;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 23px;
+      border-left: 5px solid var(--blue);
+      padding-left: 12px;
+    }
+    h3 {
+      margin: 24px 0 8px;
+      font-size: 18px;
+    }
+    p { margin: 8px 0 14px; }
+    ul, ol { margin: 10px 0 0 1.3em; padding: 0; }
+    li { margin: 5px 0; }
+    code {
+      background: #f0f3f7;
+      border: 1px solid #dce2ea;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 0.95em;
+    }
+    pre {
+      background: #101923;
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5fa;
+      text-align: left;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fbfcfe;
+    }
+    .card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .note {
+      border-left: 5px solid var(--amber);
+      background: var(--soft-amber);
+      padding: 12px 14px;
+      border-radius: 6px;
+    }
+    .ok {
+      border-left: 5px solid var(--green);
+      background: var(--soft-green);
+      padding: 12px 14px;
+      border-radius: 6px;
+    }
+    .danger {
+      border-left: 5px solid var(--red);
+      background: var(--soft-red);
+      padding: 12px 14px;
+      border-radius: 6px;
+    }
+    .diagram {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 10px;
+      margin: 14px 0;
+    }
+    .checklist li {
+      list-style: none;
+      position: relative;
+      padding-left: 26px;
+    }
+    .checklist li::before {
+      content: "□";
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 28px 34px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 780px) {
+      header { padding: 30px 18px; }
+      main { padding: 18px; }
+      section { padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>営業フォローメール自動生成システム 運用マニュアル</h1>
+      <p class="subtitle">Zoom録画の文字起こし取得から、メール生成、Drive保存、Gmail下書き、Chatwork通知までの日常運用手順</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. このシステムで行うこと</h2>
+      <p>
+        このシステムは、Zoomクラウド録画のVTT文字起こしをもとに、商談後の営業フォローメールを自動生成します。
+        Routineはメール送信までは行いません。顧客送付用Google Docs、社内確認用Google Docs、営業担当Gmailの下書き、Chatwork通知を作成し、最後の確認と送信は人間が行います。
+      </p>
+      <div class="diagram" aria-label="全体フロー図">
+        <svg width="1040" height="360" viewBox="0 0 1040 360" role="img">
+          <defs>
+            <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+              <path d="M2,2 L10,6 L2,10 Z" fill="#1f6feb"></path>
+            </marker>
+            <style>
+              .d-title { font: 700 18px sans-serif; fill: #17202a; }
+              .d-text { font: 14px sans-serif; fill: #314052; }
+              .d-note { font: 12px sans-serif; fill: #5d6d7e; }
+              .d-box { fill: #fff; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+              .d-strong { fill: #edf4ff; stroke: #1f6feb; stroke-width: 2; rx: 8; }
+              .d-green { fill: #edf8f2; stroke: #16865a; stroke-width: 2; rx: 8; }
+              .d-line { stroke: #1f6feb; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+            </style>
+          </defs>
+          <rect x="20" y="42" width="150" height="92" class="d-box"></rect>
+          <text x="48" y="78" class="d-title">Zoom</text>
+          <text x="42" y="106" class="d-text">録画 / VTT</text>
+          <path d="M174 88 H250" class="d-line"></path>
+
+          <rect x="254" y="42" width="190" height="92" class="d-strong"></rect>
+          <text x="286" y="78" class="d-title">Claude Routine</text>
+          <text x="284" y="106" class="d-text">メール生成と評価</text>
+          <path d="M448 88 H524" class="d-line"></path>
+
+          <rect x="528" y="42" width="170" height="92" class="d-box"></rect>
+          <text x="560" y="78" class="d-title">Google Drive</text>
+          <text x="558" y="106" class="d-text">Docs保存</text>
+          <path d="M702 88 H778" class="d-line"></path>
+
+          <rect x="782" y="42" width="170" height="92" class="d-box"></rect>
+          <text x="820" y="78" class="d-title">Chatwork</text>
+          <text x="814" y="106" class="d-text">完了通知</text>
+
+          <path d="M613 138 V204 H349 V148" class="d-line"></path>
+          <rect x="250" y="210" width="200" height="82" class="d-green"></rect>
+          <text x="286" y="244" class="d-title">処理済み台帳</text>
+          <text x="282" y="270" class="d-text">processed_meetings.json</text>
+
+          <rect x="528" y="210" width="250" height="82" class="d-green"></rect>
+          <text x="560" y="244" class="d-title">人間が確認して送信</text>
+          <text x="558" y="270" class="d-text">黄色箇所 / ZOOM URL / 固有情報</text>
+        </svg>
+      </div>
+      <div class="note">
+        自動送信は禁止です。営業担当または確認担当者が、黄色箇所、次回ZOOM URL、宛先、顧客固有情報を確認してから送信します。
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 日常運用の担当範囲</h2>
+      <div class="grid">
+        <div class="card">
+          <strong>営業担当</strong>
+          <p>Gmail下書き、顧客送付用Docs、黄色箇所、ZOOM URL、宛先を確認し、問題なければ手動送信します。</p>
+        </div>
+        <div class="card">
+          <strong>運用担当</strong>
+          <p>Routineの実行結果、Chatwork通知、Drive保存、台帳更新を確認します。失敗時は一次切り分けを行います。</p>
+        </div>
+        <div class="card">
+          <strong>保守担当</strong>
+          <p>認証情報、依存関係、Zoom/Google/Chatwork連携、SkillやKnowledgeの更新を管理します。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 通常運用フロー</h2>
+      <ol>
+        <li>商談をZoomクラウド録画し、Audio transcriptが生成されるのを待ちます。</li>
+        <li>Claude Routineが定期実行またはRun nowで起動します。</li>
+        <li><code>scripts/fetch_vtt.py</code> が未処理のVTTだけを取得し、営業担当別Google Driveフォルダへ保存します。</li>
+        <li>商談ごとに、顧客送付用メールと社内確認用メールが生成されます。</li>
+        <li><code>scripts/save_to_gdrive.py</code> がGoogle DriveへDocs保存し、Gmail下書きを作ります。</li>
+        <li>保存と下書き作成が成功した商談だけ、処理済み台帳に登録されます。</li>
+        <li><code>scripts/notify_chatwork.py</code> がChatworkへ結果を通知します。</li>
+        <li>営業担当が下書きを確認し、必要箇所を修正して手動送信します。</li>
+      </ol>
+      <h3>Routineで使う正本</h3>
+      <table>
+        <tr><th>ファイル</th><th>役割</th></tr>
+        <tr><td><code>routine/ROUTINE_PROMPT.md</code></td><td>Routine実行手順の正本。Step1からStep4までを定義します。</td></tr>
+        <tr><td><code>CLAUDE.md</code></td><td>Claude Codeのプロジェクトメモリ。必須Skill、評価、最終回答条件を定義します。</td></tr>
+        <tr><td><code>knowledge/video_catalog.md</code></td><td>顧客属性に合わせた参考動画の選定元です。</td></tr>
+        <tr><td><code>knowledge/sales_persons/</code></td><td>営業担当ごとの口調ナレッジです。</td></tr>
+        <tr><td><code>scripts/fetch_vtt.py</code></td><td>Zoom VTTを取得し、営業担当別フォルダまたは未割当フォルダへ保存します。</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. Run nowで手動実行する場合</h2>
+      <p>定期実行を待たずに処理したい場合は、Claude Routineの画面からRun nowを実行します。</p>
+      <ol>
+        <li>Claude Code on the webで対象Routineを開きます。</li>
+        <li><code>Run now</code> を押します。</li>
+        <li>実行ログでStep1からStep4まで進んだか確認します。</li>
+        <li>Chatwork通知が届いたか確認します。</li>
+        <li>Driveに顧客別フォルダと2つのDocsができたか確認します。</li>
+      </ol>
+      <div class="ok">
+        緑の実行ステータスだけでは成功判断しません。Drive保存、Gmail下書き、台帳更新、Chatwork通知まで確認してください。
+      </div>
+    </section>
+
+    <section>
+      <h2>5. 出力物の確認方法</h2>
+      <table>
+        <tr><th>出力物</th><th>確認すること</th><th>問題がある場合</th></tr>
+        <tr>
+          <td>文字起こしVTT</td>
+          <td>Chatwork通知またはStep1 JSONの <code>vtt_drive_url</code> から開けること。担当者別フォルダに入っていること。</td>
+          <td>未割当フォルダに入っている場合、Zoomホスト名または環境変数の対応表を確認します。</td>
+        </tr>
+        <tr>
+          <td>顧客送付用Docs</td>
+          <td>評価ログ、営業口調抽出、残リスク、黄色タグ文字が混ざっていないこと。</td>
+          <td>送信せず、社内確認用DocsとRoutineログを確認します。</td>
+        </tr>
+        <tr>
+          <td>社内確認用Docs</td>
+          <td>黄色箇所、評価ログ、動画選定理由、残リスクが見えること。</td>
+          <td>不足していれば人間確認を優先し、保守担当へ連絡します。</td>
+        </tr>
+        <tr>
+          <td>Gmail下書き</td>
+          <td>営業担当本人のGmailに作成されていること。Toは空欄でも可。</td>
+          <td>宛先、件名、本文、URLを送信前に修正します。</td>
+        </tr>
+        <tr>
+          <td>Chatwork通知</td>
+          <td>顧客送付用URL、社内確認用URL、Gmail下書きID、残リスクがあること。</td>
+          <td>通知がなければRoutineログとChatwork認証を確認します。</td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 営業担当の送信前チェック</h2>
+      <ul class="checklist">
+        <li>宛先メールアドレスが正しい。</li>
+        <li>顧客名、敬称、会社名、商談内容に誤りがない。</li>
+        <li>黄色箇所を確認し、必要に応じて自然な表現へ修正した。</li>
+        <li><code>ZOOM URL：〇〇〇</code> が残っている場合、正しいURLへ差し替えた。</li>
+        <li>参考動画URLが実URLになっている。</li>
+        <li>成果保証、収益保証、過度な断定表現がない。</li>
+        <li>評価ログや残リスクなど社内情報が本文に混ざっていない。</li>
+      </ul>
+      <div class="danger">
+        <code>[黄色]</code>、<code>[/黄色]</code>、<code>参考動画URL：〇〇〇</code>、<code>評価ログ</code>、<code>残リスク</code> が顧客送付本文に残っている場合は送信しないでください。
+      </div>
+    </section>
+
+    <section>
+      <h2>7. 0件通知の場合</h2>
+      <p>Chatworkに「処理対象の商談はありませんでした」と通知された場合、異常とは限りません。次の条件を確認してください。</p>
+      <ul>
+        <li>本日JSTの対象商談がなかった。</li>
+        <li>Zoom録画はあるが、VTT文字起こしがまだ生成されていない。</li>
+        <li>商談時間が10分未満だった。</li>
+        <li>対象ホストが <code>ALLOWED_HOST_EMAILS</code> に含まれていない。</li>
+        <li>すでに <code>processed_meetings.json</code> に登録済みだった。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>8. 営業担当別VTT保存先</h2>
+      <p>文字起こしVTTは、運用責任者のGoogle Drive配下にある営業担当別フォルダへ保存します。担当判定できない場合は未割当へ保存します。</p>
+      <table>
+        <tr><th>担当</th><th>保存先フォルダID</th></tr>
+        <tr><td>鈴江さん</td><td><code>1mSxrGnBnu-coQ_w-_b5c8Y9m3HFUJLlG</code></td></tr>
+        <tr><td>荒木さん</td><td><code>1UvpzMxst2FTVEPNX_LMA9he5FMVawYHg</code></td></tr>
+        <tr><td>谷口さん</td><td><code>1upX4T3w02nTQsnGC1gp4Oin2B66jQErC</code></td></tr>
+        <tr><td>松谷さん</td><td><code>1VgfJtpanqXCqygC-cH2bI4cYwvT7cOO5</code></td></tr>
+        <tr><td>森田さん</td><td><code>1kExkYUFH8D1PBV4hHafNWg0HFjJhtB3u</code></td></tr>
+        <tr><td>前田さん</td><td><code>1TpuWiCRMYfLYBJhBE2fgq72pnzGVMM3G</code></td></tr>
+        <tr><td>未割当</td><td><code>1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></td></tr>
+      </table>
+      <div class="note">
+        未割当に入った場合も処理は継続します。保守担当がZoomホスト名または <code>VTT_DRIVE_FOLDER_BY_HOST</code> の設定を見直してください。
+      </div>
+    </section>
+
+    <section>
+      <h2>9. 失敗時の一次対応</h2>
+      <table>
+        <tr><th>症状</th><th>運用担当が確認すること</th><th>次の対応</th></tr>
+        <tr>
+          <td>Chatworkにエラー通知が来た</td>
+          <td>通知本文のStep番号とエラー内容。</td>
+          <td>該当Stepを保守担当へ共有します。</td>
+        </tr>
+        <tr>
+          <td>DriveにDocsがない</td>
+          <td>RoutineログでStep3まで進んだか。</td>
+          <td>Google認証、DriveフォルダID、保存権限を確認します。</td>
+        </tr>
+        <tr>
+          <td>Gmail下書きがない</td>
+          <td>Chatwork通知の <code>gmail_draft_id</code> と <code>gmail_user</code>。</td>
+          <td>営業担当Gmail、Domain-wide delegation、host_emailを確認します。</td>
+        </tr>
+        <tr>
+          <td>同じ商談が再処理される</td>
+          <td>Step3が最後まで成功し、台帳更新されたか。</td>
+          <td>台帳更新前に失敗している可能性があります。重複Docsを整理し、原因を保守担当へ連絡します。</td>
+        </tr>
+        <tr>
+          <td>メール品質が低い</td>
+          <td>社内確認用Docsの評価ログ、残リスク、Speaker分離の信頼度。</td>
+          <td>人間が修正して送信し、必要ならKnowledge更新を依頼します。</td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>10. 手動フォールバック</h2>
+      <p>Routineが不調な場合は、ローカルまたはClaude Code上で同じ流れを手動実行します。詳細は <code>routine/MANUAL_FALLBACK.md</code> を参照してください。</p>
+      <pre><code>cd scripts
+python fetch_vtt.py
+
+# 取得された vtt_path をClaude Codeに渡してメール生成
+
+python scripts/save_to_gdrive.py \
+  --customer "{顧客名}" \
+  --send-date "{送付日}" \
+  --meeting-id "{uuid}" \
+  --customer-md "/tmp/output/{顧客名}/01_{顧客名}_顧客送付用.md" \
+  --internal-md "/tmp/output/{顧客名}/01_{顧客名}_社内確認用.md" \
+  --gmail-user "{Zoomのhost_email}"</code></pre>
+      <div class="note">
+        手動実行でも、保存とGmail下書き作成が成功した後に台帳へ登録されるため、基本的には重複処理を避けられます。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    作成場所: リポジトリ直下 / 対象システム: zoom-sales-followup-main / 最終送信は必ず人間確認後に実施
+  </footer>
+</body>
+</html>

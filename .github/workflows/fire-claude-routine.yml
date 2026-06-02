@@ -1,0 +1,43 @@
+name: Fire Claude Routine
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 09:00-21:30 JST, every 30 minutes.
+    - cron: "0,30 9-21 * * *"
+      timezone: "Asia/Tokyo"
+    # 22:00 JST final run.
+    - cron: "0 22 * * *"
+      timezone: "Asia/Tokyo"
+
+jobs:
+  fire-routine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger Claude Routine
+        env:
+          ROUTINE_FIRE_URL: ${{ secrets.ROUTINE_FIRE_URL }}
+          ROUTINE_FIRE_TOKEN: ${{ secrets.ROUTINE_FIRE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${ROUTINE_FIRE_URL:-}" ] || [ -z "${ROUTINE_FIRE_TOKEN:-}" ]; then
+            echo "ROUTINE_FIRE_URL and ROUTINE_FIRE_TOKEN secrets are required." >&2
+            exit 1
+          fi
+
+          payload=$(cat <<JSON
+          {
+            "text": "GitHub Actions scheduled trigger fired. Run the sales follow-up Routine using routine/ROUTINE_PROMPT.md. Triggered by ${GITHUB_WORKFLOW} run ${GITHUB_RUN_ID} on ${GITHUB_REF}."
+          }
+          JSON
+          )
+
+          curl --fail-with-body -X POST "$ROUTINE_FIRE_URL" \
+            -H "Authorization: Bearer $ROUTINE_FIRE_TOKEN" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
+            -H "Content-Type: application/json" \
+            -d "$payload"

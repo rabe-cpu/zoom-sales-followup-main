@@ -93,6 +93,18 @@ class GoogleDriveClient:
         url = f.get("webViewLink", f"https://docs.google.com/document/d/{f['id']}/edit")
         return url, f["id"]
 
+    def upload_text_file(self, text, file_name, folder_id, mimetype="text/plain"):
+        """Upload plain text as a normal Drive file without Google Docs conversion."""
+        media = MediaIoBaseUpload(
+            io.BytesIO(text.encode("utf-8")), mimetype=mimetype, resumable=False
+        )
+        meta = {"name": file_name, "parents": [folder_id]}
+        f = self.service.files().create(
+            body=meta, media_body=media, fields="id, webViewLink"
+        ).execute()
+        url = f.get("webViewLink", f"https://drive.google.com/file/d/{f['id']}/view")
+        return url, f["id"]
+
     # ------------------------------------------------------------------
     # [黄色]...[/黄色] → 実際の黄色ハイライト（lib/docs.js から移植）
     # ------------------------------------------------------------------

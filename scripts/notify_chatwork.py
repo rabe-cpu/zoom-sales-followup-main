@@ -47,6 +47,11 @@ def build_completion_message(results: list, warnings: list) -> str:
         lines.append(f"商談: {topic}（{r.get('host_email', '')}、{r.get('duration_min', '')}分）")
         lines.append(f"評価: {r.get('evaluation_summary') or '6エージェント合格'}")
         lines.append("")
+        vtt_url = r.get("vtt_drive_url")
+        if vtt_url:
+            lines.append("📝 文字起こしVTT:")
+            lines.append(vtt_url)
+            lines.append("")
         lines.append("📄 顧客送付用:")
         lines.append(r.get("customer_url", ""))
         lines.append("📋 社内確認用:")
