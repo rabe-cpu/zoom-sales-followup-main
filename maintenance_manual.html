@@ -234,7 +234,7 @@
         <tr><th>場所</th><th>責務</th><th>保守時の注意</th></tr>
         <tr><td><code>scripts/</code></td><td>Zoom、Google Drive、Gmail、Chatwork連携のPythonコード。</td><td>API仕様や認証方式の変更時に修正します。</td></tr>
         <tr><td><code>routine/</code></td><td>Claude Routineの実行手順。</td><td>実運用手順の正本です。Routine画面のPromptと同期してください。</td></tr>
-        <tr><td><code>.github/workflows/</code></td><td>GitHub Actionsの定期起動設定。</td><td>09:07から22:07まで30分間隔でClaude Routine API triggerを呼びます。cronはタイムゾーン誤差を避けるためUTC時刻で記載します。</td></tr>
+        <tr><td><code>.github/workflows/</code></td><td>GitHub Actionsの定期起動設定。</td><td>毎時07分/37分にworkflowを起動し、ジョブ内で日本時間09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</td></tr>
         <tr><td><code>.claude/skills/</code></td><td>商談分析、季語調査、メール生成、評価、Word出力のSkill。</td><td>品質ルールを変える場合、関連Knowledgeと整合させます。</td></tr>
         <tr><td><code>.claude/agents/</code></td><td>評価エージェント定義。</td><td>評価基準を変更したらStop Hookと最終回答条件も確認します。</td></tr>
         <tr><td><code>.claude/hooks/</code></td><td>最終回答の証跡不足を検出するStop Hook。</td><td>Hookが厳しすぎると納品が止まります。緩めすぎると品質証跡が欠落します。</td></tr>
@@ -282,7 +282,7 @@ python -m pip install -r scripts/requirements.txt</code></pre>
     <section>
       <h2>5. API連携の処理順</h2>
       <ol>
-        <li>GitHub Actionsの <code>.github/workflows/fire-claude-routine.yml</code> が、09:07から22:07まで30分間隔でClaude Routine API triggerを呼びます。workflow内のcronはUTC換算で設定します。</li>
+        <li>GitHub Actionsの <code>.github/workflows/fire-claude-routine.yml</code> が、毎時07分/37分にworkflowを起動します。ジョブ内のJST判定で、09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</li>
         <li>Claude Routineは最初に <code>python -m pip install -r scripts/requirements.txt</code> を実行し、Google APIクライアントなどを準備します。</li>
         <li><code>scripts/routine_lock.py acquire</code> がGoogle Drive上に <code>routine_running.lock.json</code> を作成します。既に新しいロックがある場合は、前回実行中として本処理へ進みません。</li>
         <li><code>ZoomClient.list_users()</code> でアカウント内の有効ユーザーを取得します。</li>
