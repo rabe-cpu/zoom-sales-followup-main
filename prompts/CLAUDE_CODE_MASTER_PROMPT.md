@@ -26,8 +26,13 @@
 7. 顧客との会話で出た内容を冒頭に2〜4文で入れてください。
 8. 参考動画は `knowledge/video_catalog.md` から選び、URL前に「なぜ選んだか」、実際のYouTube URL、URL後に「どこを見ると判断材料になるか」を短く入れてください。`参考動画URL：〇〇〇` のまま完成扱いにしないでください。
 9. 営業が最後に入力・確認する箇所だけ黄色または明るい色で明示してください。ZOOM URL は `ZOOM URL：〇〇〇` として残してください。
-10. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
-11. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
+10. 顧客送付用メールの資料・フォーム案内は必ず下記に統一してください。黄色にしないでください。
+    `【個別相談会資料】`
+    `https://nextjp.co.jp/document/access/kobetsu_japan6.pdf`
+    `【検討結果入力フォーム】`
+    `https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform`
+11. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
+12. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
 
 評価:
 以下の評価エージェントを立てて、100点満点で評価してください。

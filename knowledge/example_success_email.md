@@ -47,11 +47,11 @@ https://www.youtube.com/watch?v=〇〇〇〇〇
 
 〇〇
 
-【個別相談会資料はこちらです】
-https://nextjp.co.jp/document/access/〇〇〇〇.pdf
+【個別相談会資料】
+https://nextjp.co.jp/document/access/kobetsu_japan6.pdf
 
-【検討結果入力はこちらからご入力お待ちしております】
-https://docs.google.com/forms/〇〇〇〇〇
+【検討結果入力フォーム】
+https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform
 ```
 
 ---
@@ -59,7 +59,7 @@ https://docs.google.com/forms/〇〇〇〇〇
 ## なぜこれが「良い例」なのか
 
 1. **箇条書きが本文に無い**：「動画URLそのもの1行」だけで、判断軸も依頼も段落形式
-2. **見出し・Heading 1 が無い**：件名と `【個別相談会資料はこちらです】` のような定型ラベル以外フラット
+2. **見出し・Heading 1 が無い**：件名と `【個別相談会資料】`、`【検討結果入力フォーム】` のような定型ラベル以外フラット
 3. **宛名は冒頭1回のみ**：本文中で `〇〇さま` を繰り返さない
 4. **冒頭の会話反映が2段で温度感を作っている**：「公務員として安定〜」の段＋「6〜7年ぶりに不動産〜」の段
 5. **動画紹介がURL前後の短文で完結**：選定理由（URL前）→ URL → 観点（URL後）の3層
