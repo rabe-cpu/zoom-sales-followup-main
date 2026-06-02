@@ -20,6 +20,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 成果物一覧
    - 個別メール
    - 複数メールまとめ版
+   - 社内確認用のソーシャルスタイル別メール案
    - 評価ログ
    - 運用ルール
 
@@ -33,6 +34,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - docx存在
    - 黄色箇所
    - ZOOM URL
+   - ソーシャルスタイル別案が社内確認用だけに入っているか
    - 評価ログ
    - 元ファイル未変更
 
@@ -40,6 +42,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
 
 - 元ファイルを変更しない。
 - 営業チェック箇所以外をむやみに黄色にしない。
+- ソーシャルスタイル別メール案を顧客送付用docxに混ぜない。
 - Word出力指定がある場合、Markdownだけで終わらせない。
 
 ## When Not To Use

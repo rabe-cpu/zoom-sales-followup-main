@@ -17,6 +17,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - Human template or reference email
 - knowledge/video_catalog.md / selected video
 - Next action information
+- knowledge/12_social_style_email_variants.md
 
 ## Workflow
 
@@ -53,9 +54,17 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 営業チェック箇所
    - 使用した根拠
 
+7. Social Style Variants For Internal Review
+   - 顧客送付用メールとは別に、社内確認用として4スタイル別メール案を作る。
+   - 顧客の発話からスタイルを判定しない。
+   - 同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換する。
+   - 各スタイルに、メール案、この文面が効く理由、営業担当が選ぶ目安、次回商談での質問例、価格・費用質問への返し方、避ける言い方、伝え方メモを入れる。
+   - スタイル別案は社内確認用だけに入れ、顧客送付用本文には混ぜない。
+
 ## Non-Negotiables
 
 - 顧客事実を盛らない。
+- 顧客のソーシャルスタイルを判定しない。スタイル別案は表現候補としてだけ作る。
 - 成果保証をしない。
 - `伝わってまいりました` は根拠がある場合だけ使う。根拠が薄い場合は、営業担当の口調に合わせて `伝わってきました` などに寄せる。
 - 営業発話にない余白表現を足さない。
@@ -73,3 +82,4 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 動画URLの前後に、選定理由と見る観点が短く入っている。
 - 営業が最後に触る箇所だけが黄色候補として明記されている。
 - 金額表記がアラビア数字に統一されている。
+- 社内確認用に4スタイル別メール案と営業フィードバックがあり、顧客送付用本文に混ざっていない。

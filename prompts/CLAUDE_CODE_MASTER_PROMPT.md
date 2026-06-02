@@ -32,7 +32,8 @@
     `【検討結果入力フォーム】`
     `https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform`
 11. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
-12. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
+12. 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換したメール案と営業フィードバックを入れてください。顧客送付用本文には混ぜないでください。
+13. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
 
 評価:
 以下の評価エージェントを立てて、100点満点で評価してください。
@@ -68,11 +69,12 @@
 2. 抽出した営業口調
 3. 季語調査結果と参照元
 4. 参考動画選定理由
-5. ペルソナ評価
-6. 改善ログ
-7. 評価エージェント別の指摘と修正結果
-8. 最終全体チェックリスト
-9. Skill Used Check
+5. ソーシャルスタイル別メール案（社内確認用）
+6. ペルソナ評価
+7. 改善ログ
+8. 評価エージェント別の指摘と修正結果
+9. 最終全体チェックリスト
+10. Skill Used Check
 
 Skill Used Checkには、使用したSkill、読んだKnowledge、評価エージェント別スコア、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。
 ```

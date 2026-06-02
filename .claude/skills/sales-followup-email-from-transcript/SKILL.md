@@ -22,6 +22,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 - `../../../knowledge/05_quality_rubric_and_personas.md`
 - `../../../knowledge/07_self_improvement_agent_loop.md`
 - `../../../knowledge/08_official_claude_code_setup.md`
+- `../../../knowledge/12_social_style_email_variants.md`
 
 ## Specialized Skills
 
@@ -73,6 +74,8 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
    - 冒頭に商談で話した内容を2〜4文で入れる。
    - 黄色箇所は営業が最後に触るべき箇所だけにする。
    - ZOOMが必要なら `ZOOM URL：〇〇〇` を残す。
+   - 顧客送付用メールは完成稿1通にする。
+   - 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換したメール案と営業フィードバックを入れる。
 
 8. Evaluation Agents
    - Use `sales-followup-email-evaluation`.
@@ -90,7 +93,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 
 10. Final Output
    - Use `sales-followup-word-output` when Word/docx output is requested.
-   - メール本文、抽出した営業口調、季語調査、動画選定理由、評価ログ、最終チェック結果を出す。
+   - メール本文、抽出した営業口調、季語調査、動画選定理由、ソーシャルスタイル別メール案、評価ログ、最終チェック結果を出す。
    - 最終回答に `Skill Used Check` を含め、使った全Skillを列挙する。
 
 ## Non-Negotiables
@@ -98,6 +101,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 - 営業担当がMTG中に言っていない余白表現を、人間味として足さない。
 - `伝わってまいりました` は、営業担当の実発話または雛形に明確な根拠がある場合だけ使う。根拠が薄い場合は `伝わってきました`、`感じました`、`受け取りました` など自然な表現に寄せる。
 - 顧客が言っていない背景・感情・成果期待を盛らない。
+- 顧客の会話からソーシャルスタイルを判定しない。4スタイル別案は社内確認用の表現候補としてだけ扱う。
 - 収益保証・成果保証の表現を使わない。
 - 季語は毎回調査する。
 - 評価エージェントとFinal-Whole-Checkを通さずに納品しない。

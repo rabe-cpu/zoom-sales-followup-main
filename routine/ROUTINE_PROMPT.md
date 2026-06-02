@@ -59,12 +59,13 @@ cd scripts && python fetch_vtt.py
 3. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
+   - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
    - 季語は送付日で毎回調査。6エージェント評価で全員90点以上（Source-Fact / Risk は95点以上）になるまで改善。
    - 最後に Final-Whole-Check Agent で横断確認。
    - 3回改善しても90点に届かない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
 4. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
-   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・評価ログを含む）
+   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・評価ログ・4ソーシャルスタイル別メール案を含む）
 5. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新
