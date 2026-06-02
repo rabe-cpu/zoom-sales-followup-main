@@ -172,7 +172,7 @@
       <p>
         このリポジトリは、Pythonスクリプトによる外部API連携と、Claude CodeのProject Skills / Agents / Hooksによるメール品質制御で構成されています。
         Routineはポーリング方式でZoom録画を取りに行き、Webhookは使いません。
-        定期起動はGitHub ActionsからClaude RoutineのAPI triggerを呼び出す方式です。Claude Routine側のSchedule triggerは重複防止のため使わず、API triggerだけを有効にします。
+        定期起動はcron-job.orgからClaude RoutineのAPI triggerを呼び出す方式です。Claude Routine側のSchedule triggerは重複防止のため使わず、API triggerだけを有効にします。GitHub Actionsは手動実行用のバックアップとして残します。
       </p>
       <div class="diagram" aria-label="技術構成図">
         <svg width="1040" height="430" viewBox="0 0 1040 430" role="img">
@@ -234,12 +234,25 @@
         <tr><th>場所</th><th>責務</th><th>保守時の注意</th></tr>
         <tr><td><code>scripts/</code></td><td>Zoom、Google Drive、Gmail、Chatwork連携のPythonコード。</td><td>API仕様や認証方式の変更時に修正します。</td></tr>
         <tr><td><code>routine/</code></td><td>Claude Routineの実行手順。</td><td>実運用手順の正本です。Routine画面のPromptと同期してください。</td></tr>
-        <tr><td><code>.github/workflows/</code></td><td>GitHub Actionsの定期起動設定。</td><td>毎時07分/37分にworkflowを起動し、ジョブ内で日本時間09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</td></tr>
+        <tr><td>cron-job.org</td><td>本番の定期起動設定。</td><td>日本時間09:07から22:07まで30分間隔でClaude Routine API triggerを呼びます。</td></tr>
+        <tr><td><code>.github/workflows/</code></td><td>GitHub Actionsの手動実行設定。</td><td><code>workflow_dispatch</code> のみ。定期scheduleは使わず、障害時の手動バックアップとして使います。</td></tr>
         <tr><td><code>.claude/skills/</code></td><td>商談分析、季語調査、メール生成、評価、Word出力のSkill。</td><td>品質ルールを変える場合、関連Knowledgeと整合させます。</td></tr>
         <tr><td><code>.claude/agents/</code></td><td>評価エージェント定義。</td><td>評価基準を変更したらStop Hookと最終回答条件も確認します。</td></tr>
         <tr><td><code>.claude/hooks/</code></td><td>最終回答の証跡不足を検出するStop Hook。</td><td>Hookが厳しすぎると納品が止まります。緩めすぎると品質証跡が欠落します。</td></tr>
         <tr><td><code>knowledge/</code></td><td>営業口調、季語、メールルール、動画カタログ、成功例。</td><td>営業現場の変化に合わせて更新します。</td></tr>
         <tr><td><code>docs/setup/</code></td><td>他アカウント導入、スクショ取得、セットアップカンペ。</td><td>導入フロー変更時に更新します。</td></tr>
+      </table>
+      <h3>cron-job.orgのHTTP設定</h3>
+      <table>
+        <tr><th>項目</th><th>値</th></tr>
+        <tr><td>URL</td><td>Claude RoutineのFire URL。<code>https://api.anthropic.com/v1/claude_code/routines/trig_.../fire</code> の形式。</td></tr>
+        <tr><td>Method</td><td><code>POST</code></td></tr>
+        <tr><td>Header: Authorization</td><td><code>Bearer sk-ant-...</code>。BearerとTokenの間に半角スペースを入れます。</td></tr>
+        <tr><td>Header: anthropic-version</td><td><code>2023-06-01</code></td></tr>
+        <tr><td>Header: anthropic-beta</td><td><code>experimental-cc-routine-2026-04-01</code></td></tr>
+        <tr><td>Request body</td><td>空欄で運用します。bodyを入れる場合はcron-job.org側の保存・JSON扱いに注意します。</td></tr>
+        <tr><td>Time zone</td><td><code>Asia/Tokyo</code></td></tr>
+        <tr><td>Schedule</td><td><code>7,37 9-21 * * *</code> と <code>7 22 * * *</code>。1つのjobに2本入れられない場合は2つのjobに分けます。</td></tr>
       </table>
     </section>
 
@@ -252,7 +265,8 @@
         <tr><td>Google Drive / Docs</td><td><code>GOOGLE_OAUTH_CLIENT_ID</code><br><code>GOOGLE_OAUTH_CLIENT_SECRET</code><br><code>GOOGLE_OAUTH_REFRESH_TOKEN</code><br><code>GOOGLE_DRIVE_FOLDER_ID</code></td><td>Docs作成、黄色ハイライト、処理済み台帳の読み書き。</td></tr>
         <tr><td>Gmail</td><td><code>GOOGLE_SERVICE_ACCOUNT_JSON</code><br><code>GOOGLE_SERVICE_ACCOUNT_JSON_B64</code><br><code>GOOGLE_CREDENTIALS_PATH</code></td><td>Workspace domain-wide delegationで営業担当本人のGmailへ下書き作成。</td></tr>
         <tr><td>Chatwork</td><td><code>CHATWORK_API_TOKEN</code><br><code>CHATWORK_ROOM_ID</code></td><td>完了、0件、エラー通知。</td></tr>
-        <tr><td>GitHub Actions Secrets</td><td><code>ROUTINE_FIRE_URL</code><br><code>ROUTINE_FIRE_TOKEN</code></td><td>Claude RoutineのAPI triggerを呼び出すURLとToken。リポジトリへ直接書かず、GitHub Secretsに登録します。</td></tr>
+        <tr><td>cron-job.org</td><td>Claude Routine Fire URL<br>Authorization HeaderのBearer Token</td><td>本番定期実行用。Authorizationは <code>Bearer sk-ant-...</code> のようにBearer、半角スペース、Tokenで登録します。</td></tr>
+        <tr><td>GitHub Actions Secrets</td><td><code>ROUTINE_FIRE_URL</code><br><code>ROUTINE_FIRE_TOKEN</code></td><td>手動バックアップ用。GitHub SecretsにはTokenのみを入れ、Bearerはworkflow内で付与します。</td></tr>
         <tr><td>実行制御</td><td><code>VTT_DIR</code><br><code>ALLOWED_HOST_EMAILS</code><br><code>LOOKBACK_DAYS</code><br><code>ONLY_TODAY</code></td><td>VTTローカル保存先、対象ホスト、本日分処理、復旧時の遡り処理を制御。</td></tr>
         <tr><td>VTT担当別保存</td><td><code>VTT_DRIVE_FOLDER_BY_HOST</code><br><code>VTT_DRIVE_FOLDER_BY_SALES_PERSON</code><br><code>VTT_DRIVE_FALLBACK_FOLDER_ID</code></td><td>Zoom文字起こしVTTを営業担当別Google Driveフォルダへ振り分けます。</td></tr>
       </table>
@@ -282,7 +296,7 @@ python -m pip install -r scripts/requirements.txt</code></pre>
     <section>
       <h2>5. API連携の処理順</h2>
       <ol>
-        <li>GitHub Actionsの <code>.github/workflows/scheduled-claude-routine.yml</code> が、毎時07分/37分にworkflowを起動します。ジョブ内のJST判定で、09:07から22:07の範囲だけClaude Routine API triggerを呼びます。</li>
+        <li>cron-job.orgが、09:07から22:07まで30分間隔でClaude Routine API triggerを呼びます。</li>
         <li>Claude Routineは最初に <code>python -m pip install -r scripts/requirements.txt</code> を実行し、Google APIクライアントなどを準備します。</li>
         <li><code>scripts/routine_lock.py acquire</code> がGoogle Drive上に <code>routine_running.lock.json</code> を作成します。既に新しいロックがある場合は、前回実行中として本処理へ進みません。</li>
         <li><code>ZoomClient.list_users()</code> でアカウント内の有効ユーザーを取得します。</li>
@@ -475,8 +489,8 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
         </tr>
         <tr>
           <td>30分ごとの起動が動かない</td>
-          <td>workflowがdefault branchにない、GitHub Actions無効、Secrets未登録、cron/timezone設定不備。</td>
-          <td><code>.github/workflows/scheduled-claude-routine.yml</code>、GitHub Actions画面、<code>ROUTINE_FIRE_URL</code> / <code>ROUTINE_FIRE_TOKEN</code>。</td>
+          <td>cron-job.orgのjob停止、Schedule設定不備、Time zone不一致、Headers不備、Claude Routine API Token無効。</td>
+          <td>cron-job.orgのHistory/Test run、Fire URL、Authorization、<code>anthropic-version</code>、<code>anthropic-beta</code>。</td>
         </tr>
         <tr>
           <td>前回実行中として止まる</td>
@@ -523,7 +537,8 @@ python save_to_gdrive.py \
         <li>シークレットや一時出力が差分に含まれていないか確認します。</li>
         <li>可能ならローカルで該当スクリプトを単体確認します。</li>
         <li>Claude RoutineのPromptを変更した場合は、Routine画面側にも反映します。</li>
-        <li>GitHub ActionsやAPI triggerを変更した場合は、GitHub SecretsとClaude RoutineのAPI trigger設定を確認します。</li>
+        <li>cron-job.orgやAPI triggerを変更した場合は、cron-job.orgのHeadersとClaude RoutineのAPI trigger設定を確認します。</li>
+        <li>GitHub Actionsの手動バックアップを変更した場合は、GitHub Secretsも確認します。</li>
         <li>Run nowで1件だけ検証します。</li>
         <li>Drive保存、Gmail下書き、Chatwork通知、台帳更新を確認します。</li>
         <li>初回運用分は人間が出力Docsを目視確認します。</li>
@@ -533,7 +548,8 @@ python save_to_gdrive.py \
     <section>
       <h2>13. 切り戻しと停止</h2>
       <ol>
-        <li>GitHub Actionsのworkflowを無効化、または <code>.github/workflows/scheduled-claude-routine.yml</code> を停止用に変更します。</li>
+        <li>cron-job.orgのjobをPauseまたはDisableします。</li>
+        <li>必要に応じてGitHub Actionsの手動workflowを無効化します。</li>
         <li>Claude RoutineのAPI triggerを削除またはTokenを無効化します。</li>
         <li>Claude Routine側にSchedule triggerが残っていないか確認します。</li>
         <li>必要に応じてRoutine環境変数からシークレットを削除します。</li>
@@ -577,7 +593,7 @@ python save_to_gdrive.py \
         <div class="card">
           <strong>事故時</strong>
           <ul>
-            <li>GitHub ActionsとClaude Routine API triggerを止める。</li>
+            <li>cron-job.orgとClaude Routine API triggerを止める。</li>
             <li>送信済みメールの有無を確認。</li>
             <li>シークレット漏えいの可能性があれば即時ローテーション。</li>
           </ul>

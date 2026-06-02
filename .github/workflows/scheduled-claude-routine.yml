@@ -2,10 +2,6 @@ name: Scheduled Claude Routine
 
 on:
   workflow_dispatch:
-  schedule:
-    # Run every hour at :07 and :37 UTC, then gate by JST business hours in the job.
-    # This simple cron helps GitHub register the schedule reliably.
-    - cron: "7,37 * * * *"
 
 jobs:
   fire-routine:
@@ -13,37 +9,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check JST trigger window
-        id: window
-        run: |
-          set -euo pipefail
-
-          # Manual runs are always allowed.
-          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-            echo "Manual workflow_dispatch run: allowed."
-            exit 0
-          fi
-
-          hour="$(TZ=Asia/Tokyo date +%H)"
-          minute="$(TZ=Asia/Tokyo date +%M)"
-          now="$(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M:%S %Z')"
-          echo "Current JST: $now"
-
-          should_run=false
-          if [ "$minute" = "07" ] || [ "$minute" = "37" ]; then
-            if [ "$hour" -ge 9 ] && [ "$hour" -le 21 ]; then
-              should_run=true
-            elif [ "$hour" = "22" ] && [ "$minute" = "07" ]; then
-              should_run=true
-            fi
-          fi
-
-          echo "should_run=$should_run" >> "$GITHUB_OUTPUT"
-          echo "should_run=$should_run"
-
       - name: Trigger Claude Routine
-        if: steps.window.outputs.should_run == 'true'
         env:
           ROUTINE_FIRE_URL: ${{ secrets.ROUTINE_FIRE_URL }}
           ROUTINE_FIRE_TOKEN: ${{ secrets.ROUTINE_FIRE_TOKEN }}
@@ -57,7 +23,7 @@ jobs:
 
           payload=$(cat <<JSON
           {
-            "text": "GitHub Actions scheduled trigger fired. Run the sales follow-up Routine using routine/ROUTINE_PROMPT.md. Triggered by ${GITHUB_WORKFLOW} run ${GITHUB_RUN_ID} on ${GITHUB_REF}."
+            "text": "GitHub Actions manual backup trigger fired. Run the sales follow-up Routine using routine/ROUTINE_PROMPT.md. Triggered by ${GITHUB_WORKFLOW} run ${GITHUB_RUN_ID} on ${GITHUB_REF}."
           }
           JSON
           )
