@@ -158,7 +158,7 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 ```json
 {
   "results": [
-    {"customer_name": "...", "topic": "...", "host_email": "...", "duration_min": 60,
+    {"customer_name": "...", "topic": "...", "host_email": "...", "host_name": "...", "salesperson_name": "...", "duration_min": 60,
      "evaluation_summary": "...", "remaining_risks": ["...", "..."],
      "vtt_drive_url": "...",
      "customer_url": "...", "internal_url": "...",
@@ -173,6 +173,10 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 - `remaining_risks`: **営業が送付前に確認すべき具体項目**のリスト
   （例:「PDFのURL差し替え」「次回ZOOM URL日程確定後追記」）。無ければ省略可
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ
+- `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が設定されている場合、担当者へ `[To:account_id]` メンションする。
+- 担当者メンション用の環境変数例:
+  - `CHATWORK_ACCOUNT_ID_BY_HOST={"morita@example.com":"123456","matsutani@example.com":"234567"}`
+  - `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}`
 
 ---
 
