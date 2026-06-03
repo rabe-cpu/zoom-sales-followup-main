@@ -95,8 +95,9 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 
 10. Final Output
    - Use `sales-followup-word-output` when Word/docx output is requested.
-   - メール本文、ソーシャルスタイル別全文メール案、商談フィードバック要素、最終確認、残リスクを出す。
+   - メール本文、ソーシャルスタイル別全文メール案、商談フィードバック要素、最終確認を出す。
    - 営業口調抽出、季語調査、動画選定理由は内部根拠として使い、docxの独立セクションには出さない。
+   - 評価ログと残リスクはdocxに出さない。
    - 最終回答に `Skill Used Check` を含め、使った全Skillを列挙する。
 
 ## Non-Negotiables

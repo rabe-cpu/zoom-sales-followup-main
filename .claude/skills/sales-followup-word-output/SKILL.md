@@ -23,6 +23,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 社内確認用のソーシャルスタイル別全文メール案
    - 最終確認
    - 運用ルール
+   - 評価ログと残リスクはWord/docxに出さない。
 
 3. Highlight Fields
    - 営業が最後に書く箇所を黄色にする。

@@ -185,12 +185,6 @@ def build_document(data: dict[str, Any], output: Path) -> None:
     if final_check:
         add_key_values(document, "最終確認", final_check, GREEN)
 
-    risks = data.get("remaining_risk", []) if include_internal else []
-    if risks:
-        document.add_heading("残リスク", level=1)
-        for risk in risks:
-            document.add_paragraph(str(risk), style="List Bullet")
-
     output.parent.mkdir(parents=True, exist_ok=True)
     document.save(output)
 
@@ -220,7 +214,6 @@ def sample_data() -> dict[str, Any]:
             "リスク注意": "成果保証や断定表現を避けます。",
         },
         "final_check": {"顧客送付用本文": "確認済み", "黄色箇所": "確認済み"},
-        "remaining_risk": ["これはスクリプト動作確認用サンプルです。"],
     }
 
 

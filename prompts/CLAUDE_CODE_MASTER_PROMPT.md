@@ -70,10 +70,10 @@
 2. ソーシャルスタイル別全文メール案と商談フィードバック（社内確認用）
 3. ペルソナ評価
 4. 最終確認
-5. 残リスク
-6. Skill Used Check
+5. Skill Used Check
 
 営業口調抽出、季語調査結果、参考動画選定理由は内部根拠として使い、docxの独立セクションには出さないでください。
+評価ログと残リスクはdocxに出さないでください。
 
 Skill Used Checkには、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。評価エージェント別スコアは入れないでください。
 ```

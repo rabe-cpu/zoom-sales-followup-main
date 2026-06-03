@@ -66,10 +66,11 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - 顧客送付用docxと社内確認用docxを分ける。
    - 本文に `[黄色:...]`、`[/黄色]`、社内ログ見出しを出さない。
    - 営業口調抽出、季語調査結果、参考動画選定理由は内部根拠として使い、docxの独立セクションには出さない。
+   - 評価ログと残リスクは、顧客送付用docxにも社内確認用docxにも出さない。
    - `参考動画URL：〇〇〇` のままなら完成扱いにしない。
    - Word/docx指定がある場合は `scripts/create_followup_docx.py` を使える。
    - 黄色欄は営業が最後に触る箇所だけにする。原則は冒頭の確認差し替え欄と `ZOOM URL：〇〇〇`。
-- メール本文、4スタイル別全文メール案、商談フィードバック要素、最終確認、残リスクを同じdocxまたは別docxに残す。評価の詳細記録は出さない。
+- メール本文、4スタイル別全文メール案、商談フィードバック要素、最終確認を同じdocxまたは別docxに残す。評価の詳細記録と残リスクは出さない。
 
 ## Output Checklist
 
@@ -81,7 +82,6 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - 評価エージェント確認結果（点数なし）
 - Final-Whole-Check
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由
-- 残リスク
 
 ## When Not To Use
 
