@@ -58,6 +58,26 @@ def stringify(value: Any) -> str:
     return "" if value is None else str(value)
 
 
+def add_structured_value(document: Document, value: Any, level: int = 2) -> None:
+    if value is None or value == "":
+        return
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if item is None or item == "" or item == [] or item == {}:
+                continue
+            document.add_heading(str(key), level=min(level, 4))
+            add_structured_value(document, item, level + 1)
+        return
+    if isinstance(value, list):
+        for item in value:
+            if isinstance(item, dict):
+                add_structured_value(document, item, level)
+            else:
+                document.add_paragraph(str(item), style="List Bullet")
+        return
+    add_body(document, str(value).splitlines())
+
+
 def add_key_values(document: Document, title: str, values: dict[str, Any], fill: str = BLUE) -> None:
     if not values:
         return
@@ -69,15 +89,7 @@ def add_text_section(document: Document, title: str, value: Any) -> None:
     if not value:
         return
     document.add_heading(title, level=1)
-    if isinstance(value, dict):
-        for key, item in value.items():
-            document.add_heading(str(key), level=2)
-            add_body(document, stringify(item).splitlines())
-        return
-    if isinstance(value, list):
-        add_body(document, [stringify(item) for item in value])
-        return
-    add_body(document, stringify(value).splitlines())
+    add_structured_value(document, value, level=2)
 
 
 def add_highlighted_run(paragraph, text: str) -> None:
@@ -210,8 +222,20 @@ def sample_data() -> dict[str, Any]:
             "Expressive": "件名から署名まで含む全文メール案を入れます。",
         },
         "deal_feedback": {
-            "次の一手": "送信後の確認観点を入れます。",
-            "リスク注意": "成果保証や断定表現を避けます。",
+            "商談フェーズ": {
+                "currentPhase": "不安の特定",
+                "currentGoal": "判断材料を整理し、次回質問につなげる",
+                "mustHearBeforeProposal": ["作業時間", "予算感", "意思決定者"],
+            },
+            "次の一手": {
+                "nextBestAction": "送信後、資料確認の有無と不明点を確認する。",
+                "hearingQuestions": ["一番気になるのは費用面ですか、作業面ですか？"],
+                "recommendedAnswer": "金額だけで判断するとズレやすいので、作業時間と目的に合うかを一緒に確認させてください。",
+            },
+            "ベンチマーク営業再現": {
+                "script": "そこは皆さん一番気にされます。まず状況を確認した上で、合うかどうかを一緒に見ていきましょう。",
+                "delivery": "急かさず、短く区切って伝える。",
+            },
         },
         "final_check": {"顧客送付用本文": "確認済み", "黄色箇所": "確認済み"},
     }

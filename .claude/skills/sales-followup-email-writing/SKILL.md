@@ -54,13 +54,28 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 営業チェック箇所
    - 使用した根拠
 
-7. Social Style Variants For Internal Review
+7. Deal Feedback Extraction For Internal Review
+   - 顧客送付用メールを書く前に、`sales-analysis-app-openai-next` のフィードバック思想に沿って、内部で商談フィードバックを整理する。
+   - `stageStrategy`: currentGoal / keepUntilLater / mustHearBeforeProposal / planDecisionPath
+   - `phasePlaybooks`: 今回該当する商談フェーズ、目的、顧客シグナル、次回質問、返答、次フェーズへのつなぎ
+   - `customerSignals`: 温度感、懸念、購入動機、決裁観点、価格反応、家族相談、比較検討
+   - `temperature`: 高 / 中 / 低 と理由。数値スコアは出さない。
+   - `nextBestAction`: 送信後または次回接点で営業担当が取る具体行動
+   - `hearingQuestions`: 次に聞くべき質問を優先順で最大3つ
+   - `recommendedAnswer`: 顧客から返信・質問が来た時にそのまま使える2〜6文の返答
+   - `benchmarkCoach`: script / whyItWorks / benchmarkPattern / delivery
+   - `contextBridge`: sourceMoment / insight / recommendedTalk / evidence
+   - `customerAttributePlaybooks`: 慎重・分析型、価格重視、成果重視、初心者、経験者、家族相談あり、即決寄り、比較検討中などから今回使えそうなものを1〜2個
+   - この抽出結果は顧客送付用本文に混ぜず、社内確認用の「商談フィードバック要素」にだけ入れる。
+   - 評価ログ、残リスク、営業口調抽出、季語調査結果、参考動画選定理由としては出さない。
+
+8. Social Style Variants For Internal Review
    - 顧客送付用メールとは別に、社内確認用として4スタイル別メール案を作る。
    - 顧客の発話からスタイルを判定しない。
    - 同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換する。
    - 各スタイルに、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる。差し替え段落案だけで終わらせない。
-   - 各スタイルに、この文面が効く理由、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモを入れる。
-   - 商談フィードバック要素（cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / contextBridge / riskAlerts）を社内確認用に反映する。
+   - 各スタイルに、この文面が効く理由、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモを入れる。
+   - 商談フィードバック要素（stageStrategy / phasePlaybooks / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
    - スタイル別案と営業フィードバックは社内確認用だけに入れ、顧客送付用本文には混ぜない。
 
 ## Non-Negotiables
@@ -84,4 +99,4 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 動画URLの前後に、選定理由と見る観点が短く入っている。
 - 営業が最後に触る箇所だけが黄色候補として明記されている。
 - 金額表記がアラビア数字に統一されている。
-- 社内確認用に4スタイル別の全文メール案と営業フィードバックがあり、顧客送付用本文に混ざっていない。
+- 社内確認用に4スタイル別の全文メール案、商談フェーズ別フィードバック、ベンチマーク営業台本、属性別対応があり、顧客送付用本文に混ざっていない。

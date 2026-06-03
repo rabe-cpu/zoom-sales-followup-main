@@ -33,8 +33,10 @@
     `https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform`
 11. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
 12. 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換した全文メール案と営業フィードバックを入れてください。各スタイルは件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含め、差し替え段落だけで終わらせないでください。顧客送付用本文には混ぜないでください。
-13. 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を入れてください。
-14. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
+13. メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出してください。必須項目は stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks です。
+14. 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を入れてください。
+15. 価格・費用質問への返し方では、価格は隠さず、ただし価格だけで終わらせず、目的・作業時間・予算感・導入時期・意思決定者・不安の種類を確認してからプラン判断へ戻してください。
+16. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
 
 評価:
 以下の評価エージェントを立てて、点数ではなく `OK / 要修正` で評価してください。評価エージェント別スコアは出力しないでください。
@@ -68,6 +70,7 @@
 出力:
 1. 営業後送付メール
 2. ソーシャルスタイル別全文メール案と商談フィードバック（社内確認用）
+   - 商談フィードバックには stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める
 3. ペルソナ評価
 4. 最終確認
 5. Skill Used Check

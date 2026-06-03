@@ -21,6 +21,7 @@ Claude Codeをこのフォルダで起動したら、以下を必ず守ってく
 - `かと`、`かなと`、`できればと`、`見ていただけると` は、営業担当の実発話にある場合だけ使う。発話にない場合はゼロ。
 - 季語・時候の挨拶は毎回調査する。過去の表現を使い回さない。
 - 参考動画は必ず `knowledge/video_catalog.md` を優先して読み、顧客の属性・不安・判断軸に近い動画を選ぶ。
+- メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出する。必須項目は stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
 - 出力前に評価エージェントを通す。
 - サブエージェントが使える場合は、Source/Tone/Human/Risk/Opsを独立評価として分け、最後にFinal-Whole-Checkを実行する。使えない場合も同一AI内で6ロールに分け、`Orchestration log` に理由を残す。
 - 顧客送付用本文に `[黄色`、`[/黄色]`、`参考動画URL：〇〇〇`、社内確認情報、残リスク、営業口調抽出を残さない。
@@ -68,7 +69,8 @@ Claude Code内では、必要に応じて以下を確認する。
 6. `sales-followup-email-evaluation` で評価・改善・再評価する。評価エージェント別スコアは出さず、OK/要修正と修正内容だけ残す
 7. `sales-followup-human-docx` のOrchestrationに従い、サブエージェントまたは同一AI内ロールの実行ログを残す
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる
-   - 各スタイルに商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意）を入れる
+   - 社内確認用の商談フィードバック要素には、stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を入れる
+   - 各スタイルに商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意）を入れる
 8. 出力失敗パターンをチェックし、顧客送付用と社内確認用を分ける
 9. `Final-Whole-Check Agent` で最終確認する
 10. Word指定がある場合は `sales-followup-word-output` で出力する

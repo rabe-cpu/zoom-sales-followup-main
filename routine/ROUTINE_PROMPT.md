@@ -60,14 +60,25 @@ cd scripts && python fetch_vtt.py
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
    - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別の全文メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
+   - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出する。
+     - `stageStrategy`: currentGoal / keepUntilLater / mustHearBeforeProposal / planDecisionPath
+     - `phasePlaybooks`: 今回該当する商談フェーズ、目的、顧客シグナル、質問、返答、次フェーズへのつなぎ
+     - `customerSignals`: 温度感、懸念、購入動機、決裁観点、価格反応、家族相談、比較検討
+     - `temperature`: 高 / 中 / 低 と理由。数値スコアは出さない
+     - `nextBestAction`: 送信後または次回接点で営業担当が取る具体行動
+     - `hearingQuestions`: 次に聞くべき質問を優先順で最大3つ
+     - `recommendedAnswer`: 顧客から返信・質問が来た時にそのまま使える返答
+     - `benchmarkCoach`: トップ営業がそのまま話す台本、効く理由、型、伝え方
+     - `contextBridge`: 商談内のどの発言・不安・判断軸からつなげるか
+     - `customerAttributePlaybooks`: 慎重・分析型、価格重視、成果重視、初心者、経験者、家族相談あり、即決寄り、比較検討中などから今回使えそうなものを1〜2個
    - 4スタイル別メール案は、Driver / Driving、Analytical、Amiable、Expressive のすべてについて、件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含む全文にする。差し替え段落だけで終わらせない。
-   - 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を入れる。
+   - 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を入れる。
    - 季語は送付日で毎回調査。6エージェント評価で全観点が合格になるまで改善。点数や6ロール別スコアは出力しない。
    - 最後に Final-Whole-Check Agent で横断確認。
    - 3回改善しても合格しない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
 4. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
-   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。評価ログと残リスクは入れない）
+   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。商談フィードバック要素には stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める。評価ログと残リスクは入れない）
 5. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新

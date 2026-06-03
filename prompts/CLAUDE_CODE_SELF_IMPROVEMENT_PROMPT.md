@@ -36,8 +36,10 @@ Step 2. 初稿生成
 - 発話にない余白表現は使わないでください。
 - `sales-seasonal-greeting-research` で季語は毎回調査してください。
 - `sales-followup-email-writing` でメール初稿を作ってください。
+- メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出してください。必須項目は stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks です。
 - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作ってください。差し替え段落だけで終わらせないでください。
-- 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れてください。
+- 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を営業フィードバックとして入れてください。
+- 価格・費用質問への返し方では、価格は隠さず、ただし価格だけで終わらせず、目的・作業時間・予算感・導入時期・意思決定者・不安の種類を確認してからプラン判断へ戻してください。
 
 Step 3. 評価エージェントを立てる
 `sales-followup-email-evaluation` を使い、以下の6つの評価エージェントでレビューしてください。
@@ -82,6 +84,7 @@ Final-Whole-Check Agentで以下を横断確認してください。
 出力:
 1. 最終メール本文
 2. ソーシャルスタイル別全文メール案と商談フィードバック（社内確認用）
+   - 商談フィードバックには stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める
 3. 最終確認
 4. Skill Used Check
 

@@ -154,7 +154,49 @@
 
 `sales-analysis-app-openai-next` 側の商談フィードバック思想を、社内確認用に必ず反映する。
 
-各スタイルの営業フィードバックには、可能な範囲で以下を入れる。
+4スタイル別全文メール案を作る前に、まず以下の **商談フィードバック抽出** を内部で作る。
+この抽出結果は顧客送付用本文には入れない。社内確認用では「商談フィードバック要素」として、営業担当が次回商談や返信で使える形に整えて出す。
+
+```text
+## 商談フィードバック要素
+
+### 商談フェーズ
+- currentPhase: 冒頭・目的合わせ / 現状確認 / 課題深掘り / 提案 / 質疑応答 / 反論処理 / テストクロージング / クロージング / 次回合意 のどれに近いか
+- currentGoal: このメールまたは次回接点で達成すべきこと
+- keepUntilLater: 今は言い切らず、次回以降に回す話題
+- mustHearBeforeProposal: 提案・プラン判断前に必ず聞くこと
+- planDecisionPath: どの順番で判断材料を揃えるか
+
+### 顧客シグナル
+- customerSignals: 温度感、懸念、購入動機、決裁観点、家族相談、比較検討、価格反応など
+- temperature: 高 / 中 / 低 と、その理由。ただし数値スコアは出さない
+
+### 次の一手
+- nextBestAction: 送信後または次回接点で営業担当が取る行動
+- hearingQuestions: 次に聞くべき質問を優先順で最大3つ
+- recommendedAnswer: 顧客から返信・質問が来たときにそのまま使える自然な返答
+
+### ベンチマーク営業再現
+- benchmarkTalk: トップ営業なら最初に置く短い一言
+- benchmarkCoach.script: トップ営業がそのまま話す2〜6文の台本
+- benchmarkCoach.whyItWorks: なぜ効くか
+- benchmarkCoach.benchmarkPattern: 使った型
+- benchmarkCoach.delivery: 間、声色、資料提示、文章量
+
+### 文脈接続
+- contextBridge.sourceMoment: 商談内のどの発言・不安・判断軸を根拠にしているか
+- contextBridge.insight: その文脈が今効く理由
+- contextBridge.recommendedTalk: 営業担当がそのまま使える接続トーク
+
+### 属性別対応
+- customerAttributePlaybooks: 慎重・分析型、価格重視、成果重視、初心者、経験者、家族相談あり、即決寄り、比較検討中など、今回使えそうな属性を1〜2個だけ選ぶ
+- effectiveQuestions: その属性に効く質問
+- effectiveReplies: その属性に効く返答
+- avoidedTalk: その属性で避ける言い方
+- delivery: 伝え方
+```
+
+各スタイルの営業フィードバックには、上記の抽出結果を踏まえ、可能な範囲で以下を入れる。
 
 - `cues`: 商談内で見えた顧客反応シグナル
 - `decisionLogic`: そのスタイルで何を判断材料にしやすいか
@@ -165,12 +207,17 @@
 - `delivery`: 話速、間、資料提示、文章量、メールの温度感
 - `nextBestAction`: 送信後に営業担当が取る次の一手
 - `benchmarkTalk`: トップ営業ならどう言うかの台詞
+- `benchmarkCoach`: トップ営業の台本、効く理由、型、伝え方
+- `stageStrategy`: 今のフェーズで達成すべきこと、後回しにする話題、提案前に聞くこと、プラン判断の道筋
 - `contextBridge`: 商談内のどの話題・懸念・判断軸からこの文面へ接続したか
+- `customerSignals`: 温度感、懸念、購入動機、決裁観点のシグナル
+- `customerAttributePlaybooks`: 今回使えそうな顧客属性別の質問・返答・避ける言い方
 - `riskAlerts`: 成果保証、価格断定、信販・審査・個人情報などで避けるべき注意点
 
 価格・費用質問への返し方では、価格だけを即答して終わらせない。価格は隠さないが、目的、作業時間、予算感、導入時期、意思決定者、不安の種類を確認し、合うプランや判断条件へ戻す。
 
 商談フィードバック要素は社内確認用の営業メモであり、顧客送付用本文には入れない。
+評価ログや残リスクとしては出さない。あくまで営業が次に使うための実践メモとして書く。
 
 ## 評価観点
 
@@ -180,7 +227,7 @@
 - 商談にない事実を足していないか
 - 4スタイルすべてで全文メール案になっているか。差し替え段落だけなら不合格
 - 4スタイルの違いが、語尾だけではなく判断軸・情報量・次アクション・価格質問対応・伝え方メモに出ているか
-- 商談フィードバック要素（cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / contextBridge）が営業メモとして反映されているか
+- 商談フィードバック要素（stageStrategy / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks）が営業メモとして反映されているか
 - 顧客送付用本文に社内向けのスタイル分析が混ざっていないか
 - Driverは短く具体的か
 - Analyticalは根拠と条件が整理されているか

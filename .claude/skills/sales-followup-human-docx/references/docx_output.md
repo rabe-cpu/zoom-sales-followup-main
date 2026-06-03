@@ -74,3 +74,44 @@
   "final_check": {"顧客送付用本文": "確認済み", "黄色箇所": "確認済み"}
 }
 ```
+
+`deal_feedback` は入れ子構造を許容する。推奨キー:
+
+```json
+{
+  "deal_feedback": {
+    "商談フェーズ": {
+      "currentPhase": "不安の特定",
+      "currentGoal": "判断材料を整理し、次回接点につなげる",
+      "keepUntilLater": ["最終プラン断定"],
+      "mustHearBeforeProposal": ["作業時間", "予算感", "意思決定者"],
+      "planDecisionPath": "目的、作業時間、予算感を確認してから合うプランを整理する"
+    },
+    "顧客シグナル": {
+      "customerSignals": ["価格への反応", "家族相談", "比較検討"],
+      "temperature": "中: 判断材料を求めているが、即決ではない"
+    },
+    "次の一手": {
+      "nextBestAction": "資料確認後の不明点を回収する",
+      "hearingQuestions": ["一番気になるのは費用面ですか、作業面ですか？"],
+      "recommendedAnswer": "金額だけで判断するとズレやすいので、作業時間と目的に合うかを一緒に確認させてください。"
+    },
+    "ベンチマーク営業再現": {
+      "script": "トップ営業ならそのまま話す台本",
+      "whyItWorks": "効く理由",
+      "benchmarkPattern": "使った型",
+      "delivery": "間、声色、資料提示"
+    },
+    "属性別対応": {
+      "慎重・分析型": {
+        "effectiveQuestions": ["判断材料として数字、作業量、サポートのどれを見たいですか？"],
+        "effectiveReplies": ["メリットだけでなく、初期の作業負荷も含めて整理します。"],
+        "avoidedTalk": ["大丈夫です、だけで押し切る"],
+        "delivery": "根拠を分けて短く説明する"
+      }
+    }
+  }
+}
+```
+
+評価ログ、残リスク、営業口調抽出、季語調査結果、参考動画選定理由は `deal_feedback` に入れない。

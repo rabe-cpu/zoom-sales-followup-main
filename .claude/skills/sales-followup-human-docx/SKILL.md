@@ -47,8 +47,9 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - 冒頭に、顧客と実際に話した内容を2から4文入れる。
    - 雛形の流れを尊重する。
    - 参考動画は内部で選定し、docxには候補動画一覧や選定理由の独立セクションを出さない。
+   - メール本文を書く前に、商談フィードバック要素を内部抽出する。必須項目は stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作る。差し替え段落だけで終わらせない。
-   - 各スタイルの後ろに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れる。
+   - 各スタイルの後ろに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を営業フィードバックとして入れる。
    - 参考動画は knowledge/video_catalog.md から選び、メール本文内では自然な案内文 → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く。
    -参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
    -ZOOMが必要な場合は ZOOM URL：〇〇〇 を残す。
@@ -79,6 +80,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - 作成したWord/docxのパス
 - メール本文
 - 黄色チェック箇所
+- 商談フィードバック要素（stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）
 - 評価エージェント確認結果（点数なし）
 - Final-Whole-Check
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由

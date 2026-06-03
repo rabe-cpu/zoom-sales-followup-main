@@ -75,9 +75,10 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
    - 黄色箇所は営業が最後に触るべき箇所だけにする。
    - ZOOMが必要なら `ZOOM URL：〇〇〇` を残す。
    - 顧客送付用メールは完成稿1通にする。
+   - メール本文を書く前に、商談フィードバック要素を内部抽出する。必須項目は stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
    - 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換した全文メール案と営業フィードバックを入れる。
    - 各スタイルは、件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含む全文にする。差し替え段落だけで終わらせない。
-   - 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れる。
+   - 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を営業フィードバックとして入れる。
 
 8. Evaluation Agents
    - Use `sales-followup-email-evaluation`.

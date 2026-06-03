@@ -20,9 +20,10 @@
 13. 顧客送付用本文に `[黄色]`、`[/黄色]`、`参考動画URL：〇〇〇`、社内確認情報、残リスクが残っていないか
 14. 顧客送付用docxと社内確認用docxを分けたか
 15. 社内確認用に4スタイル別の全文メール案があるか（Driver / Driving、Analytical、Amiable、Expressiveすべて、件名から署名・固定資料URL・固定フォームURLまで）
-16. 社内確認用に商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意）があるか
-17. Final-Whole-Check AgentがOKか
-18. Hookがある場合、Stop Hookの完了条件を満たしているか
+16. 社内確認用に商談フィードバック要素（stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）があるか
+17. 4スタイル別の営業フィードバックに、顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意があるか
+18. Final-Whole-Check AgentがOKか
+19. Hookがある場合、Stop Hookの完了条件を満たしているか
 
 最終回答には必ず以下を入れてください。
 
