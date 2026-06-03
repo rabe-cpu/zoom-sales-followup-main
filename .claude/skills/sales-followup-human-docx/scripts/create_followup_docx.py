@@ -55,7 +55,7 @@ KEY_LABELS = {
     "customerSignals": "顧客シグナル",
     "topSalesMove": "トップ営業の動き",
     "copyTalk": "そのまま使える台詞",
-    "whyItWorks": "効く理由",
+    "whyItWorks": "判断が進む背景",
     "ngExamples": "避ける言い方",
     "practice": "次回実践",
     "currentPhase": "現在フェーズ",

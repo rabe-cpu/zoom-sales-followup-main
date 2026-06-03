@@ -82,7 +82,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - `nextBestAction`: 送信後または次回接点で営業担当が取る具体行動
    - `hearingQuestions`: 次に聞くべき質問を優先順で最大3つ
    - `recommendedAnswer`: 顧客から返信・質問が来た時にそのまま使える2〜6文の返答
-   - `benchmarkCoach`: script / whyItWorks / benchmarkPattern / delivery
+   - `benchmarkCoach`: script / benchmarkPattern / delivery
    - `contextBridge`: sourceMoment / insight / recommendedTalk / evidence
    - `customerAttributePlaybooks`: 慎重・分析型、価格重視、成果重視、初心者、経験者、家族相談あり、即決寄り、比較検討中などから今回使えそうなものを1〜2個
    - この抽出結果は顧客送付用本文に混ぜず、社内確認用の「商談フィードバック要素」にだけ入れる。
@@ -96,10 +96,11 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 顧客の発話からスタイルを判定しない。
    - 同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換する。
    - 各スタイルに、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる。差し替え段落案だけで終わらせない。
-   - 各スタイルに、この文面が効く理由、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモを入れる。
+   - 各スタイルに、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモを入れる。
+   - 「この文面が効く理由」は見出し・本文とも独立項目として出さない。理由説明は必要な場合だけ「営業担当が選ぶ目安」「伝え方メモ」「文脈接続メモ」に短く統合する。
    - 4スタイルの違いは語尾や文量だけで出さない。Driverは結論・主導権・次アクション、Analyticalは根拠・条件・例外、Amiableは安心・合意形成・相談導線、Expressiveは未来像・承認・ストーリーで分ける。
    - 各スタイルに、価格質問対応、不安が出た時の戻し方、クロージング、ストレス反応へのリカバリーを入れる。
-   - 商談フィードバック要素（overallSummary / customerInsights / cognitiveBias / expectationGap / strengths / improvementPoints / coachingCards / winningPatterns / stageStrategy / phasePlaybooks / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
+   - 商談フィードバック要素（overallSummary / customerInsights / cognitiveBias / expectationGap / strengths / improvementPoints / coachingCards / winningPatterns / stageStrategy / phasePlaybooks / customerSignals / temperature / cues / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
    - スタイル別案と営業フィードバックは社内確認用だけに入れ、顧客送付用本文には混ぜない。
 
 ## Non-Negotiables
