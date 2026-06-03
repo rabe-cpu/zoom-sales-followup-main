@@ -80,6 +80,8 @@ cd scripts && python fetch_vtt.py
      - `benchmarkCoach`: トップ営業がそのまま話す台本、効く理由、型、伝え方
      - `contextBridge`: 商談内のどの発言・不安・判断軸からつなげるか
      - `customerAttributePlaybooks`: 慎重・分析型、価格重視、成果重視、初心者、経験者、家族相談あり、即決寄り、比較検討中などから今回使えそうなものを1〜2個
+   - 社内確認用docx/MDに出す商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しない。日本語見出しと自然文に変換する。
+   - フィードバックはトップ営業マンが営業担当に目の前で指導している形にする。箇条書きの羅列ではなく、「この商談はこう見る」「次回はこう聞く」「この場面ではこう返す」という実践文を中心にする。
    - 4スタイル別メール案は、Driver / Driving、Analytical、Amiable、Expressive のすべてについて、件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含む全文にする。差し替え段落だけで終わらせない。
    - 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を入れる。
    - 季語は送付日で毎回調査。6エージェント評価で全観点が合格になるまで改善。点数や6ロール別スコアは出力しない。
@@ -87,7 +89,7 @@ cd scripts && python fetch_vtt.py
    - 3回改善しても合格しない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
 5. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
-   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。商談フィードバック要素には 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める。評価ログと残リスクは入れない）
+   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。商談フィードバック要素には 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める。英語キーや `name=` 形式は出さず、トップ営業の指導文にする。評価ログと残リスクは入れない）
 6. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新

@@ -51,6 +51,8 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - 鈴江ベンチマークは顧客事実の根拠ではない。顧客が話していない背景、金額、感情、成果期待を足さない。
    - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しない。
    - メール本文を書く前に、商談フィードバック要素を内部抽出する。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
+   - 社内確認用docxの商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しない。日本語見出しと自然文に変換する。
+   - フィードバックは、トップ営業マンが営業担当に目の前で指導している形にする。箇条書きの羅列ではなく、見立て、次の聞き方、返答案、NGの理由を文章でつなぐ。
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作る。差し替え段落だけで終わらせない。
    - 各スタイルの後ろに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を営業フィードバックとして入れる。
    - 参考動画は knowledge/video_catalog.md から選び、メール本文内では自然な案内文 → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く。
@@ -84,6 +86,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - メール本文
 - 黄色チェック箇所
 - 商談フィードバック要素（総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）
+- 英語キーや `name=` 形式が出ておらず、トップ営業が指導している自然文になっていること
 - 評価エージェント確認結果（点数なし）
 - Final-Whole-Check
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由

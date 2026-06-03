@@ -40,6 +40,8 @@ Step 2. 初稿生成
 - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず読み、文字起こしベースの営業型として、商談フィードバック要素の `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映してください。顧客が話していない事実を足す根拠にはしないでください。
 - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しないでください。
 - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出してください。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks です。
+- 社内確認用docx/MDに出す商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しないでください。日本語見出しと自然文に変換してください。
+- フィードバックはトップ営業マンが営業担当に目の前で指導している形にしてください。箇条書きの羅列ではなく、「この商談はこう見る」「次回はこう聞く」「この場面ではこう返す」という実践文を中心にしてください。
 - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作ってください。差し替え段落だけで終わらせないでください。
 - 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意を営業フィードバックとして入れてください。
 - 価格・費用質問への返し方では、価格は隠さず、ただし価格だけで終わらせず、目的・作業時間・予算感・導入時期・意思決定者・不安の種類を確認してからプラン判断へ戻してください。
@@ -94,6 +96,7 @@ Final-Whole-Check Agentで以下を横断確認してください。
 営業口調抽出、季語調査結果、参考動画選定理由は内部根拠として使い、docxや最終回答の独立セクションには出さないでください。
 評価ログと残リスクはdocxに出さないでください。
 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューはdocxにも最終出力にも出さないでください。
+英語キーや `name=` 形式はdocxにも最終出力にも出さないでください。
 
 Skill Used Checkには、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。評価エージェント別スコアは入れないでください。
 ```

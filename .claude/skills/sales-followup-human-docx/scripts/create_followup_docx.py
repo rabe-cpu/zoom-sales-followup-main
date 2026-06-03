@@ -22,6 +22,76 @@ INLINE_YELLOW_WITH_LABEL = re.compile(r"\[黄色:([^\]]*)\]([^\[]*?)\[/黄色\]"
 INLINE_YELLOW_NO_LABEL_CLOSE = re.compile(r"\[黄色:([^\[]*?)\[/黄色\]")
 BLOCK_YELLOW_START = re.compile(r"^\[黄色:[^\]]+\]$")
 
+KEY_LABELS = {
+    "overallSummary": "総合所見",
+    "meetingOutcome": "今の着地点",
+    "benchmarkGapAnalysis": "トップ営業との差分",
+    "keyDifference": "決定的な差分",
+    "missingActions": "次に補う動き",
+    "phase": "場面",
+    "missing": "不足していた動き",
+    "impact": "起きやすい影響",
+    "hiddenNeeds": "表に出ていない本音",
+    "unspokenIssues": "言い切れていない不安",
+    "competingServices": "比較対象",
+    "decisionCriteria": "判断基準",
+    "buyingTemperature": "温度感",
+    "name": "テーマ",
+    "description": "見立て",
+    "counterMeasure": "次の打ち手",
+    "topic": "論点",
+    "gap": "ズレ",
+    "solution": "整え方",
+    "item": "観点",
+    "detail": "指導メモ",
+    "theme": "テーマ",
+    "scene": "場面",
+    "insight": "トップ営業の見立て",
+    "issue": "詰まりやすい点",
+    "strategy": "次の打ち手",
+    "script": "そのまま使える台詞",
+    "outcome": "狙う着地",
+    "useCase": "使う場面",
+    "customerSignals": "顧客シグナル",
+    "topSalesMove": "トップ営業の動き",
+    "copyTalk": "そのまま使える台詞",
+    "whyItWorks": "効く理由",
+    "ngExamples": "避ける言い方",
+    "practice": "次回実践",
+    "currentPhase": "現在フェーズ",
+    "currentGoal": "この接点の目的",
+    "keepUntilLater": "今は言い切らないこと",
+    "mustHearBeforeProposal": "次に必ず聞くこと",
+    "planDecisionPath": "判断材料の並べ方",
+    "nextBestAction": "次の一手",
+    "hearingQuestions": "次に聞く質問",
+    "recommendedAnswer": "返信が来た時の返答案",
+    "benchmarkPattern": "使った型",
+    "delivery": "伝え方",
+    "sourceMoment": "根拠になった商談場面",
+    "recommendedTalk": "接続トーク",
+    "effectiveQuestions": "効く質問",
+    "effectiveReplies": "効く返答",
+    "avoidedTalk": "避ける言い方",
+}
+
+FEEDBACK_TITLES = {
+    "総合概要",
+    "顧客インサイト",
+    "認知バイアス",
+    "期待値のズレ",
+    "良かった点",
+    "改善ポイント",
+    "AIコーチングカード",
+    "再現する勝ち筋",
+    "商談フェーズ",
+    "顧客シグナル",
+    "次の一手",
+    "ベンチマーク営業再現",
+    "文脈接続",
+    "属性別対応",
+}
+
 
 def shade_cell(cell, fill: str) -> None:
     tc_pr = cell._tc.get_or_add_tcPr()
@@ -58,6 +128,68 @@ def stringify(value: Any) -> str:
     return "" if value is None else str(value)
 
 
+def label_for(key: Any) -> str:
+    return KEY_LABELS.get(str(key), str(key))
+
+
+def compact_sentence(value: Any) -> str:
+    if isinstance(value, list):
+        return "、".join(compact_sentence(item) for item in value if item not in (None, "", [], {}))
+    if isinstance(value, dict):
+        parts = []
+        for key, item in value.items():
+            if item in (None, "", [], {}):
+                continue
+            parts.append(f"{label_for(key)}は{compact_sentence(item)}")
+        return "。".join(parts)
+    return str(value).strip()
+
+
+def add_labeled_paragraph(document: Document, label: str, text: Any) -> None:
+    if text in (None, "", [], {}):
+        return
+    paragraph = document.add_paragraph()
+    run = paragraph.add_run(f"{label}: ")
+    run.bold = True
+    paragraph.add_run(compact_sentence(text))
+
+
+def item_title(item: dict[str, Any], fallback: str) -> str:
+    for key in ("title", "name", "theme", "item", "topic", "勝ち筋名"):
+        if item.get(key):
+            return str(item[key])
+    return fallback
+
+
+def add_coaching_intro(document: Document, text: str) -> None:
+    paragraph = document.add_paragraph()
+    run = paragraph.add_run("トップ営業の指導: ")
+    run.bold = True
+    run.font.color.rgb = RGBColor(0x1F, 0x4E, 0x79)
+    paragraph.add_run(text)
+
+
+def add_feedback_dict(document: Document, value: dict[str, Any], level: int = 2) -> None:
+    for index, (key, item) in enumerate(value.items(), start=1):
+        if item in (None, "", [], {}):
+            continue
+        document.add_heading(label_for(key), level=min(level, 4))
+        if isinstance(item, dict):
+            prose = compact_sentence(item)
+            if prose:
+                add_coaching_intro(document, f"ここは項目を読むだけではなく、営業担当が次にどう動くかまで落とし込みます。{prose}。")
+        elif isinstance(item, list):
+            for list_index, list_item in enumerate(item, start=1):
+                if isinstance(list_item, dict):
+                    title = item_title(list_item, f"{label_for(key)} {list_index}")
+                    document.add_heading(title, level=min(level + 1, 4))
+                    add_coaching_intro(document, f"この場面では、まず顧客の反応を受け止めてから判断軸へ戻します。{compact_sentence(list_item)}。")
+                else:
+                    add_coaching_intro(document, str(list_item))
+        else:
+            add_coaching_intro(document, str(item))
+
+
 def add_structured_value(document: Document, value: Any, level: int = 2) -> None:
     if value is None or value == "":
         return
@@ -65,7 +197,7 @@ def add_structured_value(document: Document, value: Any, level: int = 2) -> None
         for key, item in value.items():
             if item is None or item == "" or item == [] or item == {}:
                 continue
-            document.add_heading(str(key), level=min(level, 4))
+            document.add_heading(label_for(key), level=min(level, 4))
             add_structured_value(document, item, level + 1)
         return
     if isinstance(value, list):
@@ -89,7 +221,44 @@ def add_text_section(document: Document, title: str, value: Any) -> None:
     if not value:
         return
     document.add_heading(title, level=1)
+    if title.startswith("商談フィードバック") and isinstance(value, dict):
+        add_deal_feedback(document, value)
+        return
     add_structured_value(document, value, level=2)
+
+
+def add_deal_feedback(document: Document, feedback: dict[str, Any]) -> None:
+    document.add_paragraph(
+        "このフィードバックは、評価ログではなく、営業担当が次回接点でそのまま使える指導メモとして読む。"
+        "内部キーやスコアではなく、トップ営業が横で助言する口調で整理する。"
+    )
+    for section, value in feedback.items():
+        if value in (None, "", [], {}):
+            continue
+        document.add_heading(label_for(section), level=2)
+        if section in FEEDBACK_TITLES and isinstance(value, dict):
+            if section == "総合概要":
+                summary = value.get("overallSummary") or value.get("総合所見")
+                outcome = value.get("meetingOutcome") or value.get("今の着地点")
+                gap = value.get("benchmarkGapAnalysis") or value.get("トップ営業との差分")
+                if summary:
+                    add_coaching_intro(document, f"まず、この商談はこう見ます。{summary}")
+                if outcome:
+                    add_coaching_intro(document, f"今の着地点は、{outcome}です。ここを前提に、次の接点では無理に詰めず、判断材料を整える動きに寄せます。")
+                if gap:
+                    add_coaching_intro(document, f"トップ営業との差分はここです。{compact_sentence(gap)}。次回はこの不足分を先に埋めてください。")
+                continue
+            add_feedback_dict(document, value, level=3)
+        elif isinstance(value, list):
+            for index, item in enumerate(value, start=1):
+                if isinstance(item, dict):
+                    title = item_title(item, f"{section} {index}")
+                    document.add_heading(title, level=3)
+                    add_coaching_intro(document, f"ここで見るべきポイントは、{compact_sentence(item)}。次回はこの見立てをそのまま質問と返答に変えてください。")
+                else:
+                    add_coaching_intro(document, str(item))
+        else:
+            add_coaching_intro(document, str(value))
 
 
 def add_highlighted_run(paragraph, text: str) -> None:

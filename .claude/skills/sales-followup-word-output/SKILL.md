@@ -32,6 +32,8 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 運用ルール
    - 評価ログと残リスクはWord/docxに出さない。
    - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューはWord/docxに出さない。
+   - `overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名はWord/docxに出さない。日本語見出しと自然文に変換する。
+   - 商談フィードバック要素は、トップ営業マンが目の前で指導している形にする。箇条書きだけの分析メモにしない。
 
 3. Highlight Fields
    - 営業が最後に書く箇所を黄色にする。
@@ -66,4 +68,5 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
 - 新しい出力フォルダにdocxが作成されている。
 - 黄色箇所は営業入力欄と `ZOOM URL：〇〇〇` など必要箇所に限定されている。
 - 社内確認用には、商談フィードバック要素が構造化され、総合概要、顧客インサイト、認知バイアス、期待値のズレ、良かった点、改善ポイント、AIコーチングカード、再現する勝ち筋、次回商談で使える質問・返答・ベンチマーク営業台本が入っている。
+- 英語キーや `name=` 形式が表示されず、営業担当が次回どう話すか分かる指導文になっている。
 - 元ファイル未変更、成果物一覧、最終確認結果が残っている。
