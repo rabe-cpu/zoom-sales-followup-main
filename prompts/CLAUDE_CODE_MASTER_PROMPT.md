@@ -47,33 +47,32 @@
 24. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
 
 評価:
-以下の評価エージェントを立てて、点数ではなく `OK / 要修正` で評価してください。評価エージェント別スコアは出力しないでください。
-サブエージェントが使える場合は分担し、使えない場合は同一AI内で役割を分けてください。
+標準では、評価エージェントを毎回個別に立てず、点数ではなく `OK / 要修正` で統合軽量評価してください。評価エージェント別スコアは出力しないでください。
+サブエージェントは、ユーザーが明示的に「厳密評価」「6ロールで確認」と依頼した場合、またはblockingリスクが高い場合だけ使ってください。
 
-1. Source-Fact Agent
+6観点:
+1. Source-Fact
    - 商談記録の事実、日付、約束、次アクションが本文と一致しているか確認
-2. Sales-Tone Agent
+2. Sales-Tone
    - 営業担当の実発話にある言葉だけが口調として反映されているか確認
    - `かと` 系が発話にない場合はゼロ、発話にある場合でも0〜1回か確認
-3. Customer-Human Agent
+3. Customer-Human
    - 顧客本人が「ちゃんと話を聞いてくれていた」と感じるか確認
-4. Risk-Compliance Agent
+4. Risk-Compliance
    - 成果保証、過度な期待、契約・費用まわりの危険表現がないか確認
-5. Ops-Formatting Agent
+5. Ops-Formatting
    - 黄色箇所、ZOOM URL、参考動画URL前後説明、季節の結び、Word化の運用が守られているか確認
-6. Final-Whole-Check Agent
+6. Final-Whole-Check
    - すべての指摘が直っているか、最後に横断チェック
 
-各評価エージェントは、必ず以下の形式で返してください。
+統合軽量評価は、以下の形式だけで返してください。
 - status: OK / 要修正
-- findings:
-- evidence:
 - required_fix:
+- blocking: yes / no
 
 要修正の項目、または重大指摘があれば、メール本文・スキル・ナレッジ指示のどこが悪いかを特定し、修正してください。
-修正後、同じ評価エージェントで再評価してください。
-全エージェントがOK、かつFinal-Whole-CheckがOKになるまで改善ループを回してください。
-RoutineではFinal-Whole-Checkを重い全文再読エージェントにせず、以下の軽量チェックリストで30〜60秒以内に確認してください。
+修正後、同じ統合軽量チェックリストだけ再確認してください。
+Final-Whole-Checkは独立の重い全文再読エージェントにせず、以下の軽量チェックリストに統合してください。
 
 ```text
 Final-Whole-Check:

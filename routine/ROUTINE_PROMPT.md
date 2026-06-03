@@ -33,8 +33,9 @@ python -m pip install -r scripts/requirements.txt
 - 目標は1件あたり8分以内、2件で15分以内。
 - 20分を超えそうな場合は、社内確認用の厚さを保ったまま、重複説明・評価ログ・長い思考過程を削る。
 - 長尺商談（90分超）は全文を何度も読み返さない。最初に商談事実サマリー、顧客発話、営業約束、費用・審査・日程・黄色候補だけを抽出し、その要約を後工程の正本にする。
-- 6ロール評価は品質担保に必要だが、各ロールに全文VTTを再読させない。抽出済みサマリー、顧客送付用本文、社内確認用の主要見出し、リスク箇所だけを渡す。
-- Final-Whole-Checkは、全出力を再生成しない。背景エージェントで全文レビューさせず、下記8項目のチェックリスト判定と必要最小限の修正指示に限定する。
+- 評価は軽量化する。6ロールを毎回サブエージェントとして立てず、Source-Fact / Sales-Tone / Customer-Human / Risk-Compliance / Ops-Formatting / Final-Whole-Check の観点を1回の統合チェックリストに畳み込む。
+- 評価では全文VTTを再読しない。抽出済みサマリー、顧客送付用本文、社内確認用の主要見出し、リスク箇所だけを確認する。
+- Final-Whole-Checkは独立の長時間タスクにしない。下記8項目のチェックリスト判定と必要最小限の修正指示に含める。
 
 ## Step 0: 重複実行防止ロックを取得
 
@@ -117,8 +118,8 @@ cd scripts && python fetch_vtt.py
    - 社内確認用MDは厚くするが冗長にしない。目安は1顧客250〜320行以内。4スタイル別全文メールは必須だが、各スタイルの営業フィードバックは「使い方」「価格対応」「次回質問」「返答案」「避ける言い方」を中心に圧縮し、同じ説明を4回繰り返さない。
    - 4スタイルの違いは語尾や文量だけで出さない。Driverは結論・主導権・次アクション、Analyticalは根拠・条件・例外、Amiableは安心・合意形成・相談導線、Expressiveは未来像・承認・ストーリーで分ける。
    - 各スタイルに、価格質問対応、不安が出た時の戻し方、クロージング、ストレス反応へのリカバリーを入れる。
-   - 季語は送付日で毎回調査。6エージェント評価で全観点が合格になるまで改善。点数や6ロール別スコアは出力しない。
-   - 最後に軽量版Final-Whole-Checkで横断確認する。背景タスクで5分以上待つ運用にしない。統括AIが以下の8項目を直接確認し、NGだけ最小修正する。
+   - 季語は送付日で毎回調査。評価は6観点を1回の統合軽量チェックリストで確認し、点数や6ロール別スコアは出力しない。
+   - Final-Whole-Checkは独立実行せず、この統合チェックリストに含める。背景タスクで5分以上待つ運用にしない。統括AIが以下の8項目を直接確認し、NGだけ最小修正する。
      - 顧客送付用に社内情報なし
      - 黄色タグ / ZOOM / 固有情報OK
      - 参考動画URLが実URL
@@ -127,6 +128,7 @@ cd scripts && python fetch_vtt.py
      - 社内確認用4スタイル全文案あり
      - 英語キー・評価ログ・残リスクなし
      - Drive保存・Gmail下書き作成に進める
+   - blockingがなければ再評価ループは1回で終了する。blocking修正をした場合だけ、同じ8項目を再確認する。
    - 3回改善しても合格しない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
 6. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
@@ -179,6 +181,7 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
   （例:「PDFのURL差し替え」「次回ZOOM URL日程確定後追記」）。無ければ省略可
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ
 - `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が設定されている場合、担当者へ `[To:account_id]` メンションする。
+- `CHATWORK_ROOM_ID` はグループチャットIDであり、担当者メンションには使えない。担当者通知を飛ばすには `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が必須。
 - 担当者メンション用の環境変数例:
   - `CHATWORK_ACCOUNT_ID_BY_HOST={"morita@example.com":"123456","matsutani@example.com":"234567"}`
   - `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}`

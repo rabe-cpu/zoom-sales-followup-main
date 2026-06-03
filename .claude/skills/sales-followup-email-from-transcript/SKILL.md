@@ -92,16 +92,14 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 
 8. Evaluation Agents
    - Use `sales-followup-email-evaluation`.
-   - `source-fact-agent`
-   - `sales-tone-agent`
-   - `customer-human-agent`
-   - `risk-compliance-agent`
-   - `ops-formatting-agent`
+   - Routineでは `source-fact-agent` / `sales-tone-agent` / `customer-human-agent` / `risk-compliance-agent` / `ops-formatting-agent` / `final-whole-check-agent` を毎回独立実行しない。
+   - 6観点を1回の統合軽量チェックリストで確認し、NGがある場合だけ最小修正する。
+   - ユーザーが明示的に厳密評価を求めた場合、またはblockingリスクが高い場合だけ、各エージェントを個別実行する。
    - `final-whole-check-agent`
 
 9. Repair Loop
    - `status: 要修正` またはblockingがあれば修正する。
-   - 修正後、同じ評価エージェントで再評価する。
+   - Routineでは修正後、統合軽量チェックリストだけ再確認する。
    - 3回改善してもOKにならない場合は不足入力を明記して止める。
 
 10. Final Output
@@ -119,7 +117,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 - 顧客の会話からソーシャルスタイルを判定しない。4スタイル別案は社内確認用の表現候補としてだけ扱う。
 - 収益保証・成果保証の表現を使わない。
 - 季語は毎回調査する。
-- 評価エージェントとFinal-Whole-Checkを通さずに納品しない。
+- 評価チェックを通さずに納品しない。RoutineではFinal-Whole-Checkを統合軽量チェックリストに含める。
 
 ## When Not To Use
 
@@ -130,5 +128,5 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 ## Pass Conditions
 
 - 6つのSales系Skillのうち、該当工程のSkill利用または明示読込が `Skill Used Check` に残っている。
-- Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の評価結果が点数なしで残っている。
+- RoutineではSource-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の6観点を統合軽量チェックリストで確認し、点数なしで残っている。
 - `status: 要修正` またはblockingありの項目は、修正ログと再評価結果が残っている。

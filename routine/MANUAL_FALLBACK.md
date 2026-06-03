@@ -18,6 +18,17 @@ python scripts/list_chatwork_members.py
 ```
 
 出力された `account_id` と `name` を見て、`CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` に設定する。
+`CHATWORK_ROOM_ID` は通知先グループチャットのIDであり、担当者メンションには使えない。担当者通知を飛ばすには、必ず下記のどちらかを追加する。
+
+```
+CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456789","松谷":"987654321"}
+```
+
+または
+
+```
+CHATWORK_ACCOUNT_ID_BY_HOST={"yu_morita@nextjp.co.jp":"123456789","m_matsuya@nextjp.co.jp":"987654321"}
+```
 
 ## 1. 未処理VTTを取得
 ```

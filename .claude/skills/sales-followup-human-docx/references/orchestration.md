@@ -3,8 +3,9 @@
 ## Goal
 
 商談後メール作成で、分析、文体、リスク、Word出力の確認を1つの視点に寄せない。
-Claude Codeで `.claude/agents/` が使える場合は、サブエージェントで分担する。
-Codexでユーザーがサブエージェントや並列実行を明示した場合も、同じ分担で実行する。
+Routineでは速度を優先し、下記の分担を毎回は実行しない。
+Source-Fact / Sales-Tone / Customer-Human / Risk-Compliance / Ops-Formatting / Final-Whole-Check の6観点を1回の統合軽量チェックリストにまとめる。
+Claude Codeでユーザーが「厳密評価」「6ロールで確認」を明示した場合、またはblockingリスクが高い場合だけ、下記のサブエージェント分担を使う。
 
 ## Team Assignment
 
@@ -38,8 +39,8 @@ Codexでユーザーがサブエージェントや並列実行を明示した場
 
 ### Phase D: Final Gate
 
-Final-Whole-Check Agentを最後に1回実行する。
-全Agentの指摘、修正ログ、Word出力、黄色欄、Skill Used Check、残リスクを横断確認する。
+RoutineではFinal-Whole-Check Agentを独立実行しない。統合軽量チェックリストに含める。
+厳密評価時だけ、全Agentの指摘、修正ログ、Word出力、黄色欄、Skill Used Check、残リスクを横断確認する。
 
 ## Required Orchestration Log
 
@@ -47,7 +48,7 @@ Final-Whole-Check Agentを最後に1回実行する。
 
 ```text
 Orchestration log:
-- Mode: subagents / same-AI roles
+- Mode: integrated-lightweight / subagents / same-AI roles
 - Parallel lanes:
 - Sequential gates:
 - Agents used:
@@ -58,12 +59,12 @@ Orchestration log:
 
 ## Fallback Rule
 
-Claude Codeで `/agents` に対象エージェントが表示されない場合は、同一AI内でロール分担する。
-その場合も、`same-AI roles` と明記し、6 Agent相当の評価を省略しない。
+Routineでは `/agents` の有無に関係なく `integrated-lightweight` を標準とする。
+ユーザーが厳密評価を明示した場合に `/agents` が使えなければ、`same-AI roles` と明記し、6 Agent相当の評価を省略しない。
 
 ## Pass Conditions
 
-- Draft前にSource/Tone/Humanの分析がある。
-- Draft後にFact/Tone/Human/Risk/Opsの評価がある。
-- 最後にFinal-Whole-Checkがある。
-- サブエージェントを使ったか、使えない場合の理由が記録されている。
+- Routineでは6観点の統合軽量チェックがある。
+- 厳密評価時はDraft前にSource/Tone/Humanの分析、Draft後にFact/Tone/Human/Risk/Opsの評価がある。
+- Final-Whole-CheckはRoutineでは統合、厳密評価時は最後に独立確認する。
+- サブエージェントを使ったか、使わない場合は `integrated-lightweight` と記録されている。

@@ -66,11 +66,9 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    -ZOOMが必要な場合は ZOOM URL：〇〇〇 を残す。
 
 6. Evaluate and repair
-   - Claude Codeで `.claude/agents/` が使える場合は、`references/orchestration.md` のTeam Assignmentに従ってサブエージェントを並列または段階実行する。
-   - Codexでユーザーがサブエージェント利用を明示した場合は、同じTeam Assignmentで独立評価を並列実行する。
-   - サブエージェントが使えない環境では、同一AI内で6つの評価ロールを分け、各ロールの結果を残す。
-   - Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の6観点で評価する。
-   - 評価エージェント別スコアは出さず、各観点をOK/要修正で判定する。
+   - Routineでは、Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の6観点を1回の統合軽量チェックリストで評価する。
+   - 評価エージェント別スコアは出さず、統合チェックをOK/要修正で判定する。
+   - 独立サブエージェントは、ユーザーが明示した場合またはblockingリスクが高い場合だけ、`references/orchestration.md` のTeam Assignmentに従って使う。
    - 未達またはblockingがあれば修正し、同じ観点で再評価する。最大2回改善する。
 
 7. Word output
@@ -93,8 +91,8 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - 黄色チェック箇所
 - 商談フィードバック要素（総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）
 - 英語キーや `name=` 形式が出ておらず、トップ営業が指導している自然文になっていること
-- 評価エージェント確認結果（点数なし）
-- Final-Whole-Check
+- 統合軽量チェック結果（点数なし）
+- Final-Whole-Check統合
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由
 
 ## When Not To Use

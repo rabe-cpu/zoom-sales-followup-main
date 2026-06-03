@@ -23,11 +23,11 @@ Claude Codeをこのフォルダで起動したら、以下を必ず守ってく
 - 参考動画は必ず `knowledge/video_catalog.md` を優先して読み、顧客の属性・不安・判断軸に近い動画を選ぶ。
 - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出する。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
 - 社内確認用docxの商談フィードバックでは `overallSummary`、`name=`、`item=`、`theme=` などの内部キーを出さず、日本語見出しとトップ営業マンが目の前で指導する自然文に変換する。箇条書きだけの分析メモで終わらせない。
-- 出力前に評価エージェントを通す。
-- サブエージェントが使える場合は、Source/Tone/Human/Risk/Opsを独立評価として分け、最後にFinal-Whole-Checkを実行する。RoutineではFinal-Whole-Checkを全文再読エージェントにせず、軽量チェックリストで30〜60秒以内に確認する。
+- 出力前に評価を通す。Routineでは6ロールを毎回サブエージェントとして立てず、Source/Tone/Human/Risk/Ops/Finalの観点を1回の統合軽量チェックリストで確認する。
+- サブエージェントによる独立評価は、ユーザーが明示的に「厳密評価」「6ロールで確認」と依頼した場合、またはblockingリスクが高い場合だけ使う。
 - 顧客送付用本文に `[黄色`、`[/黄色]`、`参考動画URL：〇〇〇`、社内確認情報、残リスク、営業口調抽出を残さない。
 - 顧客送付用docxと社内確認用docxを分ける。
-- 最後に `Final-Whole-Check` で横断チェックし、NGがあればAIで修正して再評価する。Routineでは8項目チェックリスト方式を優先する。
+- `Final-Whole-Check` はRoutineでは独立の長時間タスクにせず、8項目チェックリストに統合する。NGがあればAIで最小修正し、8項目だけ再確認する。
 - 最終回答には必ず `Skill Used Check` を入れ、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Hook/Final Checkの結果、残リスクを短く書く。評価エージェント別スコアは出さない。
 
 ## 読むべきナレッジ
@@ -74,7 +74,7 @@ Claude Code内では、必要に応じて以下を確認する。
    - Vector Store検索結果はベンチマーク営業型の根拠としてだけ使う。顧客が話していない事実・金額・感情・成果期待を足す根拠にしない。顧客送付用本文に鈴江商談名、検索結果、引用原文を出さない
    - Vector Store未設定、APIキーなし、検索失敗の場合は `knowledge/benchmark_playbooks/suzue_benchmark.md` にフォールバックし、社内確認用docxには失敗ログを出さない
    - 音声・映像コーチング、録音練習、模写練習メニューは出力しない
-6. `sales-followup-email-evaluation` で評価・改善・再評価する。評価エージェント別スコアは出さず、OK/要修正と修正内容だけ残す
+6. `sales-followup-email-evaluation` で評価・改善する。Routineでは6観点を統合軽量チェックリストで確認し、評価エージェント別スコアは出さず、OK/要修正と修正内容だけ残す
 7. `sales-followup-human-docx` のOrchestrationに従い、サブエージェントまたは同一AI内ロールの実行ログを残す
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる
    - 社内確認用の商談フィードバック要素には、総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を入れる
@@ -82,7 +82,7 @@ Claude Code内では、必要に応じて以下を確認する。
    - 各スタイルに商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意）を入れる
    - 4スタイルの違いは語尾や文量だけで出さず、価格対応、不安対応、クロージング、ストレス時の戻し方まで分岐させる
 8. 出力失敗パターンをチェックし、顧客送付用と社内確認用を分ける
-9. `Final-Whole-Check` で最終確認する。Routineでは軽量チェックリスト方式で行う
+9. `Final-Whole-Check` はRoutineでは統合軽量チェックリスト内で行う。独立エージェントとして長時間実行しない
 10. Word指定がある場合は `sales-followup-word-output` で出力する
 11. `Skill Used Check` を最終回答に入れる
 
@@ -94,14 +94,14 @@ Claude Code内では、必要に応じて以下を確認する。
 Skill Used Check:
 - Skills: <発動Skill列挙> / 発動あり・なし
 - Knowledge: CLAUDE.md / knowledge読込あり
-- 評価: 6ロール確認済み / 修正有無 / サブエージェント / Output quality gate / Final-Whole-Check
+- 評価: 統合軽量チェック済み / 修正有無 / サブエージェント不使用または使用 / Output quality gate / Final-Whole-Check統合
 - 残リスク / remaining risk: <なし、または1〜2行>
 ```
 
 書き方ルール:
 
 - Word/.docx/黄色/ZOOM URL を出力した回は、Skills行に `sales-followup-word-output` を必ず含める。
-- 評価行には点数や6ロール別スコアを出さず、確認済みか、修正したか、Final-Whole-Checkが通ったかだけを書く。
+- 評価行には点数や6ロール別スコアを出さず、統合軽量チェック済みか、修正したか、Final-Whole-Check統合が通ったかだけを書く。
 - 残リスクが本当にない場合も「残リスク / remaining risk: なし」と書く（キー欠落でHookが落ちるため）。
 - 詳細を残したい場合のみ、別途長文版を補足できる（標準は短縮形）。
 

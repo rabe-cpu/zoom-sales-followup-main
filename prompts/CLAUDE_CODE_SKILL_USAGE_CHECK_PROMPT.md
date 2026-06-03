@@ -41,7 +41,7 @@ Skill Used Check:
 - Repair loop:
 - Orchestration log:
 - Output quality gate:
-- Final-Whole-Check:
+- Final-Whole-Check統合:
 - Hooks/settings:
 - Remaining risk:
 ```

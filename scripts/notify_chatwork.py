@@ -35,7 +35,15 @@ def _load_json_mapping(env_name: str, lower_keys: bool = False) -> dict[str, str
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        return {}
+        data = {}
+        for part in raw.split(","):
+            if ":" not in part:
+                continue
+            key, value = part.split(":", 1)
+            key = key.strip().strip('"').strip("'")
+            value = value.strip().strip('"').strip("'")
+            if key and value:
+                data[key] = value
     if not isinstance(data, dict):
         return {}
     result = {}
@@ -72,11 +80,18 @@ def _chatwork_account_id_for(result: dict, host_map: dict[str, str], person_map:
         normalized = _normalize_person_name(str(candidate))
         if normalized and normalized in normalized_map:
             return normalized_map[normalized]
+        for mapped_name, account_id in normalized_map.items():
+            if normalized and mapped_name and (normalized in mapped_name or mapped_name in normalized):
+                return account_id
     return ""
 
 
 def _chatwork_to_line(account_id: str) -> str:
     return f"[To:{account_id}]"
+
+
+def _valid_account_id(account_id: str) -> bool:
+    return account_id.isdigit()
 
 
 def send(message: str) -> None:
@@ -109,9 +124,15 @@ def build_completion_message(results: list, warnings: list) -> str:
 
     lines = [f"[info][title]✅ 営業フォローメール自動生成完了（{len(results)}件）[/title]"]
     mention_lines = []
+    mention_warnings = []
     seen_mentions = set()
     for r in results:
         account_id = _chatwork_account_id_for(r, host_map, person_map)
+        if account_id and not _valid_account_id(account_id):
+            mention_warnings.append(
+                f"担当者メンションIDが数値ではありません: {r.get('salesperson_name') or r.get('host_name') or r.get('host_email', '')}"
+            )
+            continue
         if account_id and account_id not in seen_mentions:
             seen_mentions.add(account_id)
             mention_lines.append(_chatwork_to_line(account_id))
@@ -123,8 +144,12 @@ def build_completion_message(results: list, warnings: list) -> str:
     for r in results:
         topic = r.get("topic") or r.get("customer_name", "")
         account_id = _chatwork_account_id_for(r, host_map, person_map)
-        assignee_prefix = f"{_chatwork_to_line(account_id)} " if account_id else ""
+        assignee_prefix = f"{_chatwork_to_line(account_id)} " if account_id and _valid_account_id(account_id) else ""
         salesperson = r.get("salesperson_name") or r.get("salesperson") or r.get("host_name") or r.get("host_email", "")
+        if not account_id:
+            mention_warnings.append(
+                f"担当者メンション未設定: 担当={salesperson or '不明'} / host_email={r.get('host_email') or r.get('gmail_user') or '不明'}"
+            )
         lines.append(f"{assignee_prefix}商談: {topic}（担当: {salesperson} / {r.get('duration_min', '')}分）")
         lines.append(f"評価: {r.get('evaluation_summary') or '6エージェント合格'}")
         lines.append("")
@@ -157,6 +182,11 @@ def build_completion_message(results: list, warnings: list) -> str:
         lines.append("■ エラー・警告")
         for w in warnings:
             lines.append(f"・{w}")
+    if mention_warnings:
+        lines.append("■ メンション設定")
+        for w in sorted(set(mention_warnings)):
+            lines.append(f"・{w}")
+        lines.append("・CHATWORK_ACCOUNT_ID_BY_HOST または CHATWORK_ACCOUNT_ID_BY_SALES_PERSON を設定してください。")
     lines.append("[/info]")
     return "\n".join(lines)
 

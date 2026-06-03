@@ -54,20 +54,19 @@ Step 2. 初稿生成
 - 各スタイルに、価格質問対応、不安が出た時の戻し方、クロージング、ストレス反応へのリカバリーを入れてください。
 - 価格・費用質問への返し方では、価格は隠さず、ただし価格だけで終わらせず、目的・作業時間・予算感・導入時期・意思決定者・不安の種類を確認してからプラン判断へ戻してください。
 
-Step 3. 評価エージェントを立てる
-`sales-followup-email-evaluation` を使い、以下の6つの評価エージェントでレビューしてください。
+Step 3. 統合軽量評価
+`sales-followup-email-evaluation` を使い、以下の6観点を1回の統合チェックリストでレビューしてください。
+サブエージェントは、ユーザーが明示的に「厳密評価」「6ロールで確認」と依頼した場合、またはblockingリスクが高い場合だけ使ってください。
 
-1. Source-Fact Agent
-2. Sales-Tone Agent
-3. Customer-Human Agent
-4. Risk-Compliance Agent
-5. Ops-Formatting Agent
-6. Final-Whole-Check Agent
+1. Source-Fact
+2. Sales-Tone
+3. Customer-Human
+4. Risk-Compliance
+5. Ops-Formatting
+6. Final-Whole-Check
 
-各エージェントは必ず以下で出してください。
+統合評価は必ず以下で出してください。
 - status: OK / 要修正
-- findings:
-- evidence:
 - required_fix:
 - blocking:
 
@@ -77,12 +76,12 @@ Step 4. 修正
 - 修正した箇所は最終確認に短く反映してください。詳細な評価記録や改善記録は出力しないでください。
 
 Step 5. 再評価
-- 同じ評価エージェントで再評価してください。
-- 全評価がOKになるまで繰り返してください。
+- 同じ統合軽量チェックリストで再評価してください。
+- blockingがなければ再評価は1回で終えてください。
 - 3回改善してもOKにならない場合は、足りない入力情報を明記して止めてください。
 
 Step 6. 最終全体チェック
-Final-Whole-Checkは重い全文再読ではなく、軽量チェックリスト方式で行ってください。新しい文章案は作らず、NGがある場合だけ最小修正してください。
+Final-Whole-Checkは独立の重い全文再読ではなく、Step 3の統合軽量チェックリストに含めてください。新しい文章案は作らず、NGがある場合だけ最小修正してください。
 
 ```text
 Final-Whole-Check:
