@@ -59,13 +59,15 @@ cd scripts && python fetch_vtt.py
 3. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
-   - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
-   - 季語は送付日で毎回調査。6エージェント評価で全員90点以上（Source-Fact / Risk は95点以上）になるまで改善。
+   - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別の全文メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
+   - 4スタイル別メール案は、Driver / Driving、Analytical、Amiable、Expressive のすべてについて、件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含む全文にする。差し替え段落だけで終わらせない。
+   - 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を入れる。
+   - 季語は送付日で毎回調査。6エージェント評価で全観点が合格になるまで改善。点数や6ロール別スコアは出力しない。
    - 最後に Final-Whole-Check Agent で横断確認。
-   - 3回改善しても90点に届かない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
+   - 3回改善しても合格しない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
 4. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
-   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・評価ログ・4ソーシャルスタイル別メール案を含む）
+   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・評価ログ・4ソーシャルスタイル別全文メール案・商談フィードバック要素を含む）
 5. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新
@@ -108,8 +110,8 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 }
 ```
 各フィールドの作り方（通知の見やすさのため重要）:
-- `evaluation_summary`: **点数の羅列にしない**。何を盛り込んだかの**文章要約**にする
-  （例:「音声問題謝罪・連日参加へのお礼・個別相談会確認・動画推薦を盛り込み、修正1回で全スコア合格」）
+- `evaluation_summary`: **点数や6ロール別スコアを書かない**。何を盛り込んだか、何を修正したかの**文章要約**にする
+  （例:「音声問題謝罪・連日参加へのお礼・個別相談会確認・動画推薦を盛り込み、修正1回で全観点合格」）
 - `remaining_risks`: **営業が送付前に確認すべき具体項目**のリスト
   （例:「PDFのURL差し替え」「次回ZOOM URL日程確定後追記」）。無ければ省略可
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ

@@ -41,11 +41,11 @@ skills:
 
 ```text
 Agent: Customer-Human Agent
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:
 blocking:
 ```
 
-Customer-Humanは90点以上で合格。
+メールとして不自然、または社内文書のように見える場合は `status: 要修正`。

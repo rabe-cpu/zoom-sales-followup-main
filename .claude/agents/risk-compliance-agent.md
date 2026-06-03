@@ -22,11 +22,11 @@ skills:
 
 ```text
 Agent: Risk-Compliance Agent
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:
 blocking:
 ```
 
-Risk-Complianceは95点以上で合格。成果保証・危険表現はblocking=yes。
+成果保証・危険表現は `status: 要修正` かつ `blocking: yes`。

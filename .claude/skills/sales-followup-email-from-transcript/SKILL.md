@@ -75,7 +75,9 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
    - 黄色箇所は営業が最後に触るべき箇所だけにする。
    - ZOOMが必要なら `ZOOM URL：〇〇〇` を残す。
    - 顧客送付用メールは完成稿1通にする。
-   - 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換したメール案と営業フィードバックを入れる。
+   - 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換した全文メール案と営業フィードバックを入れる。
+   - 各スタイルは、件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含む全文にする。差し替え段落だけで終わらせない。
+   - 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れる。
 
 8. Evaluation Agents
    - Use `sales-followup-email-evaluation`.
@@ -87,9 +89,9 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
    - `final-whole-check-agent`
 
 9. Repair Loop
-   - 90点未満、Source-Fact/Riskが95点未満、またはblockingがあれば修正する。
+   - `status: 要修正` またはblockingがあれば修正する。
    - 修正後、同じ評価エージェントで再評価する。
-   - 3回改善しても届かない場合は不足入力を明記して止める。
+   - 3回改善してもOKにならない場合は不足入力を明記して止める。
 
 10. Final Output
    - Use `sales-followup-word-output` when Word/docx output is requested.
@@ -115,5 +117,5 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 ## Pass Conditions
 
 - 6つのSales系Skillのうち、該当工程のSkill利用または明示読込が `Skill Used Check` に残っている。
-- Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の評価結果が残っている。
-- 90点未満またはblockingありの項目は、修正ログと再評価結果が残っている。
+- Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の評価結果が点数なしで残っている。
+- `status: 要修正` またはblockingありの項目は、修正ログと再評価結果が残っている。

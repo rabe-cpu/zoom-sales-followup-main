@@ -32,11 +32,12 @@
     `【検討結果入力フォーム】`
     `https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform`
 11. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
-12. 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換したメール案と営業フィードバックを入れてください。顧客送付用本文には混ぜないでください。
-13. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
+12. 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換した全文メール案と営業フィードバックを入れてください。各スタイルは件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含め、差し替え段落だけで終わらせないでください。顧客送付用本文には混ぜないでください。
+13. 各スタイルの営業フィードバックには、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を入れてください。
+14. メール本文は `sales-followup-email-writing`、評価改善は `sales-followup-email-evaluation`、Word出力は `sales-followup-word-output` を使ってください。
 
 評価:
-以下の評価エージェントを立てて、100点満点で評価してください。
+以下の評価エージェントを立てて、点数ではなく `OK / 要修正` で評価してください。評価エージェント別スコアは出力しないでください。
 サブエージェントが使える場合は分担し、使えない場合は同一AI内で役割を分けてください。
 
 1. Source-Fact Agent
@@ -54,27 +55,27 @@
    - すべての指摘が直っているか、最後に横断チェック
 
 各評価エージェントは、必ず以下の形式で返してください。
-- score:
+- status: OK / 要修正
 - findings:
 - evidence:
 - required_fix:
 
-90点未満の項目、または重大指摘があれば、メール本文・スキル・ナレッジ指示のどこが悪いかを特定し、修正してください。
+要修正の項目、または重大指摘があれば、メール本文・スキル・ナレッジ指示のどこが悪いかを特定し、修正してください。
 修正後、同じ評価エージェントで再評価してください。
-全エージェントが90点以上、かつFinal-Whole-Check AgentがOKになるまで改善ループを回してください。
-3回改善しても90点に届かない場合は、足りない入力情報を明記して止めてください。
+全エージェントがOK、かつFinal-Whole-Check AgentがOKになるまで改善ループを回してください。
+3回改善してもOKにならない場合は、足りない入力情報を明記して止めてください。
 
 出力:
 1. 営業後送付メール
 2. 抽出した営業口調
 3. 季語調査結果と参照元
 4. 参考動画選定理由
-5. ソーシャルスタイル別メール案（社内確認用）
+5. ソーシャルスタイル別全文メール案と商談フィードバック（社内確認用）
 6. ペルソナ評価
 7. 改善ログ
-8. 評価エージェント別の指摘と修正結果
+8. 評価エージェント別の指摘と修正結果（点数なし）
 9. 最終全体チェックリスト
 10. Skill Used Check
 
-Skill Used Checkには、使用したSkill、読んだKnowledge、評価エージェント別スコア、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。
+Skill Used Checkには、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。評価エージェント別スコアは入れないでください。
 ```

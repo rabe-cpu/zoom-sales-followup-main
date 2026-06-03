@@ -22,11 +22,11 @@ skills:
 
 ```text
 Agent: Source-Fact Agent
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:
 blocking:
 ```
 
-Source-Factは95点以上で合格。事実誤りは必ずblocking=yes。
+事実誤りは必ず `status: 要修正` かつ `blocking: yes`。

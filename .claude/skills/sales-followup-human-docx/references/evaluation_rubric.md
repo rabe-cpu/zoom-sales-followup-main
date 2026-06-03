@@ -2,20 +2,20 @@
 
 ## 評価エージェント
 
-| Agent | 合格点 | 見る点 |
-|---|---:|---|
-| Source-Fact | 95 | 商談事実、日付、次回予定、約束、送付物が本文と一致しているか |
-| Sales-Tone | 90 | 営業担当の実発話にある言葉だけで口調を作っているか |
-| Customer-Human | 90 | 顧客が「話を聞いてくれていた」と感じるか |
-| Risk-Compliance | 95 | 成果保証、断定、契約・費用まわりの危険表現がないか |
-| Ops-Formatting | 90 | 黄色欄、ZOOM URL、動画URL前後説明、金額のアラビア数字表記、Word出力が守られているか |
-| Final-Whole-Check | OK | 全指摘が直っているか、最後に横断確認できているか |
+| Agent | 判定 | 見る点 |
+|---|---|---|
+| Source-Fact | OK / 要修正 | 商談事実、日付、次回予定、約束、送付物が本文と一致しているか |
+| Sales-Tone | OK / 要修正 | 営業担当の実発話にある言葉だけで口調を作っているか |
+| Customer-Human | OK / 要修正 | 顧客が「話を聞いてくれていた」と感じるか |
+| Risk-Compliance | OK / 要修正 | 成果保証、断定、契約・費用まわりの危険表現がないか |
+| Ops-Formatting | OK / 要修正 | 黄色欄、ZOOM URL、動画URL前後説明、金額のアラビア数字表記、Word出力が守られているか |
+| Final-Whole-Check | OK / NG | 全指摘が直っているか、最後に横断確認できているか |
 
 ## 評価出力形式
 
 ```text
 Agent:
-score:
+status:
 findings:
 evidence:
 required_fix:
@@ -24,10 +24,10 @@ blocking:
 
 ## 改善ルール
 
-- 90点未満、Source-Fact/Riskが95点未満、またはblocking=yesなら修正する。
+- `status: 要修正`、Final-Whole-CheckがNG、またはblocking=yesなら修正する。
 - 修正順は、事実誤り、危険表現、営業口調、会話反映、運用ミス、季語、自然さ。
 - 最大2回改善する。
-- 2回改善しても届かない場合は、不足入力を明記して止める。
+- 2回改善してもOKにならない場合は、不足入力を明記して止める。
 
 ## Ops-Formatting blocking
 

@@ -26,7 +26,7 @@ Claude Codeをこのフォルダで起動したら、以下を必ず守ってく
 - 顧客送付用本文に `[黄色`、`[/黄色]`、`参考動画URL：〇〇〇`、評価ログ、残リスク、営業口調抽出を残さない。
 - 顧客送付用docxと社内確認用docxを分ける。
 - 最後に `Final-Whole-Check Agent` で横断チェックし、NGがあればAIで修正して再評価する。
-- 最終回答には必ず `Skill Used Check` を入れ、使用したSkill、読んだKnowledge、評価エージェント別スコア、修正有無、Hook/Final Checkの結果、残リスクを短く書く。
+- 最終回答には必ず `Skill Used Check` を入れ、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Hook/Final Checkの結果、残リスクを短く書く。評価エージェント別スコアは出さない。
 
 ## 読むべきナレッジ
 
@@ -65,8 +65,10 @@ Claude Code内では、必要に応じて以下を確認する。
 3. `sales-tone-knowledge-register` で営業担当の登録有無を確認し、未登録なら `knowledge/sales_persons/{担当}.md` を新規作成、既存なら `.draft.md` でdiff提示する
 4. `sales-seasonal-greeting-research` で季語を調査し、参照元を残す
 5. `sales-followup-email-writing` でメール初稿を作る
-6. `sales-followup-email-evaluation` で評価・改善・再評価し、評価エージェント別スコアを残す
+6. `sales-followup-email-evaluation` で評価・改善・再評価する。評価エージェント別スコアは出さず、OK/要修正と修正内容だけ残す
 7. `sales-followup-human-docx` のOrchestrationに従い、サブエージェントまたは同一AI内ロールの実行ログを残す
+   - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる
+   - 各スタイルに商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意）を入れる
 8. 出力失敗パターンをチェックし、顧客送付用と社内確認用を分ける
 9. `Final-Whole-Check Agent` で最終確認する
 10. Word指定がある場合は `sales-followup-word-output` で出力する
@@ -80,14 +82,14 @@ Claude Code内では、必要に応じて以下を確認する。
 Skill Used Check:
 - Skills: <発動Skill列挙> / 発動あり・なし
 - Knowledge: CLAUDE.md / knowledge読込あり
-- 評価エージェント: Source-Fact Agent 含む6体 / 修正有無 / サブエージェント / Output quality gate / Final-Whole-Check
+- 評価: 6ロール確認済み / 修正有無 / サブエージェント / Output quality gate / Final-Whole-Check
 - 残リスク / remaining risk: <なし、または1〜2行>
 ```
 
 書き方ルール:
 
 - Word/.docx/黄色/ZOOM URL を出力した回は、Skills行に `sales-followup-word-output` を必ず含める。
-- 評価エージェント行は `Source-Fact Agent` の名前を1度残す（Stop Hookの必須キー）。
+- 評価行には点数や6ロール別スコアを出さず、確認済みか、修正したか、Final-Whole-Checkが通ったかだけを書く。
 - 残リスクが本当にない場合も「残リスク / remaining risk: なし」と書く（キー欠落でHookが落ちるため）。
 - 詳細を残したい場合のみ、別途長文版を補足できる（標準は短縮形）。
 

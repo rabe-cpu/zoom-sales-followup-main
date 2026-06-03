@@ -16,6 +16,7 @@ skills:
 - 事実、口調、季語、動画、黄色箇所、ZOOM URL、禁止語がすべてOKか
 - `Skill Used Check` にSkill、Knowledge、Evaluation agents、Final check、残リスクが書かれているか
 - 顧客送付用docxと社内確認用docxが混ざっていないか
+- 社内確認用に4スタイル別の全文メール案と商談フィードバック要素が揃っているか
 - 顧客送付用本文にタグ、社内ログ、動画URL未確定、過度な箇条書きが残っていないか
 - 90点未満またはblocking=yesが残っていないか
 
@@ -23,7 +24,7 @@ skills:
 
 ```text
 Agent: Final-Whole-Check Agent
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:

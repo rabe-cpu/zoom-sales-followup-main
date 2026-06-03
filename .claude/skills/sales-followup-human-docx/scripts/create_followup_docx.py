@@ -165,13 +165,13 @@ def build_document(data: dict[str, Any], output: Path) -> None:
         rows = [
             [
                 item.get("agent", ""),
-                item.get("score", ""),
+                item.get("status", item.get("result", "")),
                 item.get("finding", ""),
                 item.get("required_fix", ""),
             ]
             for item in evaluation
         ]
-        add_table(document, ["Agent", "score", "finding", "required_fix"], rows, GREEN)
+        add_table(document, ["Agent", "status", "finding", "required_fix"], rows, GREEN)
 
     risks = data.get("remaining_risk", []) if include_internal else []
     if risks:
@@ -200,7 +200,7 @@ def sample_data() -> dict[str, Any]:
         "analysis": {"営業口調": "お時間があるときに、見ていただけると"},
         "seasonal_research": {"送付日": "2026-05-14", "時候": "初夏"},
         "video_reason": {"選定理由": "導入判断の流れが近いため"},
-        "evaluation": [{"agent": "Source-Fact", "score": 96, "finding": "OK", "required_fix": ""}],
+        "evaluation": [{"agent": "Source-Fact", "status": "OK", "finding": "OK", "required_fix": ""}],
         "remaining_risk": ["これはスクリプト動作確認用サンプルです。"],
     }
 

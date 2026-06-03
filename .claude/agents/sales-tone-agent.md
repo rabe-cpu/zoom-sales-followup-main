@@ -23,11 +23,11 @@ skills:
 
 ```text
 Agent: Sales-Tone Agent
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:
 blocking:
 ```
 
-Sales-Toneは90点以上で合格。発話にない余白表現がある場合はblocking=yes。
+発話にない余白表現がある場合は `status: 要修正` かつ `blocking: yes`。

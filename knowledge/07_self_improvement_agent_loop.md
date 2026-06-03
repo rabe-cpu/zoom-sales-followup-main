@@ -5,6 +5,7 @@
 営業後送付メールを、生成して終わりにしない。
 
 評価エージェントが分担してチェックし、足りない点があれば修正担当AIが直し、再評価してから納品する。
+評価エージェント別スコアは出力せず、OK / 要修正とblockingで判断する。
 
 ## エージェント構成
 
@@ -27,7 +28,7 @@ Claude Codeでサブエージェントが使える場合は分担する。
 
 ```text
 Agent:
-score:
+status: OK / 要修正
 findings:
 evidence:
 required_fix:
@@ -43,17 +44,17 @@ blocking:
 3. Synthesis / Repair Agent が指摘を統合する
 4. 重大度順に修正する
 5. 同じ評価エージェントが再評価する
-6. 全員90点以上、blockingなしになるまで繰り返す
+6. 全員OK、blockingなしになるまで繰り返す
 7. Final-Whole-Check Agent が横断チェックする
 8. NGが残っていれば該当箇所だけ直して再チェックする
 
 ## 合格条件
 
-- Source-Fact Agent: 95点以上
-- Sales-Tone Agent: 90点以上
-- Customer-Human Agent: 90点以上
-- Risk-Compliance Agent: 95点以上
-- Ops-Formatting Agent: 90点以上
+- Source-Fact Agent: OK
+- Sales-Tone Agent: OK
+- Customer-Human Agent: OK
+- Risk-Compliance Agent: OK
+- Ops-Formatting Agent: OK
 - Final-Whole-Check Agent: OK
 
 ## 修正の優先順位
@@ -68,7 +69,7 @@ blocking:
 
 ## 止める条件
 
-3回改善しても90点に届かない場合は、文章を無理に整えない。
+3回改善してもOKにならない場合は、文章を無理に整えない。
 
 次のいずれかを報告する。
 
@@ -77,4 +78,3 @@ blocking:
 - 次アクションが商談内で不明
 - 季語を判断する送付日が不明
 - `knowledge/video_catalog.md`に近い事例がない
-

@@ -7,7 +7,8 @@ description: Evaluate and improve Japanese sales follow-up emails using source-f
 
 ## Purpose
 
-営業後送付メールを、評価エージェントでチェックし、90点以上まで改善する。
+営業後送付メールを、評価エージェントでチェックし、全観点が合格するまで改善する。
+評価エージェント別スコアは出力しない。判断は `status: OK / 要修正` と `blocking` で残す。
 
 ## Evaluation Agents
 
@@ -22,18 +23,18 @@ description: Evaluate and improve Japanese sales follow-up emails using source-f
 
 1. Run Agent Review
    - 各評価エージェントで評価する。
-   - `score / findings / evidence / required_fix / blocking` を出す。
+   - `status / findings / evidence / required_fix / blocking` を出す。
 
 2. Repair
-   - 90点未満、Source-Fact/Riskが95点未満、またはblocking=yesなら修正する。
+   - `status: 要修正` または `blocking=yes` なら修正する。
    - 修正は事実誤り、危険表現、営業口調、会話反映、運用ミス、季語、自然さの順で行う。
 
 3. Re-evaluate
    - 同じ評価エージェントで再評価する。
-   - 全基準を超えるまで繰り返す。
+   - 全観点がOKになるまで繰り返す。
 
 4. Stop Rule
-   - 3回改善しても届かない場合は、不足情報を明記して止める。
+   - 3回改善してもOKにならない場合は、不足情報を明記して止める。
 
 5. Final Check
    - Final-Whole-Check AgentがOKになるまで納品しない。
@@ -42,7 +43,7 @@ description: Evaluate and improve Japanese sales follow-up emails using source-f
 
 ```text
 Evaluation summary:
-Agent scores:
+Evaluation status:
 Repair log:
 Final-Whole-Check:
 Remaining risk:
@@ -55,6 +56,7 @@ Remaining risk:
 
 ## Pass Conditions
 
-- 6つの評価エージェントすべてに `score / findings / evidence / required_fix / blocking` がある。
-- Source-Fact と Risk-Compliance は95点以上、その他は90点以上になっている。
-- 90点未満またはblockingありの指摘は、修正内容と再評価結果が残っている。
+- 6つの評価エージェントすべてに `status / findings / evidence / required_fix / blocking` がある。
+- 全観点がOKになっている。
+- `status: 要修正` または `blocking=yes` の指摘は、修正内容と再評価結果が残っている。
+- 評価エージェント別スコアを最終回答や社内確認用に出していない。

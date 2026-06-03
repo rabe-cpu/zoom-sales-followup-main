@@ -32,7 +32,7 @@ Claude Codeでは、`CLAUDE.md` がプロジェクトメモリとして読み込
 
 Claude Codeでは、Skillのdescriptionが自動起動の判断に使われるため、統括Skillには `商談文字起こし`、`営業後送付メール`、`Zoom/JamRoll CSV`、`季語`、`評価エージェント` などのトリガー語を入れた。
 工程別Skillには、文字起こし分析、季語調査、メール作成、評価改善、Word出力の各トリガー語を入れた。
-統合DOCX Skillには、黄色欄、ZOOM URL、90点評価、Word出力などユーザー指摘事項のトリガー語を入れた。
+統合DOCX Skillには、黄色欄、ZOOM URL、評価改善、Word出力などユーザー指摘事項のトリガー語を入れた。
 
 確認方法:
 
@@ -68,7 +68,7 @@ Claude CodeのHooksは `.claude/settings.json` に設定できる。
 - Skill使用またはSkill読込
 - Knowledge読込
 - 評価エージェント
-- 評価エージェント別スコア
+- 評価エージェント確認結果（点数なし）
 - 修正ループの有無
 - Final-Whole-Check
 - 残リスク

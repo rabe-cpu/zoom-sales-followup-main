@@ -47,6 +47,8 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - 冒頭に、顧客と実際に話した内容を2から4文入れる。
    - 雛形の流れを尊重する。
    - 社内確認用には候補動画を 動画タイトル / YouTube URL / 顧客に合う理由 で列挙してから1本選ぶ。
+   - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作る。差し替え段落だけで終わらせない。
+   - 各スタイルの後ろに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れる。
    - 参考動画は knowledge/video_catalog.md から選び、なぜ選んだか → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く
    -参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
    -ZOOMが必要な場合は ZOOM URL：〇〇〇 を残す。
@@ -55,8 +57,8 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - Claude Codeで `.claude/agents/` が使える場合は、`references/orchestration.md` のTeam Assignmentに従ってサブエージェントを並列または段階実行する。
    - Codexでユーザーがサブエージェント利用を明示した場合は、同じTeam Assignmentで独立評価を並列実行する。
    - サブエージェントが使えない環境では、同一AI内で6つの評価ロールを分け、各ロールの結果を残す。
-   - Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の6観点で採点する。
-   - Source-FactとRiskは95点以上、その他は90点以上を合格にする。
+   - Source-Fact、Sales-Tone、Customer-Human、Risk-Compliance、Ops-Formatting、Final-Whole-Check の6観点で評価する。
+   - 評価エージェント別スコアは出さず、各観点をOK/要修正で判定する。
    - 未達またはblockingがあれば修正し、同じ観点で再評価する。最大2回改善する。
 
 7. Word output
@@ -66,7 +68,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - `参考動画URL：〇〇〇` のままなら完成扱いにしない。
    - Word/docx指定がある場合は `scripts/create_followup_docx.py` を使える。
    - 黄色欄は営業が最後に触る箇所だけにする。原則は冒頭の確認差し替え欄と `ZOOM URL：〇〇〇`。
-   - メール本文、営業口調抽出、季語調査、評価ログ、残リスクを同じdocxまたは別docxに残す。
+- メール本文、営業口調抽出、季語調査、4スタイル別全文メール案、商談フィードバック要素、評価ログ、残リスクを同じdocxまたは別docxに残す。
 
 ## Output Checklist
 
@@ -78,7 +80,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - 抽出した営業口調
 - 季語調査結果と参照元
 - 参考動画の選定理由
-- 評価エージェント別スコア
+- 評価エージェント確認結果（点数なし）
 - 改善ログ
 - Final-Whole-Check
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由

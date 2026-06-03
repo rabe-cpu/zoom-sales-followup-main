@@ -36,6 +36,8 @@ Step 2. 初稿生成
 - 発話にない余白表現は使わないでください。
 - `sales-seasonal-greeting-research` で季語は毎回調査してください。
 - `sales-followup-email-writing` でメール初稿を作ってください。
+- 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作ってください。差し替え段落だけで終わらせないでください。
+- 各スタイルに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れてください。
 
 Step 3. 評価エージェントを立てる
 `sales-followup-email-evaluation` を使い、以下の6つの評価エージェントでレビューしてください。
@@ -48,21 +50,21 @@ Step 3. 評価エージェントを立てる
 6. Final-Whole-Check Agent
 
 各エージェントは必ず以下で出してください。
-- score:
+- status: OK / 要修正
 - findings:
 - evidence:
 - required_fix:
 - blocking:
 
 Step 4. 修正
-- scoreが90点未満、Source-Fact/Riskが95点未満、またはblocking=yesがある場合は修正してください。
+- `status: 要修正` またはblocking=yesがある場合は修正してください。
 - 修正は、事実誤り、危険表現、営業口調、会話反映、運用ミス、季語、自然さの順で行ってください。
 - 修正した箇所と理由を改善ログに残してください。
 
 Step 5. 再評価
 - 同じ評価エージェントで再評価してください。
-- 全評価が基準を超えるまで繰り返してください。
-- 3回改善しても超えない場合は、足りない入力情報を明記して止めてください。
+- 全評価がOKになるまで繰り返してください。
+- 3回改善してもOKにならない場合は、足りない入力情報を明記して止めてください。
 
 Step 6. 最終全体チェック
 Final-Whole-Check Agentで以下を横断確認してください。
@@ -81,10 +83,10 @@ Final-Whole-Check Agentで以下を横断確認してください。
 1. 最終メール本文
 2. 営業口調抽出結果
 3. 季語調査結果と参照元
-4. 評価エージェント別レビュー
+4. 評価エージェント別レビュー（点数なし）
 5. 改善ログ
 6. 最終全体チェック結果
 7. Skill Used Check
 
-Skill Used Checkには、使用したSkill、読んだKnowledge、評価エージェント別スコア、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。
+Skill Used Checkには、使用したSkill、読んだKnowledge、評価実施有無、修正有無、Orchestration log、Output quality gate、Final-Whole-Check、Hook/settings、残リスクを必ず入れてください。評価エージェント別スコアは入れないでください。
 ```
