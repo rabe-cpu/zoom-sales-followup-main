@@ -18,6 +18,9 @@
 - 商談で出ていない事実、感情、成果期待をスタイル別案に足さない。
 - 成果保証、収益保証、過度な安心表現は禁止。
 - 資料URLと検討結果入力フォームは `knowledge/04_email_generation_rules.md` の固定表記を使う。
+- 営業後メール生成時は `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず参照し、4スタイル別の `benchmarkTalk`、`benchmarkCoach`、`winningPatterns` に反映する。
+- 鈴江ベンチマークは営業型として使い、顧客が話していない事実を足す根拠にはしない。
+- 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しない。
 - 黄色マーカーは営業が編集・確認する箇所だけに使い、4スタイル案そのものを黄色にしない。
 
 ## 出力先
@@ -104,7 +107,7 @@
 （avoidedTalk: 失注や不信につながりやすい表現）
 
 #### 伝え方メモ
-（delivery: 話速、間、資料提示、文章量の注意）
+（delivery: メール文量、説明順、資料URLやフォームへの接続、次アクションの明確さ）
 
 #### 次の一手
 （nextBestAction: 営業担当が送信後または次回接点で取る具体行動）
@@ -160,6 +163,47 @@
 ```text
 ## 商談フィードバック要素
 
+### 総合概要
+- overallSummary: 商談の全体要約。顧客の状況、検討背景、判断軸、現在の進み具合を300〜500文字程度でまとめる
+- meetingOutcome: won / lost / in_progress のような内部状態ではなく、自然な日本語で「検討中」「次回確認待ち」「前向きに比較中」などと書く
+- benchmarkGapAnalysis.keyDifference: トップ営業・勝ち商談と比べた決定的な差分
+- benchmarkGapAnalysis.missingActions: 不足行動を、フェーズ / 不足行動 / 影響 の形で書く。数値スコアは出さない
+
+### 顧客インサイト
+- hiddenNeeds: 顧客が明言していないが商談から見える本音・潜在ニーズ
+- unspokenIssues: 顧客が言い切っていない不安、制約、迷い
+- competingServices: 比較対象、代替案、迷っている選択肢。明確に出ていなければ「明確な競合名は未確認」と書く
+- decisionCriteria: 顧客が何で判断しそうか。費用、作業時間、家族説明、回収イメージ、サポート範囲など
+- buyingTemperature: 高 / 中 / 低 と理由。数値スコアは出さない
+
+### 認知バイアス
+- cognitiveBias: name / description / counterMeasure の形で、顧客または営業側に起きていそうな認知の偏りを書く
+- 例: 現状維持バイアス、損失回避、確証バイアス、過度な楽観、情報過多による先送り
+
+### 期待値のズレ
+- expectationGap: topic / gap / solution の形で、顧客期待と実際の説明・条件のズレを整理する
+- 費用、作業時間、回収時期、サポート範囲、家族説明、審査・契約条件などを優先する
+
+### 良かった点
+- strengths: item / detail の形で、営業担当が再現すべき良かった動きを3〜5個出す
+- 単なる褒めではなく、どの発言・進め方が顧客の判断に効いたかを書く
+
+### 改善ポイント
+- improvementPoints: item / detail の形で、次回直すべき点を3〜5個出す
+- 修正後の聞き方・言い方が分かるようにする
+
+### AIコーチングカード
+- coachingCards: 4枚を基本にする
+- 各カードは theme / scene / insight / issue / strategy / script / outcome を必ず含める
+- script は営業担当がそのまま言える2〜4文にする
+- raw transcript、タイムスタンプ、評価点、評価ログは入れない
+
+### 再現する勝ち筋
+- winningPatterns: 勝ち筋名 / 使う場面 / 顧客シグナル / トップ営業の動き / コピートーク / なぜ効くか / NG例 / 次回実践方法 を含める
+- talkStyleModel: 再現すべき営業像、語尾・敬語・柔らかさ、質問順、つなぎ台詞、クロージングのリズム
+- textDeliveryModel: メール文量、説明順、質問の置き方、資料URLやフォームへの接続
+- objectionPatterns: 反論・不安 / 隠れた懸念 / ベンチマーク返答 / 深掘り質問 / NG返答
+
 ### 商談フェーズ
 - currentPhase: 冒頭・目的合わせ / 現状確認 / 課題深掘り / 提案 / 質疑応答 / 反論処理 / テストクロージング / クロージング / 次回合意 のどれに近いか
 - currentGoal: このメールまたは次回接点で達成すべきこと
@@ -181,7 +225,7 @@
 - benchmarkCoach.script: トップ営業がそのまま話す2〜6文の台本
 - benchmarkCoach.whyItWorks: なぜ効くか
 - benchmarkCoach.benchmarkPattern: 使った型
-- benchmarkCoach.delivery: 間、声色、資料提示、文章量
+- benchmarkCoach.delivery: メール文量、説明順、資料URLやフォームへの接続、次アクションの明確さ
 
 ### 文脈接続
 - contextBridge.sourceMoment: 商談内のどの発言・不安・判断軸を根拠にしているか
@@ -204,7 +248,7 @@
 - `effectiveReplies`: 営業担当がそのまま使える返答例
 - `priceQuestionHandling`: 商談初期や返信で価格・費用を聞かれた時の返し方
 - `avoidedTalk`: 避ける言い方、NG表現
-- `delivery`: 話速、間、資料提示、文章量、メールの温度感
+- `delivery`: メール文量、説明順、資料URLやフォームへの接続、メールの温度感
 - `nextBestAction`: 送信後に営業担当が取る次の一手
 - `benchmarkTalk`: トップ営業ならどう言うかの台詞
 - `benchmarkCoach`: トップ営業の台本、効く理由、型、伝え方
@@ -212,6 +256,14 @@
 - `contextBridge`: 商談内のどの話題・懸念・判断軸からこの文面へ接続したか
 - `customerSignals`: 温度感、懸念、購入動機、決裁観点のシグナル
 - `customerAttributePlaybooks`: 今回使えそうな顧客属性別の質問・返答・避ける言い方
+- `overallSummary`: 総合概要
+- `customerInsights`: 顧客インサイト
+- `cognitiveBias`: 認知バイアス
+- `expectationGap`: 期待値のズレ
+- `strengths`: 良かった点
+- `improvementPoints`: 改善ポイント
+- `coachingCards`: AIコーチングカード
+- `winningPatterns`: 再現する勝ち筋
 - `riskAlerts`: 成果保証、価格断定、信販・審査・個人情報などで避けるべき注意点
 
 価格・費用質問への返し方では、価格だけを即答して終わらせない。価格は隠さないが、目的、作業時間、予算感、導入時期、意思決定者、不安の種類を確認し、合うプランや判断条件へ戻す。
@@ -227,7 +279,7 @@
 - 商談にない事実を足していないか
 - 4スタイルすべてで全文メール案になっているか。差し替え段落だけなら不合格
 - 4スタイルの違いが、語尾だけではなく判断軸・情報量・次アクション・価格質問対応・伝え方メモに出ているか
-- 商談フィードバック要素（stageStrategy / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks）が営業メモとして反映されているか
+- 商談フィードバック要素（overallSummary / customerInsights / cognitiveBias / expectationGap / strengths / improvementPoints / coachingCards / winningPatterns / stageStrategy / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks）が営業メモとして反映されているか
 - 顧客送付用本文に社内向けのスタイル分析が混ざっていないか
 - Driverは短く具体的か
 - Analyticalは根拠と条件が整理されているか

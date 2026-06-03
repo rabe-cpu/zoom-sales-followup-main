@@ -56,11 +56,20 @@ cd scripts && python fetch_vtt.py
 `unprocessed` の各商談について、1件ずつ順番に:
 1. `vtt_path` のVTTファイルを読む。
 2. `knowledge/video_catalog.md` を読み、候補動画を `動画タイトル / YouTube URL / 顧客に合う理由` で列挙してから1本選び、参考動画は `理由 → 実際のYouTube URL → 見る観点1文` で出す。
-3. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
+3. `knowledge/benchmark_playbooks/suzue_benchmark.md` を読み、営業後メール生成と社内確認用の商談フィードバック要素に必ず反映する。これは文字起こしベースの営業型だけを参照し、音声・映像コーチング、録音練習、模写練習メニューは出力しない。
+4. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
    - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別の全文メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
    - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出する。
+     - `overallSummary`: 総合概要、現在の検討状態、勝ち商談との差分
+     - `customerInsights`: 顧客インサイト、潜在ニーズ、言い切っていない不安、比較対象、判断基準
+     - `cognitiveBias`: 認知バイアス。name / description / counterMeasure
+     - `expectationGap`: 期待値のズレ。topic / gap / solution
+     - `strengths`: 良かった点。item / detail
+     - `improvementPoints`: 改善ポイント。item / detail
+     - `coachingCards`: AIコーチングカード4枚。theme / scene / insight / issue / strategy / script / outcome
+     - `winningPatterns`: 再現する勝ち筋。勝ち筋名 / 使う場面 / 顧客シグナル / トップ営業の動き / コピートーク / なぜ効くか / NG例 / 次回実践方法
      - `stageStrategy`: currentGoal / keepUntilLater / mustHearBeforeProposal / planDecisionPath
      - `phasePlaybooks`: 今回該当する商談フェーズ、目的、顧客シグナル、質問、返答、次フェーズへのつなぎ
      - `customerSignals`: 温度感、懸念、購入動機、決裁観点、価格反応、家族相談、比較検討
@@ -76,10 +85,10 @@ cd scripts && python fetch_vtt.py
    - 季語は送付日で毎回調査。6エージェント評価で全観点が合格になるまで改善。点数や6ロール別スコアは出力しない。
    - 最後に Final-Whole-Check Agent で横断確認。
    - 3回改善しても合格しない場合は無理に整えず、社内確認用MDにその旨を明記し、通知で「要人間確認」とする。
-4. 出力を `/tmp/output/{customer_name}/` に保存:
+5. 出力を `/tmp/output/{customer_name}/` に保存:
    - `01_{customer_name}_顧客送付用.md`
-   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。商談フィードバック要素には stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める。評価ログと残リスクは入れない）
-5. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
+   - `01_{customer_name}_社内確認用.md`（[黄色]タグ・4ソーシャルスタイル別全文メール案・商談フィードバック要素・最終確認を含む。商談フィードバック要素には 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を含める。評価ログと残リスクは入れない）
+6. その商談の保存が終わったら、すぐ Step 3 を実行する（1件ごとに保存＝途中失敗のロスを最小化）。
 
 ## Step 3: 共有ドライブに保存＋Gmail下書き作成＋台帳更新
 

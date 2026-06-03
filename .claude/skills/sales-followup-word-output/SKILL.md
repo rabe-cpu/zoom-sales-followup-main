@@ -22,12 +22,16 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 複数メールまとめ版
    - 社内確認用のソーシャルスタイル別全文メール案
    - 社内確認用の商談フィードバック要素
+     - 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ
+     - 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋
      - stageStrategy / phasePlaybooks / customerSignals / temperature
      - nextBestAction / hearingQuestions / recommendedAnswer
      - benchmarkCoach / contextBridge / customerAttributePlaybooks
+      - `knowledge/benchmark_playbooks/suzue_benchmark.md` を参照した文字起こしベースの営業型
    - 最終確認
    - 運用ルール
    - 評価ログと残リスクはWord/docxに出さない。
+   - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューはWord/docxに出さない。
 
 3. Highlight Fields
    - 営業が最後に書く箇所を黄色にする。
@@ -48,6 +52,8 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
 - 元ファイルを変更しない。
 - 営業チェック箇所以外をむやみに黄色にしない。
 - ソーシャルスタイル別メール案を顧客送付用docxに混ぜない。
+- 鈴江ベンチマークは顧客事実の根拠にせず、顧客が話していない背景、金額、感情、成果期待を足さない。
+- 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューを出さない。
 - Word出力指定がある場合、Markdownだけで終わらせない。
 
 ## When Not To Use
@@ -59,5 +65,5 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
 
 - 新しい出力フォルダにdocxが作成されている。
 - 黄色箇所は営業入力欄と `ZOOM URL：〇〇〇` など必要箇所に限定されている。
-- 社内確認用には、商談フィードバック要素が構造化され、次回商談で使える質問・返答・ベンチマーク営業台本が入っている。
+- 社内確認用には、商談フィードバック要素が構造化され、総合概要、顧客インサイト、認知バイアス、期待値のズレ、良かった点、改善ポイント、AIコーチングカード、再現する勝ち筋、次回商談で使える質問・返答・ベンチマーク営業台本が入っている。
 - 元ファイル未変更、成果物一覧、最終確認結果が残っている。

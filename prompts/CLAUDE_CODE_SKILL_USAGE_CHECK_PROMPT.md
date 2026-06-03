@@ -14,16 +14,18 @@
 7. Skillが自動起動しなかった場合、該当 `.claude/skills/*/SKILL.md` を読んだか
 8. `CLAUDE.md` のルールを守ったか
 9. 必須Knowledgeを読んだか
+   - `knowledge/benchmark_playbooks/suzue_benchmark.md` を読み、営業後メール生成と社内確認用の商談フィードバック要素に反映したか
 10. 評価エージェント確認結果を点数なしで残したか
 11. 指摘があった場合、AIで修正して再評価し、修正内容と再評価結果を残したか
 12. `Orchestration log` に、サブエージェント使用有無、並列/直列、使えない場合の理由を残したか
 13. 顧客送付用本文に `[黄色]`、`[/黄色]`、`参考動画URL：〇〇〇`、社内確認情報、残リスクが残っていないか
 14. 顧客送付用docxと社内確認用docxを分けたか
 15. 社内確認用に4スタイル別の全文メール案があるか（Driver / Driving、Analytical、Amiable、Expressiveすべて、件名から署名・固定資料URL・固定フォームURLまで）
-16. 社内確認用に商談フィードバック要素（stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）があるか
+16. 社内確認用に商談フィードバック要素（総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）があるか
 17. 4スタイル別の営業フィードバックに、顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意があるか
-18. Final-Whole-Check AgentがOKか
-19. Hookがある場合、Stop Hookの完了条件を満たしているか
+18. 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューを出力していないか
+19. Final-Whole-Check AgentがOKか
+20. Hookがある場合、Stop Hookの完了条件を満たしているか
 
 最終回答には必ず以下を入れてください。
 

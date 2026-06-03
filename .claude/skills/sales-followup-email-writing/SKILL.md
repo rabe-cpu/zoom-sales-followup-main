@@ -18,6 +18,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - knowledge/video_catalog.md / selected video
 - Next action information
 - knowledge/12_social_style_email_variants.md
+- knowledge/benchmark_playbooks/suzue_benchmark.md
 
 ## Workflow
 
@@ -56,6 +57,20 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 
 7. Deal Feedback Extraction For Internal Review
    - 顧客送付用メールを書く前に、`sales-analysis-app-openai-next` のフィードバック思想に沿って、内部で商談フィードバックを整理する。
+   - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず参照し、文字起こしベースの営業型として `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映する。
+   - 鈴江ベンチマークは顧客事実の根拠ではない。顧客が話していない背景、金額、感情、成果期待を足さない。
+   - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しない。
+   - `overallSummary`: 総合概要、現在の検討状態、トップ営業・勝ち商談との差分
+   - `customerInsights`: 潜在ニーズ、言い切っていない不安、比較対象、判断基準、購買温度感
+   - `cognitiveBias`: name / description / counterMeasure
+   - `expectationGap`: topic / gap / solution
+   - `strengths`: 良かった点。item / detail
+   - `improvementPoints`: 改善ポイント。item / detail
+   - `coachingCards`: 4枚。theme / scene / insight / issue / strategy / script / outcome
+   - `winningPatterns`: 再現する勝ち筋。勝ち筋名 / 使う場面 / 顧客シグナル / トップ営業の動き / コピートーク / なぜ効くか / NG例 / 次回実践方法
+   - `talkStyleModel`: 再現すべき営業像、語尾、質問順、つなぎ台詞、クロージングのリズム
+   - `textDeliveryModel`: メール文量、説明順、質問の置き方、資料URLやフォームへの接続
+   - `objectionPatterns`: 反論・不安へのベンチマーク返答、深掘り質問、NG返答
    - `stageStrategy`: currentGoal / keepUntilLater / mustHearBeforeProposal / planDecisionPath
    - `phasePlaybooks`: 今回該当する商談フェーズ、目的、顧客シグナル、次回質問、返答、次フェーズへのつなぎ
    - `customerSignals`: 温度感、懸念、購入動機、決裁観点、価格反応、家族相談、比較検討
@@ -75,7 +90,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換する。
    - 各スタイルに、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる。差し替え段落案だけで終わらせない。
    - 各スタイルに、この文面が効く理由、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモを入れる。
-   - 商談フィードバック要素（stageStrategy / phasePlaybooks / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
+   - 商談フィードバック要素（overallSummary / customerInsights / cognitiveBias / expectationGap / strengths / improvementPoints / coachingCards / winningPatterns / stageStrategy / phasePlaybooks / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
    - スタイル別案と営業フィードバックは社内確認用だけに入れ、顧客送付用本文には混ぜない。
 
 ## Non-Negotiables
@@ -99,4 +114,4 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 動画URLの前後に、選定理由と見る観点が短く入っている。
 - 営業が最後に触る箇所だけが黄色候補として明記されている。
 - 金額表記がアラビア数字に統一されている。
-- 社内確認用に4スタイル別の全文メール案、商談フェーズ別フィードバック、ベンチマーク営業台本、属性別対応があり、顧客送付用本文に混ざっていない。
+- 社内確認用に4スタイル別の全文メール案、総合概要、顧客インサイト、認知バイアス、期待値のズレ、良かった点、改善ポイント、AIコーチングカード、再現する勝ち筋、商談フェーズ別フィードバック、ベンチマーク営業台本、属性別対応があり、顧客送付用本文に混ざっていない。
