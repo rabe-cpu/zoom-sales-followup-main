@@ -216,6 +216,13 @@ def load_state(state_path: Path) -> dict[str, Any]:
     return json.loads(state_path.read_text(encoding="utf-8"))
 
 
+def resolve_vector_store_id(args: argparse.Namespace) -> str:
+    vector_store_id = args.vector_store_id or os.environ.get("OPENAI_VECTOR_STORE_ID", "").strip()
+    if vector_store_id:
+        return vector_store_id
+    return load_state(args.state_path)["vector_store_id"]
+
+
 def upload_corpus(output_dir: Path, state_path: Path, name: str, limit: int | None = None) -> dict[str, Any]:
     manifest_path = output_dir / "manifest.json"
     if not manifest_path.exists():
@@ -318,13 +325,13 @@ def main() -> int:
         return 0
 
     if args.command == "search":
-        vector_store_id = args.vector_store_id or load_state(args.state_path)["vector_store_id"]
+        vector_store_id = resolve_vector_store_id(args)
         result = search(vector_store_id, args.query, args.max_results)
         print_search_results(result)
         return 0
 
     if args.command == "status":
-        vector_store_id = args.vector_store_id or load_state(args.state_path)["vector_store_id"]
+        vector_store_id = resolve_vector_store_id(args)
         result = request_json("GET", f"/vector_stores/{vector_store_id}")
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0

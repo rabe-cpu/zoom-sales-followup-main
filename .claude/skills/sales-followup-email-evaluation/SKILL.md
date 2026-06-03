@@ -17,7 +17,7 @@ description: Evaluate and improve Japanese sales follow-up emails using source-f
 - Customer-Human Agent: 人間味・会話反映
 - Risk-Compliance Agent: 成果保証・危険表現
 - Ops-Formatting Agent: 黄色箇所・ZOOM・動画・Word出力
-- Final-Whole-Check Agent: 最終横断チェック
+- Final-Whole-Check Agent: 最終横断チェック。ただしRoutineでは軽量チェックリスト方式を優先し、全文再読や再生成をしない。
 
 ## Workflow
 
@@ -37,7 +37,9 @@ description: Evaluate and improve Japanese sales follow-up emails using source-f
    - 3回改善してもOKにならない場合は、不足情報を明記して止める。
 
 5. Final Check
-   - Final-Whole-Check AgentがOKになるまで納品しない。
+   - Final-Whole-CheckがOKになるまで納品しない。
+   - Routineでは重いサブエージェントを立てず、30〜60秒の軽量チェックリストで確認してよい。
+   - Final-Whole-Checkは全成果物の再生成、全文VTT再読、4スタイル全文の再レビューをしない。NGを見つけた時だけ最小修正する。
 
 ## Output
 
@@ -56,7 +58,8 @@ Remaining risk:
 
 ## Pass Conditions
 
-- 6つの評価エージェントすべてに `status / findings / evidence / required_fix / blocking` がある。
+- Source-Fact / Sales-Tone / Customer-Human / Risk-Compliance / Ops-Formatting は `status / findings / evidence / required_fix / blocking` がある。
+- Final-Whole-Checkは、Routineでは軽量チェックリスト8項目がOKであれば合格とする。
 - 全観点がOKになっている。
 - `status: 要修正` または `blocking=yes` の指摘は、修正内容と再評価結果が残っている。
 - 評価エージェント別スコアを最終回答や社内確認用に出していない。

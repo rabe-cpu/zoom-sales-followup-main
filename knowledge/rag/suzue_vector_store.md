@@ -24,6 +24,19 @@ python scripts\suzue_vector_store.py upload
 
 上記2つはgit管理しない。
 
+## Claude Codeブラウザ版で設定する環境変数
+
+ブラウザ版Claude Codeでは、Windows側の環境変数ではなく、Claude Code側のEnvironment variables / Secrets / Settingsに以下を登録する。
+
+```text
+OPENAI_API_KEY=sk-xxxxxxxx
+OPENAI_VECTOR_STORE_ID=vs_6a1fb4d423388191bb066a2bd90060c6
+```
+
+`OPENAI_API_KEY` はOpenAI APIキー本体。チャット本文、Git、docx、Knowledgeには貼らない。
+
+`OPENAI_VECTOR_STORE_ID` は今回作成済みの鈴江商談Vector Store ID。APIキーではないが、外部に公開しない。
+
 ## メール生成時の検索
 
 営業後メールを書く前に、今回商談の論点から検索クエリを作る。

@@ -29,7 +29,7 @@
 21. 社内確認用docx/MDに `overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名が残っていないか
 22. 商談フィードバックが、トップ営業マンが目の前で指導している自然文になっているか。箇条書きの羅列だけで終わっていないか
 23. 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューを出力していないか
-24. Final-Whole-Check AgentがOKか
+24. Final-Whole-Checkが軽量チェックリスト方式でOKか
 25. Hookがある場合、Stop Hookの完了条件を満たしているか
 
 最終回答には必ず以下を入れてください。
