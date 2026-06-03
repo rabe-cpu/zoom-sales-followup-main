@@ -19,6 +19,7 @@ Claude Codeで、評価エージェント付きの自己改善ループを明示
 - knowledge/04_email_generation_rules.md
 - knowledge/05_quality_rubric_and_personas.md
 - knowledge/benchmark_playbooks/suzue_benchmark.md
+- knowledge/rag/suzue_vector_store.md
 - knowledge/07_self_improvement_agent_loop.md
 
 をルールとして使ってください。
@@ -38,6 +39,8 @@ Step 2. 初稿生成
 - `sales-seasonal-greeting-research` で季語は毎回調査してください。
 - `sales-followup-email-writing` でメール初稿を作ってください。
 - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず読み、文字起こしベースの営業型として、商談フィードバック要素の `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映してください。顧客が話していない事実を足す根拠にはしないでください。
+- OpenAI Vector Storeが利用可能な場合は、メール本文を書く前に `knowledge/rag/suzue_vector_store.md` に従い、今回商談の論点で鈴江商談RAGを検索してください。検索結果は似た場面の営業型として `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks`、価格質問対応、不安が出た時の戻し方、クロージングに反映してください。
+- RAG検索結果は顧客事実の根拠にしないでください。顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さないでください。使えない場合は静的ベンチマークへフォールバックしてください。
 - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しないでください。
 - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出してください。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks です。
 - 社内確認用docx/MDに出す商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しないでください。日本語見出しと自然文に変換してください。

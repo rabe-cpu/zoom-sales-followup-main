@@ -19,6 +19,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - Next action information
 - knowledge/12_social_style_email_variants.md
 - knowledge/benchmark_playbooks/suzue_benchmark.md
+- knowledge/rag/suzue_vector_store.md / OpenAI Vector Store search result when available
 
 ## Workflow
 
@@ -58,7 +59,10 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 7. Deal Feedback Extraction For Internal Review
    - 顧客送付用メールを書く前に、`sales-analysis-app-openai-next` のフィードバック思想に沿って、内部で商談フィードバックを整理する。
    - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず参照し、文字起こしベースの営業型として `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映する。
+   - OpenAI Vector Storeが利用可能な場合は、`knowledge/rag/suzue_vector_store.md` に従って今回商談の論点で鈴江商談RAGを検索し、似た場面の営業型を `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映する。
    - 鈴江ベンチマークは顧客事実の根拠ではない。顧客が話していない背景、金額、感情、成果期待を足さない。
+   - RAG検索結果も顧客事実の根拠ではない。顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さない。
+   - Vector Store未設定、APIキーなし、検索失敗の場合は `knowledge/benchmark_playbooks/suzue_benchmark.md` にフォールバックし、docxには失敗ログを出さない。
    - 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューは出力しない。
    - `overallSummary`: 総合概要、現在の検討状態、トップ営業・勝ち商談との差分
    - `customerInsights`: 潜在ニーズ、言い切っていない不安、比較対象、判断基準、購買温度感
@@ -120,5 +124,6 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 営業が最後に触る箇所だけが黄色候補として明記されている。
 - 金額表記がアラビア数字に統一されている。
 - 社内確認用に4スタイル別の全文メール案、総合概要、顧客インサイト、認知バイアス、期待値のズレ、良かった点、改善ポイント、AIコーチングカード、再現する勝ち筋、商談フェーズ別フィードバック、ベンチマーク営業台本、属性別対応があり、顧客送付用本文に混ざっていない。
+- Vector Store検索が使える場合は、似た鈴江商談の勝ち筋が社内確認用の指導文へ反映されている。使えない場合は静的ベンチマークへフォールバックしている。
 - 社内確認用docxに英語キーや `name=` 形式が出ておらず、トップ営業の指導文として読める。
 - 4スタイル別案が、価格対応、不安対応、クロージング、ストレス時の戻し方まで分岐している。

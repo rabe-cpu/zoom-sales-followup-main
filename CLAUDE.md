@@ -41,6 +41,7 @@ Claude Codeをこのフォルダで起動したら、以下を必ず守ってく
 @knowledge/04_email_generation_rules.md
 @knowledge/05_quality_rubric_and_personas.md
 @knowledge/benchmark_playbooks/suzue_benchmark.md
+@knowledge/rag/suzue_vector_store.md
 @knowledge/07_self_improvement_agent_loop.md
 @knowledge/08_official_claude_code_setup.md
 @knowledge/example_success_email.md
@@ -69,6 +70,9 @@ Claude Code内では、必要に応じて以下を確認する。
 4. `sales-seasonal-greeting-research` で季語を調査し、参照元を残す
 5. `sales-followup-email-writing` でメール初稿を作る
    - 営業後メール生成時は `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず参照し、社内確認用の `benchmarkCoach` / `winningPatterns` / `phasePlaybooks` に反映する
+   - OpenAI Vector Storeが利用可能な場合は、本文を書く前に `scripts/suzue_vector_store.py search "<今回商談の論点>" --max-results 8` を実行し、鈴江商談RAGの上位結果を `benchmarkCoach` / `winningPatterns` / `phasePlaybooks` / `customerAttributePlaybooks` に反映する
+   - Vector Store検索結果はベンチマーク営業型の根拠としてだけ使う。顧客が話していない事実・金額・感情・成果期待を足す根拠にしない。顧客送付用本文に鈴江商談名、検索結果、引用原文を出さない
+   - Vector Store未設定、APIキーなし、検索失敗の場合は `knowledge/benchmark_playbooks/suzue_benchmark.md` にフォールバックし、社内確認用docxには失敗ログを出さない
    - 音声・映像コーチング、録音練習、模写練習メニューは出力しない
 6. `sales-followup-email-evaluation` で評価・改善・再評価する。評価エージェント別スコアは出さず、OK/要修正と修正内容だけ残す
 7. `sales-followup-human-docx` のOrchestrationに従い、サブエージェントまたは同一AI内ロールの実行ログを残す

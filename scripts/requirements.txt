@@ -1,6 +1,9 @@
 # Zoom S2S OAuth / API 呼び出し
 requests>=2.28
 
+# OpenAI Vector Store / Retrieval API
+openai>=1.0
+
 # Google Drive / Docs API（OAuth・まなさん本人）
 google-auth>=2.23
 google-auth-httplib2>=0.1

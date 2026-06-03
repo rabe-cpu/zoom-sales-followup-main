@@ -24,6 +24,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 - `../../../knowledge/08_official_claude_code_setup.md`
 - `../../../knowledge/12_social_style_email_variants.md`
 - `../../../knowledge/benchmark_playbooks/suzue_benchmark.md`
+- `../../../knowledge/rag/suzue_vector_store.md`
 
 ## Specialized Skills
 
@@ -73,6 +74,9 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 7. Draft Email
    - Use `sales-followup-email-writing`.
    - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず参照し、文字起こしベースの営業型として `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映する。
+   - OpenAI Vector Storeが利用可能な場合は、メール本文を書く前に今回商談の論点で鈴江商談RAGを検索し、似た場面の営業型を社内確認用の商談フィードバックへ反映する。
+   - 検索結果は顧客事実の根拠にしない。顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さない。
+   - Vector Store未設定、APIキーなし、検索失敗の場合は `knowledge/benchmark_playbooks/suzue_benchmark.md` にフォールバックし、docxには失敗ログを出さない。
    - 音声・映像コーチング、録音練習、模写練習メニューは出力しない。
    - 冒頭に商談で話した内容を2〜4文で入れる。
    - 黄色箇所は営業が最後に触るべき箇所だけにする。
