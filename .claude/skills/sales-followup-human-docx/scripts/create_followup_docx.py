@@ -373,7 +373,7 @@ def build_document(data: dict[str, Any], output: Path) -> None:
 def sample_data() -> dict[str, Any]:
     return {
         "title": "営業後送付メール サンプル",
-        "subject": "本日のご面談のお礼",
+        "subject": "【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)",
         "recipient": "〇〇さま",
         "body": [
             "本日はお時間をいただき、ありがとうございました。",

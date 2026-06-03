@@ -53,6 +53,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - メール本文を書く前に、商談フィードバック要素を内部抽出する。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks。
    - 社内確認用docxの商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しない。日本語見出しと自然文に変換する。
    - フィードバックは、トップ営業マンが営業担当に目の前で指導している形にする。箇条書きの羅列ではなく、見立て、次の聞き方、返答案、NGの理由を文章でつなぐ。
+   - 件名は顧客送付用、Gmail下書き、4スタイル別全文メール案の全てで `【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)` に統一する。
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作る。差し替え段落だけで終わらせない。
    - 顧客送付用メールと4スタイル別全文メールは読みやすさを優先する。1段落は原則1〜2文、長くても120〜160字程度。商談背景、判断軸、作業内容、参考動画、次アクションを1段落に混ぜない。
    - 判断軸、作業内容、確認事項は2〜4項目までの短い箇条書きを使ってよい。箇条書きだけで本文を構成せず、前後に自然な導入文と締めを置く。

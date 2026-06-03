@@ -78,6 +78,7 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
    - 検索結果は顧客事実の根拠にしない。顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さない。
    - Vector Store未設定、APIキーなし、検索失敗の場合は `knowledge/benchmark_playbooks/suzue_benchmark.md` にフォールバックし、docxには失敗ログを出さない。
    - 音声・映像コーチング、録音練習、模写練習メニューは出力しない。
+   - 件名は全て `【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)` に統一する。顧客送付用、Gmail下書き、4スタイル別全文メール案で変えない。
    - 冒頭に商談で話した内容を1〜2文で入れる。
    - 黄色箇所は営業が最後に触るべき箇所だけにする。
    - ZOOMが必要なら `ZOOM URL：〇〇〇` を残す。

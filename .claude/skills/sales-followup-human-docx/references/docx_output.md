@@ -101,7 +101,7 @@ AIコーチングカードは4枚を基本にし、各カードに `theme / scen
 ```json
 {
   "title": "営業後送付メール",
-  "subject": "件名",
+  "subject": "【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)",
   "recipient": "宛名",
   "body": ["本文1", "本文2"],
   "yellow_fields": ["ZOOM URL：〇〇〇"],

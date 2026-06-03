@@ -32,6 +32,7 @@ import httplib2
 
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 TOKEN_URI = "https://oauth2.googleapis.com/token"
+FIXED_FOLLOWUP_SUBJECT = "【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)"
 YELLOW_TAG_RE = re.compile(r"\[/?黄色\]")
 
 
@@ -60,28 +61,21 @@ class GmailDraftClient:
 def build_draft_content(md_text: str, customer_name: str) -> tuple[str, str]:
     """Extract a subject and plain-text body from the generated customer MD."""
     lines = md_text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
-    subject = ""
     kept_lines: list[str] = []
 
     for line in lines:
         stripped = line.strip()
-        if not subject:
-            m = re.match(r"^(?:件名|Subject)\s*[:：]\s*(.+)$", stripped, re.IGNORECASE)
-            if m:
-                subject = m.group(1).strip()
-                continue
-            m = re.match(r"^【件名】\s*(.+)$", stripped)
-            if m:
-                subject = m.group(1).strip()
-                continue
+        m = re.match(r"^(?:件名|Subject)\s*[:：]\s*(.+)$", stripped, re.IGNORECASE)
+        if m:
+            continue
+        m = re.match(r"^【件名】\s*(.+)$", stripped)
+        if m:
+            continue
         kept_lines.append(line)
-
-    if not subject:
-        subject = f"本日はありがとうございました／{customer_name}"
 
     body = "\n".join(kept_lines).strip()
     body = _clean_customer_body(body)
-    return subject, body
+    return FIXED_FOLLOWUP_SUBJECT, body
 
 
 def _clean_customer_body(text: str) -> str:

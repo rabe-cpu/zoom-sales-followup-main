@@ -26,6 +26,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 1. Keep Template Structure
    - 雛形の流れを維持する。
    - 不自然に長い説明を増やさない。
+   - 件名は全て `【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)` に統一する。顧客名、日付、担当者名、商談内容を件名に足さない。
    - メール本文は短い段落で書く。1段落は原則1〜2文、長くても120〜160字程度に抑える。
    - 商談背景、判断軸、作業内容、参考動画、次アクションを1段落に混ぜない。情報の種類ごとに改行する。
    - 判断軸、作業内容、確認事項は2〜4項目までの短い箇条書きを使ってよい。箇条書きだけで本文を構成しない。
@@ -54,7 +55,7 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - ZOOMが必要なら `ZOOM URL：〇〇〇` を残す。
 
 6. Output Draft
-   - 件名
+   - 件名: `【株式会社NEXT】個別相談会の御礼(総合物販システム_アクセス)`
    - 宛名
    - 本文
    - 営業チェック箇所
