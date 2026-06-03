@@ -85,6 +85,9 @@ cd scripts && python fetch_vtt.py
 5. `sales-followup-email-from-transcript` Skill を使ってメールを生成する。
    - 商談情報: `customer_name` / `host_email` / `start_date` / `duration_min` / 送付日=今日のJST日付。
    - 営業担当の口調は `knowledge/sales_persons/` を参照。未登録担当なら `sales-tone-knowledge-register` で生成。
+   - 顧客送付用メールと4スタイル別全文メールは読みやすさを優先する。1段落は原則1〜2文、長くても120〜160字程度。商談背景、判断軸、作業内容、参考動画、次アクションを1段落に混ぜない。
+   - 判断軸、作業内容、確認事項は2〜4項目までの短い箇条書きを使ってよい。箇条書きだけで本文を構成せず、前後に自然な導入文と締めを置く。
+   - `とても印象的でした`、`伝わってきました` のような営業所感は重ねない。顧客が読み返して判断しやすい情報を優先する。
    - `knowledge/12_social_style_email_variants.md` を読み、社内確認用MDには4ソーシャルスタイル別の全文メール案と営業フィードバックを入れる。顧客タイプの判定はしない。
    - メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出する。
      - `overallSummary`: 総合概要、現在の検討状態、勝ち商談との差分

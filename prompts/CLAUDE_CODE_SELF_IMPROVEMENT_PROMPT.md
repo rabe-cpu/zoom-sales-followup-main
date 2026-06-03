@@ -38,6 +38,8 @@ Step 2. 初稿生成
 - 発話にない余白表現は使わないでください。
 - `sales-seasonal-greeting-research` で季語は毎回調査してください。
 - `sales-followup-email-writing` でメール初稿を作ってください。
+- 顧客送付用メールと4スタイル別全文メールは読みやすさを優先してください。1段落は原則1〜2文、長くても120〜160字程度にし、商談背景・判断軸・作業内容・参考動画・次アクションを1段落に混ぜないでください。判断軸、作業内容、確認事項は2〜4項目までの短い箇条書きを使って構いません。
+- `伝わってきました`、`とても印象的でした` のような営業所感は重ねず、顧客が読み返して判断しやすい情報を優先してください。
 - `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず読み、文字起こしベースの営業型として、商談フィードバック要素の `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映してください。顧客が話していない事実を足す根拠にはしないでください。
 - OpenAI Vector Storeが利用可能な場合は、メール本文を書く前に `knowledge/rag/suzue_vector_store.md` に従い、今回商談の論点で鈴江商談RAGを検索してください。検索結果は似た場面の営業型として `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks`、価格質問対応、不安が出た時の戻し方、クロージングに反映してください。
 - RAG検索結果は顧客事実の根拠にしないでください。顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さないでください。使えない場合は静的ベンチマークへフォールバックしてください。

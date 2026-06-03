@@ -23,7 +23,7 @@
 4. `かと`、`かなと`、`できればと`、`見ていただけると` のような余白表現は、営業担当の発話にある場合だけ使ってください。発話にない場合はゼロにしてください。
 5. 発話にある場合でも、余白表現は1通あたり0〜1回を基本にしてください。
 6. `sales-seasonal-greeting-research` を使い、季語・時候の挨拶は毎回調査してください。送付日、二十四節気、月の上旬中旬下旬を確認してください。
-7. 顧客との会話で出た内容を冒頭に2〜4文で入れてください。
+7. 顧客との会話で出た内容を冒頭に1〜2文で入れてください。メール本文は読みやすさを優先し、1段落は原則1〜2文、長くても120〜160字程度に抑えてください。商談背景・判断軸・作業内容・参考動画・次アクションを1段落に混ぜないでください。判断軸、作業内容、確認事項は2〜4項目までの短い箇条書きを使って構いません。
 8. 参考動画は `knowledge/video_catalog.md` から内部で選び、メール本文内には自然な案内文、実際のYouTube URL、URL後に「どこを見ると判断材料になるか」を短く入れてください。選定理由を独立セクションとして出さないでください。`参考動画URL：〇〇〇` のまま完成扱いにしないでください。
 9. `knowledge/benchmark_playbooks/suzue_benchmark.md` を必ず読み、文字起こしベースの営業型として、商談フィードバック要素の `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks` に反映してください。顧客が話していない事実を足す根拠にはしないでください。
 10. OpenAI Vector Storeが利用可能な場合は、メール本文を書く前に今回商談の論点で鈴江商談RAGを検索し、似た場面の営業型を `benchmarkCoach`、`winningPatterns`、`phasePlaybooks`、`customerAttributePlaybooks`、価格質問対応、不安が出た時の戻し方、クロージングに反映してください。検索結果は顧客事実の根拠にせず、顧客送付用本文に鈴江商談名、検索結果、原文引用、RAG実行ログを出さないでください。使えない場合は静的ベンチマークへフォールバックしてください。
@@ -34,7 +34,7 @@
     `https://nextjp.co.jp/document/access/kobetsu_japan6.pdf`
     `【検討結果入力フォーム】`
     `https://docs.google.com/forms/d/e/1FAIpQLSd7K5Ki8TOdRVeE_zEZroSiDfqTFyS5RKf6HRXAa4_WWxg7iA/viewform`
-14. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。
+14. `伝わってまいりました`、成果保証、顧客が言っていない感情の断定は禁止です。`伝わってきました`、`とても印象的でした` のような営業所感も多用せず、顧客が読み返して判断しやすい情報を優先してください。
 15. 社内確認用には、顧客タイプを判定せず、同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換した全文メール案と営業フィードバックを入れてください。各スタイルは件名、宛名、本文、参考動画、ネクストアクション、署名、固定資料URL、固定フォームURLまで含め、差し替え段落だけで終わらせないでください。顧客送付用本文には混ぜないでください。
 16. メール本文を書く前に、`sales-analysis-app-openai-next` の思想に沿って商談フィードバック要素を内部抽出してください。必須項目は 総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks です。
 17. 社内確認用docx/MDに出す商談フィードバック要素では、`overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名を表示しないでください。日本語見出しと自然文に変換してください。
