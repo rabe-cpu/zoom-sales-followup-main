@@ -23,11 +23,12 @@
 15. 社内確認用に4スタイル別の全文メール案があるか（Driver / Driving、Analytical、Amiable、Expressiveすべて、件名から署名・固定資料URL・固定フォームURLまで）
 16. 社内確認用に商談フィードバック要素（総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks）があるか
 17. 4スタイル別の営業フィードバックに、顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意があるか
-18. 社内確認用docx/MDに `overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名が残っていないか
-19. 商談フィードバックが、トップ営業マンが目の前で指導している自然文になっているか。箇条書きの羅列だけで終わっていないか
-20. 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューを出力していないか
-21. Final-Whole-Check AgentがOKか
-22. Hookがある場合、Stop Hookの完了条件を満たしているか
+18. 4スタイル別案が、語尾や文量だけでなく、価格対応、不安対応、クロージング、ストレス時の戻し方まで分岐しているか
+19. 社内確認用docx/MDに `overallSummary`、`hiddenNeeds`、`name=`、`item=`、`theme=`、`benchmarkCoach.script` などの内部キー名が残っていないか
+20. 商談フィードバックが、トップ営業マンが目の前で指導している自然文になっているか。箇条書きの羅列だけで終わっていないか
+21. 音声・映像コーチング、声色・話速評価、録音練習、模写練習メニューを出力していないか
+22. Final-Whole-Check AgentがOKか
+23. Hookがある場合、Stop Hookの完了条件を満たしているか
 
 最終回答には必ず以下を入れてください。
 

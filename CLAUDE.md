@@ -76,6 +76,7 @@ Claude Code内では、必要に応じて以下を確認する。
    - 社内確認用の商談フィードバック要素には、総合概要 / 顧客インサイト / 認知バイアス / 期待値のズレ / 良かった点 / 改善ポイント / AIコーチングカード / 再現する勝ち筋 / stageStrategy / phasePlaybooks / customerSignals / temperature / nextBestAction / hearingQuestions / recommendedAnswer / benchmarkCoach / contextBridge / customerAttributePlaybooks を入れる
    - 商談フィードバック要素は、英語キーや `name=` 形式を出さず、「この商談はこう見る」「次回はこう聞く」「この場面ではこう返す」という指導文で出す
    - 各スタイルに商談フィードバック要素（顧客反応シグナル、次回質問、返答例、価格質問対応、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモ、属性別対応、リスク注意）を入れる
+   - 4スタイルの違いは語尾や文量だけで出さず、価格対応、不安対応、クロージング、ストレス時の戻し方まで分岐させる
 8. 出力失敗パターンをチェックし、顧客送付用と社内確認用を分ける
 9. `Final-Whole-Check Agent` で最終確認する
 10. Word指定がある場合は `sales-followup-word-output` で出力する

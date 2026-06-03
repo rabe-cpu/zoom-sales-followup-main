@@ -93,6 +93,8 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
    - 同じ商談事実を Driver / Driving、Analytical、Amiable、Expressive の4つの伝え方に変換する。
    - 各スタイルに、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を入れる。差し替え段落案だけで終わらせない。
    - 各スタイルに、この文面が効く理由、顧客反応シグナル、営業担当が選ぶ目安、次回商談での質問例、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、ベンチマーク営業台本、文脈接続メモを入れる。
+   - 4スタイルの違いは語尾や文量だけで出さない。Driverは結論・主導権・次アクション、Analyticalは根拠・条件・例外、Amiableは安心・合意形成・相談導線、Expressiveは未来像・承認・ストーリーで分ける。
+   - 各スタイルに、価格質問対応、不安が出た時の戻し方、クロージング、ストレス反応へのリカバリーを入れる。
    - 商談フィードバック要素（overallSummary / customerInsights / cognitiveBias / expectationGap / strengths / improvementPoints / coachingCards / winningPatterns / stageStrategy / phasePlaybooks / customerSignals / temperature / cues / decisionLogic / effectiveQuestions / effectiveReplies / priceQuestionHandling / avoidedTalk / delivery / nextBestAction / benchmarkTalk / benchmarkCoach / contextBridge / customerAttributePlaybooks / riskAlerts）を社内確認用に反映する。
    - スタイル別案と営業フィードバックは社内確認用だけに入れ、顧客送付用本文には混ぜない。
 
@@ -119,3 +121,4 @@ description: Write warm Japanese sales follow-up emails from analyzed transcript
 - 金額表記がアラビア数字に統一されている。
 - 社内確認用に4スタイル別の全文メール案、総合概要、顧客インサイト、認知バイアス、期待値のズレ、良かった点、改善ポイント、AIコーチングカード、再現する勝ち筋、商談フェーズ別フィードバック、ベンチマーク営業台本、属性別対応があり、顧客送付用本文に混ざっていない。
 - 社内確認用docxに英語キーや `name=` 形式が出ておらず、トップ営業の指導文として読める。
+- 4スタイル別案が、価格対応、不安対応、クロージング、ストレス時の戻し方まで分岐している。
