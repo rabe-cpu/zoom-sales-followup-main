@@ -43,7 +43,7 @@ Final-Whole-Check Agentを最後に1回実行する。
 
 ## Required Orchestration Log
 
-最終回答またはWord評価ログに以下を残す。
+最終確認に以下を短く残す。
 
 ```text
 Orchestration log:

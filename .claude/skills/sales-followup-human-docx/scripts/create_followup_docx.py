@@ -65,6 +65,21 @@ def add_key_values(document: Document, title: str, values: dict[str, Any], fill:
     add_table(document, ["項目", "内容"], [[str(k), stringify(v)] for k, v in values.items()], fill)
 
 
+def add_text_section(document: Document, title: str, value: Any) -> None:
+    if not value:
+        return
+    document.add_heading(title, level=1)
+    if isinstance(value, dict):
+        for key, item in value.items():
+            document.add_heading(str(key), level=2)
+            add_body(document, stringify(item).splitlines())
+        return
+    if isinstance(value, list):
+        add_body(document, [stringify(item) for item in value])
+        return
+    add_body(document, stringify(value).splitlines())
+
+
 def add_highlighted_run(paragraph, text: str) -> None:
     if not text:
         return
@@ -155,23 +170,20 @@ def build_document(data: dict[str, Any], output: Path) -> None:
 
     include_internal = data.get("include_internal_sections", True)
     if include_internal:
-        add_key_values(document, "抽出した営業口調", data.get("analysis", {}), BLUE)
-        add_key_values(document, "季語調査結果", data.get("seasonal_research", {}), GREEN)
-        add_key_values(document, "参考動画選定理由", data.get("video_reason", {}), BLUE)
+        add_text_section(
+            document,
+            "ソーシャルスタイル別全文メール案（社内確認用）",
+            data.get("social_style_variants") or data.get("social_style_emails"),
+        )
+        add_text_section(
+            document,
+            "商談フィードバック要素",
+            data.get("deal_feedback") or data.get("sales_feedback"),
+        )
 
-    evaluation = data.get("evaluation", []) if include_internal else []
-    if evaluation:
-        document.add_heading("評価ログ", level=1)
-        rows = [
-            [
-                item.get("agent", ""),
-                item.get("status", item.get("result", "")),
-                item.get("finding", ""),
-                item.get("required_fix", ""),
-            ]
-            for item in evaluation
-        ]
-        add_table(document, ["Agent", "status", "finding", "required_fix"], rows, GREEN)
+    final_check = data.get("final_check", {}) if include_internal else {}
+    if final_check:
+        add_key_values(document, "最終確認", final_check, GREEN)
 
     risks = data.get("remaining_risk", []) if include_internal else []
     if risks:
@@ -197,10 +209,17 @@ def sample_data() -> dict[str, Any]:
             "ZOOM URL：[黄色:〇〇〇[/黄色]",
         ],
         "yellow_fields": ["冒頭の確認差し替え欄", "ZOOM URL：〇〇〇"],
-        "analysis": {"営業口調": "お時間があるときに、見ていただけると"},
-        "seasonal_research": {"送付日": "2026-05-14", "時候": "初夏"},
-        "video_reason": {"選定理由": "導入判断の流れが近いため"},
-        "evaluation": [{"agent": "Source-Fact", "status": "OK", "finding": "OK", "required_fix": ""}],
+        "social_style_variants": {
+            "Driver / Driving": "件名から署名まで含む全文メール案を入れます。",
+            "Analytical": "件名から署名まで含む全文メール案を入れます。",
+            "Amiable": "件名から署名まで含む全文メール案を入れます。",
+            "Expressive": "件名から署名まで含む全文メール案を入れます。",
+        },
+        "deal_feedback": {
+            "次の一手": "送信後の確認観点を入れます。",
+            "リスク注意": "成果保証や断定表現を避けます。",
+        },
+        "final_check": {"顧客送付用本文": "確認済み", "黄色箇所": "確認済み"},
         "remaining_risk": ["これはスクリプト動作確認用サンプルです。"],
     }
 

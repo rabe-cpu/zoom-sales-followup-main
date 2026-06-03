@@ -1,13 +1,13 @@
 ---
 name: sales-followup-word-output
-description: Create final Word/docx deliverables for Japanese sales follow-up emails, including yellow editable fields, ZOOM URL placeholder, summary docs, evaluation logs, and output folder checklists.
+description: Create final Word/docx deliverables for Japanese sales follow-up emails, including yellow editable fields, ZOOM URL placeholder, summary docs, final checks, and output folder checklists.
 ---
 
 # Sales Follow-up Word Output
 
 ## Purpose
 
-営業後送付メールと評価ログを、Word出力にまとめる。
+営業後送付メールと社内確認情報を、Word出力にまとめる。評価の詳細記録は出さない。
 
 ## Workflow
 
@@ -21,7 +21,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 個別メール
    - 複数メールまとめ版
    - 社内確認用のソーシャルスタイル別全文メール案
-   - 評価ログ
+   - 最終確認
    - 運用ルール
 
 3. Highlight Fields
@@ -35,7 +35,7 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
    - 黄色箇所
    - ZOOM URL
    - ソーシャルスタイル別全文メール案と商談フィードバック要素が社内確認用だけに入っているか
-   - 評価ログ
+   - 最終確認
    - 元ファイル未変更
 
 ## Non-Negotiables
@@ -48,10 +48,10 @@ description: Create final Word/docx deliverables for Japanese sales follow-up em
 ## When Not To Use
 
 - ユーザーが明確にWord出力不要と言っている場合。
-- メール本文・評価ログ・営業チェック箇所がまだ確定していない場合。
+- メール本文・営業チェック箇所がまだ確定していない場合。
 
 ## Pass Conditions
 
 - 新しい出力フォルダにdocxが作成されている。
 - 黄色箇所は営業入力欄と `ZOOM URL：〇〇〇` など必要箇所に限定されている。
-- 元ファイル未変更、成果物一覧、評価ログの確認結果が残っている。
+- 元ファイル未変更、成果物一覧、最終確認結果が残っている。

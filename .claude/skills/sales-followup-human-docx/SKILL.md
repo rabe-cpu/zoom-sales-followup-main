@@ -1,6 +1,6 @@
 ---
 name: sales-followup-human-docx
-description: Create warm Japanese post-sales follow-up emails and Word/docx deliverables from meeting transcripts, MTG文字起こし, Zoom/JamRoll CSV/txt files, 商談zip records, and human email templates. Use when the user asks for 営業後送付メール, 商談後メール, human-feeling sales email text, salesperson tone extraction, seasonal greeting research, yellow editable fields, ZOOM URL placeholders, evaluation loops over 90 points, or Word output.
+description: Create warm Japanese post-sales follow-up emails and Word/docx deliverables from meeting transcripts, MTG文字起こし, Zoom/JamRoll CSV/txt files, 商談zip records, and human email templates. Use when the user asks for 営業後送付メール, 商談後メール, human-feeling sales email text, salesperson tone extraction, seasonal greeting research, yellow editable fields, ZOOM URL placeholders, evaluation loops, or Word output.
 ---
 
 # Sales Follow-up Human DOCX
@@ -16,7 +16,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 必要になった時だけ読む。
 
 - 指摘事項と禁止/許可ルール: `references/user_requirements.md`
-- 評価ルーブリックと90点基準: `references/evaluation_rubric.md`
+- 評価ルーブリック: `references/evaluation_rubric.md`
 - Word出力仕様と黄色欄: `references/docx_output.md`
 - サブエージェント/オーケストレーション: `references/orchestration.md`
 - 出力失敗パターン: `references/output_failure_patterns.md`
@@ -46,10 +46,10 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 5. Draft email
    - 冒頭に、顧客と実際に話した内容を2から4文入れる。
    - 雛形の流れを尊重する。
-   - 社内確認用には候補動画を 動画タイトル / YouTube URL / 顧客に合う理由 で列挙してから1本選ぶ。
+   - 参考動画は内部で選定し、docxには候補動画一覧や選定理由の独立セクションを出さない。
    - 社内確認用には、Driver / Driving、Analytical、Amiable、Expressive の4スタイル別に、件名から署名・固定資料URL・固定フォームURLまで含む全文メール案を作る。差し替え段落だけで終わらせない。
    - 各スタイルの後ろに、顧客反応シグナル、効く理由、次回質問、そのまま使える返答例、価格・費用質問への返し方、避ける言い方、伝え方メモ、次の一手、ベンチマーク営業トーク、文脈接続メモ、リスク注意を営業フィードバックとして入れる。
-   - 参考動画は knowledge/video_catalog.md から選び、なぜ選んだか → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く
+   - 参考動画は knowledge/video_catalog.md から選び、メール本文内では自然な案内文 → 実際のYouTube URL → どこを見ると判断材料になるか の順で短く書く。
    -参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
    -ZOOMが必要な場合は ZOOM URL：〇〇〇 を残す。
 
@@ -65,10 +65,11 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
    - Word化の前に `references/output_failure_patterns.md` の未完成パターンを確認する。
    - 顧客送付用docxと社内確認用docxを分ける。
    - 本文に `[黄色:...]`、`[/黄色]`、社内ログ見出しを出さない。
+   - 営業口調抽出、季語調査結果、参考動画選定理由は内部根拠として使い、docxの独立セクションには出さない。
    - `参考動画URL：〇〇〇` のままなら完成扱いにしない。
    - Word/docx指定がある場合は `scripts/create_followup_docx.py` を使える。
    - 黄色欄は営業が最後に触る箇所だけにする。原則は冒頭の確認差し替え欄と `ZOOM URL：〇〇〇`。
-- メール本文、営業口調抽出、季語調査、4スタイル別全文メール案、商談フィードバック要素、評価ログ、残リスクを同じdocxまたは別docxに残す。
+- メール本文、4スタイル別全文メール案、商談フィードバック要素、最終確認、残リスクを同じdocxまたは別docxに残す。評価の詳細記録は出さない。
 
 ## Output Checklist
 
@@ -77,11 +78,7 @@ description: Create warm Japanese post-sales follow-up emails and Word/docx deli
 - 作成したWord/docxのパス
 - メール本文
 - 黄色チェック箇所
-- 抽出した営業口調
-- 季語調査結果と参照元
-- 参考動画の選定理由
 - 評価エージェント確認結果（点数なし）
-- 改善ログ
 - Final-Whole-Check
 - Orchestration log: 使用したサブエージェント、並列/直列、未使用の場合の理由
 - 残リスク

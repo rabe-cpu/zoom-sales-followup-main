@@ -30,7 +30,7 @@ REQUIRED_MARKERS = [
     ("seasonal research Skill", ["sales-seasonal-greeting-research", "季語"]),
     ("email writing Skill", ["sales-followup-email-writing"]),
     ("evaluation Skill", ["sales-followup-email-evaluation", "評価エージェント"]),
-    ("repair loop evidence", ["Repair loop", "改善ログ", "修正有無"]),
+    ("repair loop evidence", ["Repair loop", "修正有無", "修正済み"]),
     ("orchestration evidence", ["Orchestration log", "subagents", "same-AI roles", "サブエージェント"]),
     ("output quality gate", ["Output quality gate", "顧客送付用", "出力失敗パターン"]),
     ("Knowledge or CLAUDE.md", ["knowledge/", "CLAUDE.md", "ナレッジ"]),

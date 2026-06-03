@@ -62,10 +62,10 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 
 6. Video Recommendation
    - knowledge/video_catalog.md の YouTube URL、動画タイトル、属性カード、この動画が刺さるお客様像、推薦時の自然な言い回しを根拠にする。
-   - 候補動画を 動画タイトル / YouTube URL / 顧客に合う理由 で列挙する。
-   -顧客の属性・不安・判断軸に近い動画を1本選ぶ。
-   -なぜこの動画か → 実際のYouTube URL → 見る観点を1文 の形にする。
-   -参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
+   - 候補動画の比較と選定理由は内部で行い、docxの独立セクションには出さない。
+   - 顧客の属性・不安・判断軸に近い動画を1本選ぶ。
+   - メール本文内では自然な案内文 → 実際のYouTube URL → 見る観点を1文 の形にする。
+   - 参考動画URL：〇〇〇 やURL未確定のままなら完成扱いにしない。
    
 
 
@@ -95,7 +95,8 @@ description: Create Japanese post-sales follow-up emails and Word outputs from s
 
 10. Final Output
    - Use `sales-followup-word-output` when Word/docx output is requested.
-   - メール本文、抽出した営業口調、季語調査、動画選定理由、ソーシャルスタイル別メール案、評価ログ、最終チェック結果を出す。
+   - メール本文、ソーシャルスタイル別全文メール案、商談フィードバック要素、最終確認、残リスクを出す。
+   - 営業口調抽出、季語調査、動画選定理由は内部根拠として使い、docxの独立セクションには出さない。
    - 最終回答に `Skill Used Check` を含め、使った全Skillを列挙する。
 
 ## Non-Negotiables

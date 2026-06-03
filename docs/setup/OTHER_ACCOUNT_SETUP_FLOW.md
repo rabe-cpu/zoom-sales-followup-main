@@ -366,7 +366,7 @@ Routine詳細画面で `Run now` を実行する。
 - 社内確認用Google Docsが作成される
 - `processed_meetings.json` にmeeting_idが追加される
 - ChatworkにDocs URL付き通知が届く
-- 顧客送付用に評価ログ・黄色タグ・余計なメモが混入していない
+- 顧客送付用に黄色タグ・社内確認情報・余計なメモが混入していない
 
 Claude公式では、Routineの緑ステータスはインフラ上の実行完了を示すだけで、タスク自体の成功を意味しない。必ずRunの中身を確認する。  
 公式: https://code.claude.com/docs/en/routines
