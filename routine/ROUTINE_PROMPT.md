@@ -180,8 +180,12 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 - `remaining_risks`: **営業が送付前に確認すべき具体項目**のリスト
   （例:「PDFのURL差し替え」「次回ZOOM URL日程確定後追記」）。無ければ省略可
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ
-- `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が設定されている場合、担当者へ `[To:account_id]` メンションする。
-- `CHATWORK_ROOM_ID` はグループチャットIDであり、担当者メンションには使えない。担当者通知を飛ばすには `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が必須。
+- `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ROOM_ID_BY_HOST` または `CHATWORK_ROOM_ID_BY_SALES_PERSON` が設定されている場合、担当者別のChatworkルームへ結果通知を分ける。未設定の担当者は従来通り `CHATWORK_ROOM_ID` へ通知する。
+- `CHATWORK_ROOM_ID` はデフォルト通知先グループチャットID。0件通知、エラー通知、担当者別ルーム未設定の結果、全体警告はここに通知する。担当者メンションには使えない。
+- 担当者別ルーム用の環境変数例:
+  - `CHATWORK_ROOM_ID_BY_HOST={"morita@example.com":"111111111","new-sales@example.com":"222222222"}`
+  - `CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"111111111","新担当":"222222222"}`
+- 担当者メンションを飛ばすには `CHATWORK_ACCOUNT_ID_BY_HOST` または `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON` が必須。
 - 担当者メンション用の環境変数例:
   - `CHATWORK_ACCOUNT_ID_BY_HOST={"morita@example.com":"123456","matsutani@example.com":"234567"}`
   - `CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}`

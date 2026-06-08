@@ -267,7 +267,7 @@
         <li>商談ごとに、顧客送付用メールと社内確認用メールが生成されます。</li>
         <li><code>scripts/save_to_gdrive.py</code> がGoogle DriveへDocs保存し、Gmail下書きを作ります。</li>
         <li>保存と下書き作成が成功した商談だけ、処理済み台帳に登録されます。</li>
-        <li><code>scripts/notify_chatwork.py</code> がChatworkへ結果を通知します。</li>
+        <li><code>scripts/notify_chatwork.py</code> がChatworkへ結果を通知します。担当者別ルーム設定がある場合は、商談の <code>host_email</code> または担当者名に応じて別ルームへ分けて通知します。</li>
         <li>営業担当が下書きを確認し、必要箇所を修正して手動送信します。</li>
       </ol>
       <h3>Routineで使う正本</h3>
@@ -327,7 +327,7 @@
         </tr>
         <tr>
           <td>Chatwork通知</td>
-          <td>顧客送付用URL、社内確認用URL、Gmail下書きID、残リスクがあること。</td>
+          <td>顧客送付用URL、社内確認用URL、Gmail下書きID、残リスクがあること。担当者別ルーム運用の場合は、該当担当のルームへ届いていること。</td>
           <td>通知がなければRoutineログとChatwork認証を確認します。</td>
         </tr>
       </table>

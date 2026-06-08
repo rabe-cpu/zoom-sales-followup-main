@@ -15,6 +15,8 @@ results JSON の想定形（save_to_gdrive.py の出力を集約したもの）:
 任意の環境変数:
   CHATWORK_ACCOUNT_ID_BY_HOST={"sales@example.com":"123456"}
   CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}
+  CHATWORK_ROOM_ID_BY_HOST={"sales@example.com":"123456789"}
+  CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"123456789","松谷":"987654321"}
 """
 
 import argparse
@@ -86,6 +88,48 @@ def _chatwork_account_id_for(result: dict, host_map: dict[str, str], person_map:
     return ""
 
 
+def _mapped_value_for_person(result: dict, host_map: dict[str, str], person_map: dict[str, str]) -> str:
+    """Resolve a host/person keyed mapping for room IDs or similar values."""
+    host_email = (result.get("host_email") or result.get("gmail_user") or "").strip().lower()
+    if host_email and host_email in host_map:
+        return host_map[host_email]
+
+    candidates = [
+        result.get("salesperson_name", ""),
+        result.get("salesperson", ""),
+        result.get("host_name", ""),
+        result.get("gmail_user", ""),
+    ]
+    normalized_map = {_normalize_person_name(k): v for k, v in person_map.items()}
+    for candidate in candidates:
+        normalized = _normalize_person_name(str(candidate))
+        if normalized and normalized in normalized_map:
+            return normalized_map[normalized]
+        for mapped_name, value in normalized_map.items():
+            if normalized and mapped_name and (normalized in mapped_name or mapped_name in normalized):
+                return value
+    return ""
+
+
+def _chatwork_room_id_for(
+    result: dict,
+    host_room_map: dict[str, str],
+    person_room_map: dict[str, str],
+    default_room_id: str,
+    room_warnings: list[str],
+) -> str:
+    room_id = _mapped_value_for_person(result, host_room_map, person_room_map)
+    if not room_id:
+        return default_room_id
+    if not room_id.isdigit():
+        room_warnings.append(
+            f"担当者別ChatworkルームIDが数値ではありません: "
+            f"{result.get('salesperson_name') or result.get('host_name') or result.get('host_email', '')}"
+        )
+        return default_room_id
+    return room_id
+
+
 def _chatwork_to_line(account_id: str) -> str:
     return f"[To:{account_id}]"
 
@@ -94,9 +138,9 @@ def _valid_account_id(account_id: str) -> bool:
     return account_id.isdigit()
 
 
-def send(message: str) -> None:
+def send(message: str, room_id: str | None = None) -> None:
     token = os.environ["CHATWORK_API_TOKEN"]
-    room_id = os.environ["CHATWORK_ROOM_ID"]
+    room_id = room_id or os.environ["CHATWORK_ROOM_ID"]
     resp = requests.post(
         f"{CHATWORK_API}/rooms/{room_id}/messages",
         headers={"X-ChatWorkToken": token},
@@ -191,6 +235,39 @@ def build_completion_message(results: list, warnings: list) -> str:
     return "\n".join(lines)
 
 
+def build_completion_messages_by_room(results: list, warnings: list) -> list[tuple[str, str]]:
+    default_room_id = os.environ["CHATWORK_ROOM_ID"]
+    host_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_HOST", lower_keys=True)
+    person_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_SALES_PERSON")
+    room_warnings: list[str] = []
+    grouped: dict[str, list] = {}
+
+    for result in results:
+        room_id = _chatwork_room_id_for(
+            result,
+            host_room_map,
+            person_room_map,
+            default_room_id,
+            room_warnings,
+        )
+        grouped.setdefault(room_id, []).append(result)
+
+    messages: list[tuple[str, str]] = []
+    for room_id, room_results in grouped.items():
+        if room_id == default_room_id:
+            room_warnings_for_message = warnings + room_warnings
+        else:
+            room_warnings_for_message = []
+        messages.append((room_id, build_completion_message(room_results, room_warnings_for_message)))
+
+    if warnings and default_room_id not in grouped:
+        messages.append((default_room_id, build_completion_message([], warnings + room_warnings)))
+    elif room_warnings and default_room_id not in grouped:
+        messages.append((default_room_id, build_completion_message([], room_warnings)))
+
+    return messages
+
+
 def _load_results(raw: str):
     if raw and os.path.exists(raw):
         raw = Path(raw).read_text(encoding="utf-8")
@@ -217,7 +294,8 @@ def main() -> None:
             return
 
         results, warnings = _load_results(args.results or "{}")
-        send(build_completion_message(results, warnings))
+        for room_id, message in build_completion_messages_by_room(results, warnings):
+            send(message, room_id)
     finally:
         if args.release_lock:
             release_routine_lock()
