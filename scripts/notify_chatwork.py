@@ -17,6 +17,8 @@ results JSON の想定形（save_to_gdrive.py の出力を集約したもの）:
   CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}
   CHATWORK_ROOM_ID_BY_HOST={"sales@example.com":"123456789"}
   CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"123456789","松谷":"987654321"}
+
+0件通知は CHATWORK_ROOM_ID に加えて、担当者別ルーム設定に含まれる各ルームにも送る。
 """
 
 import argparse
@@ -268,6 +270,51 @@ def build_completion_messages_by_room(results: list, warnings: list) -> list[tup
     return messages
 
 
+def build_empty_message(warnings: list | None = None) -> str:
+    lines = [
+        "[info][title]営業フォローメール 自動生成[/title]",
+        "処理対象の商談はありませんでした。",
+    ]
+    if warnings:
+        lines.append("")
+        lines.append("■ エラー・警告")
+        for warning in warnings:
+            lines.append(f"・{warning}")
+    lines.append("[/info]")
+    return "\n".join(lines)
+
+
+def build_empty_messages_by_room() -> list[tuple[str, str]]:
+    default_room_id = os.environ["CHATWORK_ROOM_ID"]
+    host_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_HOST", lower_keys=True)
+    person_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_SALES_PERSON")
+    room_warnings: list[str] = []
+    room_ids: list[str] = []
+
+    def add_room(room_id: str, label: str) -> None:
+        room_id = str(room_id or "").strip()
+        if not room_id:
+            return
+        if not room_id.isdigit():
+            room_warnings.append(f"0件通知のChatworkルームIDが数値ではありません: {label}")
+            return
+        if room_id not in room_ids:
+            room_ids.append(room_id)
+
+    add_room(default_room_id, "CHATWORK_ROOM_ID")
+    for host_email, room_id in host_room_map.items():
+        add_room(room_id, f"CHATWORK_ROOM_ID_BY_HOST[{host_email}]")
+    for salesperson, room_id in person_room_map.items():
+        add_room(room_id, f"CHATWORK_ROOM_ID_BY_SALES_PERSON[{salesperson}]")
+
+    messages: list[tuple[str, str]] = []
+    for room_id in room_ids:
+        warnings = room_warnings if room_id == default_room_id else []
+        messages.append((room_id, build_empty_message(warnings)))
+
+    return messages
+
+
 def _load_results(raw: str):
     if raw and os.path.exists(raw):
         raw = Path(raw).read_text(encoding="utf-8")
@@ -290,7 +337,8 @@ def main() -> None:
             send(f"[info][title]営業フォローメール 自動生成 エラー[/title]{args.error}[/info]")
             return
         if args.empty:
-            send("[info][title]営業フォローメール 自動生成[/title]処理対象の商談はありませんでした。[/info]")
+            for room_id, message in build_empty_messages_by_room():
+                send(message, room_id)
             return
 
         results, warnings = _load_results(args.results or "{}")

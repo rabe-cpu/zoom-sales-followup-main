@@ -277,7 +277,7 @@
       <p><code>CHATWORK_ROOM_ID</code> はデフォルト通知先です。追加担当者だけ別ルームへ通知したい場合は、Zoom商談のホストメールアドレスをキーにして <code>CHATWORK_ROOM_ID_BY_HOST</code> を追加します。</p>
       <pre><code>CHATWORK_ROOM_ID=100000000
 CHATWORK_ROOM_ID_BY_HOST={"new1@example.com":"111111111","new2@example.com":"222222222"}</code></pre>
-      <p>上記の場合、<code>new1@example.com</code> の商談は <code>111111111</code>、<code>new2@example.com</code> の商談は <code>222222222</code> に通知されます。対応表にない担当者、0件通知、エラー通知、全体警告は <code>CHATWORK_ROOM_ID</code> に通知されます。</p>
+      <p>上記の場合、<code>new1@example.com</code> の商談は <code>111111111</code>、<code>new2@example.com</code> の商談は <code>222222222</code> に通知されます。対応表にない担当者、エラー通知、全体警告は <code>CHATWORK_ROOM_ID</code> に通知されます。0件通知は <code>CHATWORK_ROOM_ID</code> に加えて、担当者別ルーム設定に含まれる各ルームにも通知されます。</p>
       <p>メールアドレスで判定できない場合のみ、担当者名をキーにした <code>CHATWORK_ROOM_ID_BY_SALES_PERSON</code> を使います。メンション先を変える場合は、投稿先ルームとは別に <code>CHATWORK_ACCOUNT_ID_BY_HOST</code> または <code>CHATWORK_ACCOUNT_ID_BY_SALES_PERSON</code> を設定します。</p>
     </section>
 

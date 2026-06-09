@@ -181,7 +181,8 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
   （例:「PDFのURL差し替え」「次回ZOOM URL日程確定後追記」）。無ければ省略可
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ
 - `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ROOM_ID_BY_HOST` または `CHATWORK_ROOM_ID_BY_SALES_PERSON` が設定されている場合、担当者別のChatworkルームへ結果通知を分ける。未設定の担当者は従来通り `CHATWORK_ROOM_ID` へ通知する。
-- `CHATWORK_ROOM_ID` はデフォルト通知先グループチャットID。0件通知、エラー通知、担当者別ルーム未設定の結果、全体警告はここに通知する。担当者メンションには使えない。
+- `CHATWORK_ROOM_ID` はデフォルト通知先グループチャットID。エラー通知、担当者別ルーム未設定の結果、全体警告はここに通知する。担当者メンションには使えない。
+- 0件通知は `CHATWORK_ROOM_ID` に加えて、`CHATWORK_ROOM_ID_BY_HOST` / `CHATWORK_ROOM_ID_BY_SALES_PERSON` に設定されている担当者別ルームにも送る。笠井・栗原など担当者別Chatworkを分けている場合も「処理対象の商談はありませんでした。」が届く。
 - 担当者別ルーム用の環境変数例:
   - `CHATWORK_ROOM_ID_BY_HOST={"morita@example.com":"111111111","new-sales@example.com":"222222222"}`
   - `CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"111111111","新担当":"222222222"}`
