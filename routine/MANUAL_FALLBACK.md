@@ -22,6 +22,7 @@ python scripts/list_chatwork_members.py
 `CHATWORK_ROOM_ID` はデフォルト通知先グループチャットのIDであり、担当者メンションには使えない。
 
 担当者別に投稿先ルームを分ける場合は、下記のどちらかを追加する。host_email指定を優先する。
+左側にZoom商談の `host_email`、右側に通知先ChatworkルームIDを入れる。
 
 ```
 CHATWORK_ROOM_ID_BY_HOST={"new1@example.com":"111111111","new2@example.com":"222222222"}
@@ -32,6 +33,8 @@ CHATWORK_ROOM_ID_BY_HOST={"new1@example.com":"111111111","new2@example.com":"222
 ```
 CHATWORK_ROOM_ID_BY_SALES_PERSON={"新担当A":"111111111","新担当B":"222222222"}
 ```
+
+この設定では、`new1@example.com` の商談は `111111111`、`new2@example.com` の商談は `222222222` に通知される。対応表にない担当者、0件通知、エラー通知は従来通り `CHATWORK_ROOM_ID` に通知される。
 
 担当者メンションを飛ばすには、別途下記のどちらかを追加する。
 
