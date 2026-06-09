@@ -17,8 +17,10 @@ results JSON の想定形（save_to_gdrive.py の出力を集約したもの）:
   CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}
   CHATWORK_ROOM_ID_BY_HOST={"sales@example.com":"123456789"}
   CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"123456789","松谷":"987654321"}
+  CHATWORK_EMPTY_ROOM_IDS=123456789,987654321
 
-0件通知は CHATWORK_ROOM_ID に加えて、担当者別ルーム設定に含まれる各ルームにも送る。
+0件通知は CHATWORK_ROOM_ID に加えて、担当者別ルーム設定と CHATWORK_EMPTY_ROOM_IDS
+に含まれる各ルームにも送る。
 """
 
 import argparse
@@ -30,6 +32,23 @@ from pathlib import Path
 import requests
 
 CHATWORK_API = "https://api.chatwork.com/v2"
+
+
+def _load_local_env_file() -> None:
+    env_path = Path(__file__).resolve().parent.parent / "routine_env.local.env"
+    if not env_path.exists():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and value and not os.getenv(key):
+            os.environ[key] = value
 
 
 def _load_json_mapping(env_name: str, lower_keys: bool = False) -> dict[str, str]:
@@ -58,6 +77,28 @@ def _load_json_mapping(env_name: str, lower_keys: bool = False) -> dict[str, str
             continue
         result[k.lower() if lower_keys else k] = v
     return result
+
+
+def _load_id_list(env_name: str) -> list[str]:
+    raw = os.getenv(env_name, "").strip()
+    if not raw:
+        return []
+    values = []
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        data = raw.split(",")
+
+    if isinstance(data, (str, int)):
+        data = [data]
+    if not isinstance(data, list):
+        return []
+
+    for value in data:
+        item = str(value).strip().strip('"').strip("'")
+        if item:
+            values.append(item)
+    return values
 
 
 def _normalize_person_name(value: str) -> str:
@@ -308,6 +349,7 @@ def build_empty_messages_by_room() -> list[tuple[str, str]]:
     default_room_id = os.environ["CHATWORK_ROOM_ID"]
     host_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_HOST", lower_keys=True)
     person_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_SALES_PERSON")
+    explicit_empty_room_ids = _load_id_list("CHATWORK_EMPTY_ROOM_IDS")
     room_warnings: list[str] = []
     room_ids: list[str] = []
 
@@ -326,6 +368,8 @@ def build_empty_messages_by_room() -> list[tuple[str, str]]:
         add_room(room_id, f"CHATWORK_ROOM_ID_BY_HOST[{host_email}]")
     for salesperson, room_id in person_room_map.items():
         add_room(room_id, f"CHATWORK_ROOM_ID_BY_SALES_PERSON[{salesperson}]")
+    for index, room_id in enumerate(explicit_empty_room_ids, start=1):
+        add_room(room_id, f"CHATWORK_EMPTY_ROOM_IDS[{index}]")
 
     messages: list[tuple[str, str]] = []
     for room_id in room_ids:
@@ -345,6 +389,8 @@ def _load_results(raw: str):
 
 
 def main() -> None:
+    _load_local_env_file()
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", help="結果JSONファイルのパス or JSON文字列")
     ap.add_argument("--empty", action="store_true", help="処理対象0件の通知")

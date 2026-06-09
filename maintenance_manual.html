@@ -264,7 +264,7 @@
         <tr><td>Zoom</td><td><code>ZOOM_ACCOUNT_ID</code><br><code>ZOOM_CLIENT_ID</code><br><code>ZOOM_CLIENT_SECRET</code></td><td>S2S OAuthでユーザー一覧、録画一覧、VTTを取得します。</td></tr>
         <tr><td>Google Drive / Docs</td><td><code>GOOGLE_OAUTH_CLIENT_ID</code><br><code>GOOGLE_OAUTH_CLIENT_SECRET</code><br><code>GOOGLE_OAUTH_REFRESH_TOKEN</code><br><code>GOOGLE_DRIVE_FOLDER_ID</code></td><td>Docs作成、黄色ハイライト、処理済み台帳の読み書き。</td></tr>
         <tr><td>Gmail</td><td><code>GOOGLE_SERVICE_ACCOUNT_JSON</code><br><code>GOOGLE_SERVICE_ACCOUNT_JSON_B64</code><br><code>GOOGLE_CREDENTIALS_PATH</code></td><td>Workspace domain-wide delegationで営業担当本人のGmailへ下書き作成。</td></tr>
-        <tr><td>Chatwork</td><td><code>CHATWORK_API_TOKEN</code><br><code>CHATWORK_ROOM_ID</code><br><code>CHATWORK_ROOM_ID_BY_HOST</code><br><code>CHATWORK_ROOM_ID_BY_SALES_PERSON</code><br><code>CHATWORK_ACCOUNT_ID_BY_HOST</code><br><code>CHATWORK_ACCOUNT_ID_BY_SALES_PERSON</code></td><td>完了、0件、エラー通知。担当者別ルームを使う場合は <code>CHATWORK_ROOM_ID_BY_HOST</code> を優先し、未設定時は <code>CHATWORK_ROOM_ID</code> へ通知します。<code>CHATWORK_ACCOUNT_ID_BY_*</code> はメンション用です。</td></tr>
+        <tr><td>Chatwork</td><td><code>CHATWORK_API_TOKEN</code><br><code>CHATWORK_ROOM_ID</code><br><code>CHATWORK_ROOM_ID_BY_HOST</code><br><code>CHATWORK_ROOM_ID_BY_SALES_PERSON</code><br><code>CHATWORK_EMPTY_ROOM_IDS</code><br><code>CHATWORK_ACCOUNT_ID_BY_HOST</code><br><code>CHATWORK_ACCOUNT_ID_BY_SALES_PERSON</code></td><td>完了、0件、エラー通知。担当者別ルームを使う場合は <code>CHATWORK_ROOM_ID_BY_HOST</code> を優先し、未設定時は <code>CHATWORK_ROOM_ID</code> へ通知します。0件通知だけ追加送信したいルームは <code>CHATWORK_EMPTY_ROOM_IDS</code> に入れます。<code>CHATWORK_ACCOUNT_ID_BY_*</code> はメンション用です。</td></tr>
         <tr><td>cron-job.org</td><td>Claude Routine Fire URL<br>Authorization HeaderのBearer Token</td><td>本番定期実行用。Authorizationは <code>Bearer sk-ant-...</code> のようにBearer、半角スペース、Tokenで登録します。</td></tr>
         <tr><td>GitHub Actions Secrets</td><td><code>ROUTINE_FIRE_URL</code><br><code>ROUTINE_FIRE_TOKEN</code></td><td>手動バックアップ用。GitHub SecretsにはTokenのみを入れ、Bearerはworkflow内で付与します。</td></tr>
         <tr><td>実行制御</td><td><code>VTT_DIR</code><br><code>ALLOWED_HOST_EMAILS</code><br><code>LOOKBACK_DAYS</code><br><code>ONLY_TODAY</code></td><td>VTTローカル保存先、対象ホスト、本日分処理、復旧時の遡り処理を制御。</td></tr>
@@ -277,7 +277,7 @@
       <p><code>CHATWORK_ROOM_ID</code> はデフォルト通知先です。追加担当者だけ別ルームへ通知したい場合は、Zoom商談のホストメールアドレスをキーにして <code>CHATWORK_ROOM_ID_BY_HOST</code> を追加します。</p>
       <pre><code>CHATWORK_ROOM_ID=100000000
 CHATWORK_ROOM_ID_BY_HOST={"new1@example.com":"111111111","new2@example.com":"222222222"}</code></pre>
-      <p>上記の場合、<code>new1@example.com</code> の商談は <code>111111111</code>、<code>new2@example.com</code> の商談は <code>222222222</code> に通知されます。対応表にない担当者、エラー通知、全体警告は <code>CHATWORK_ROOM_ID</code> に通知されます。0件通知は <code>CHATWORK_ROOM_ID</code> に加えて、担当者別ルーム設定に含まれる各ルームにも通知されます。</p>
+      <p>上記の場合、<code>new1@example.com</code> の商談は <code>111111111</code>、<code>new2@example.com</code> の商談は <code>222222222</code> に通知されます。対応表にない担当者、エラー通知、全体警告は <code>CHATWORK_ROOM_ID</code> に通知されます。0件通知は <code>CHATWORK_ROOM_ID</code> に加えて、担当者別ルーム設定に含まれる各ルームにも通知されます。0件通知だけ必ず追加送信したいルームは <code>CHATWORK_EMPTY_ROOM_IDS=437933333,424053694</code> のように指定します。</p>
       <p>メールアドレスで判定できない場合のみ、担当者名をキーにした <code>CHATWORK_ROOM_ID_BY_SALES_PERSON</code> を使います。メンション先を変える場合は、投稿先ルームとは別に <code>CHATWORK_ACCOUNT_ID_BY_HOST</code> または <code>CHATWORK_ACCOUNT_ID_BY_SALES_PERSON</code> を設定します。</p>
     </section>
 

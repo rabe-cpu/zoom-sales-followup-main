@@ -35,7 +35,11 @@ CHATWORK_ROOM_ID_BY_SALES_PERSON={"新担当A":"111111111","新担当B":"2222222
 ```
 
 この設定では、`new1@example.com` の商談は `111111111`、`new2@example.com` の商談は `222222222` に通知される。対応表にない担当者、エラー通知は従来通り `CHATWORK_ROOM_ID` に通知される。
-0件通知は `CHATWORK_ROOM_ID` に加えて、`CHATWORK_ROOM_ID_BY_HOST` / `CHATWORK_ROOM_ID_BY_SALES_PERSON` に設定されている担当者別ルームにも通知される。
+0件通知は `CHATWORK_ROOM_ID` に加えて、`CHATWORK_ROOM_ID_BY_HOST` / `CHATWORK_ROOM_ID_BY_SALES_PERSON` に設定されている担当者別ルームにも通知される。0件通知だけ必ず追加送信したいルームは `CHATWORK_EMPTY_ROOM_IDS` にカンマ区切りで入れる。
+
+```
+CHATWORK_EMPTY_ROOM_IDS=437933333,424053694
+```
 
 担当者メンションを飛ばすには、別途下記のどちらかを追加する。
 
