@@ -161,6 +161,8 @@ python scripts/save_to_gdrive.py \
 ```
 python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 ```
+- `notify_chatwork.py` の標準出力に `Chatwork通知成功 room_id=...` が出たルームだけを送信成功として扱う。コマンドが0以外で終了した場合、または成功ログが1件もない場合は「通知送信済み」と要約せず、Routine実行サマリーに失敗内容を明記する。
+- 複数ルーム通知では一部ルームが失敗しても残りのルームには送信を試行する。最終終了コードが失敗の場合は、成功したルームIDと失敗したルームIDを分けて記録する。
 `results JSON` の形式:
 ```json
 {

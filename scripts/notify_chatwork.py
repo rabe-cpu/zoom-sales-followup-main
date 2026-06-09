@@ -140,7 +140,7 @@ def _valid_account_id(account_id: str) -> bool:
     return account_id.isdigit()
 
 
-def send(message: str, room_id: str | None = None) -> None:
+def send(message: str, room_id: str | None = None) -> dict:
     token = os.environ["CHATWORK_API_TOKEN"]
     room_id = room_id or os.environ["CHATWORK_ROOM_ID"]
     resp = requests.post(
@@ -149,9 +149,29 @@ def send(message: str, room_id: str | None = None) -> None:
         data={"body": message},
         timeout=30,
     )
-    if resp.status_code != 200:
-        sys.stderr.write(f"Chatwork通知失敗 {resp.status_code}: {resp.text}\n")
-        sys.exit(1)
+    if not 200 <= resp.status_code < 300:
+        raise RuntimeError(f"Chatwork通知失敗 room_id={room_id} status={resp.status_code}: {resp.text}")
+    try:
+        data = resp.json()
+    except ValueError:
+        data = {}
+    message_id = data.get("message_id", "")
+    suffix = f" message_id={message_id}" if message_id else ""
+    print(f"Chatwork通知成功 room_id={room_id}{suffix}")
+    return data
+
+
+def send_many(messages: list[tuple[str, str]]) -> None:
+    errors = []
+    for room_id, message in messages:
+        try:
+            send(message, room_id)
+        except Exception as exc:
+            error = str(exc)
+            errors.append(error)
+            sys.stderr.write(error + "\n")
+    if errors:
+        raise RuntimeError("Chatwork通知に失敗したルームがあります: " + " / ".join(errors))
 
 
 def release_routine_lock() -> None:
@@ -337,13 +357,11 @@ def main() -> None:
             send(f"[info][title]営業フォローメール 自動生成 エラー[/title]{args.error}[/info]")
             return
         if args.empty:
-            for room_id, message in build_empty_messages_by_room():
-                send(message, room_id)
+            send_many(build_empty_messages_by_room())
             return
 
         results, warnings = _load_results(args.results or "{}")
-        for room_id, message in build_completion_messages_by_room(results, warnings):
-            send(message, room_id)
+        send_many(build_completion_messages_by_room(results, warnings))
     finally:
         if args.release_lock:
             release_routine_lock()

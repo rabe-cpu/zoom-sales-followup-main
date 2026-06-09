@@ -293,7 +293,7 @@
         <li>GitHub Actionsから試す場合は、GitHubのActionsタブで <code>Scheduled Claude Routine</code> を選び、<code>Run workflow</code> を押します。</li>
         <li>Routineログ冒頭で <code>python -m pip install -r scripts/requirements.txt</code> と <code>python scripts/routine_lock.py acquire</code> が実行されることを確認します。</li>
         <li>実行ログでStep1からStep4まで進んだか確認します。</li>
-        <li>Chatwork通知が届いたか確認します。担当者別ルーム運用の場合は、既存担当はデフォルトルーム、新担当者は設定した個別ルームに届いているか確認します。</li>
+        <li>Chatwork通知が届いたか確認します。Routineログに <code>Chatwork通知成功 room_id=...</code> が出ているかも確認します。担当者別ルーム運用の場合は、既存担当はデフォルトルーム、新担当者は設定した個別ルームに届いているか確認します。</li>
         <li>Driveに顧客別フォルダと2つのDocsができたか確認します。</li>
       </ol>
       <div class="ok">
@@ -328,7 +328,7 @@
         <tr>
           <td>Chatwork通知</td>
           <td>顧客送付用URL、社内確認用URL、Gmail下書きID、残リスクがあること。担当者別ルーム運用の場合は、該当担当のルームへ届いていること。</td>
-          <td>通知がなければRoutineログ、Chatwork認証、<code>CHATWORK_ROOM_ID_BY_HOST</code> のメールアドレスとルームIDを確認します。</td>
+          <td>通知がなければRoutineログの <code>Chatwork通知成功 room_id=...</code>、Chatwork認証、<code>CHATWORK_ROOM_ID_BY_HOST</code> のメールアドレスとルームIDを確認します。</td>
         </tr>
       </table>
       <p>担当者別ルーム通知は、商談の <code>host_email</code> が <code>CHATWORK_ROOM_ID_BY_HOST</code> に一致した場合に分岐します。対応表にない担当者、エラー通知はデフォルトの <code>CHATWORK_ROOM_ID</code> に届きます。0件通知はデフォルトルームに加えて、担当者別ルーム設定に含まれる各ルームにも届きます。</p>

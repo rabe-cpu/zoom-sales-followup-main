@@ -485,8 +485,8 @@ VTT_DRIVE_FALLBACK_FOLDER_ID=1V0CW2ZK7TyV9oxIHSMdWCHKnugOxhDKX</code></pre>
         </tr>
         <tr>
           <td>Chatwork通知失敗</td>
-          <td>API token無効、Room ID誤り、投稿権限なし。</td>
-          <td><code>notify_chatwork.py</code>、Chatworkルーム。</td>
+          <td>API token無効、Room ID誤り、投稿権限なし。0件通知の場合も <code>notify_chatwork.py</code> の標準出力に <code>Chatwork通知成功 room_id=...</code> が出ていなければ未送信として扱う。</td>
+          <td><code>notify_chatwork.py</code>、Chatworkルーム、Routine実行ログ。</td>
         </tr>
         <tr>
           <td>Routineだけ失敗</td>
