@@ -2,9 +2,9 @@
 """
 notify_chatwork.py - 処理結果をChatwork通知（Routine Step4）
 ============================================================
-3つの通知パターン:
+通知パターン:
   --results <JSONファイル or JSON文字列>  … 完了通知（件数・評価・Docs URL）
-  --empty                                 … 処理対象0件の通知
+  --empty                                 … 後方互換用。通知せず正常終了
   --error  "<メッセージ>"                  … エラー通知
 
 results JSON の想定形（save_to_gdrive.py の出力を集約したもの）:
@@ -17,10 +17,8 @@ results JSON の想定形（save_to_gdrive.py の出力を集約したもの）:
   CHATWORK_ACCOUNT_ID_BY_SALES_PERSON={"森田":"123456","松谷":"234567"}
   CHATWORK_ROOM_ID_BY_HOST={"sales@example.com":"123456789"}
   CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"123456789","松谷":"987654321"}
-  CHATWORK_EMPTY_ROOM_IDS=123456789,987654321
 
-0件通知は CHATWORK_ROOM_ID に加えて、担当者別ルーム設定と CHATWORK_EMPTY_ROOM_IDS
-に含まれる各ルームにも送る。
+0件通知は送らない。--empty は後方互換のため受け付けるが、投稿せず正常終了する。
 """
 
 import argparse
@@ -77,28 +75,6 @@ def _load_json_mapping(env_name: str, lower_keys: bool = False) -> dict[str, str
             continue
         result[k.lower() if lower_keys else k] = v
     return result
-
-
-def _load_id_list(env_name: str) -> list[str]:
-    raw = os.getenv(env_name, "").strip()
-    if not raw:
-        return []
-    values = []
-    try:
-        data = json.loads(raw)
-    except json.JSONDecodeError:
-        data = raw.split(",")
-
-    if isinstance(data, (str, int)):
-        data = [data]
-    if not isinstance(data, list):
-        return []
-
-    for value in data:
-        item = str(value).strip().strip('"').strip("'")
-        if item:
-            values.append(item)
-    return values
 
 
 def _normalize_person_name(value: str) -> str:
@@ -331,54 +307,6 @@ def build_completion_messages_by_room(results: list, warnings: list) -> list[tup
     return messages
 
 
-def build_empty_message(warnings: list | None = None) -> str:
-    lines = [
-        "[info][title]営業フォローメール 自動生成[/title]",
-        "処理対象の商談はありませんでした。",
-    ]
-    if warnings:
-        lines.append("")
-        lines.append("■ エラー・警告")
-        for warning in warnings:
-            lines.append(f"・{warning}")
-    lines.append("[/info]")
-    return "\n".join(lines)
-
-
-def build_empty_messages_by_room() -> list[tuple[str, str]]:
-    default_room_id = os.environ["CHATWORK_ROOM_ID"]
-    host_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_HOST", lower_keys=True)
-    person_room_map = _load_json_mapping("CHATWORK_ROOM_ID_BY_SALES_PERSON")
-    explicit_empty_room_ids = _load_id_list("CHATWORK_EMPTY_ROOM_IDS")
-    room_warnings: list[str] = []
-    room_ids: list[str] = []
-
-    def add_room(room_id: str, label: str) -> None:
-        room_id = str(room_id or "").strip()
-        if not room_id:
-            return
-        if not room_id.isdigit():
-            room_warnings.append(f"0件通知のChatworkルームIDが数値ではありません: {label}")
-            return
-        if room_id not in room_ids:
-            room_ids.append(room_id)
-
-    add_room(default_room_id, "CHATWORK_ROOM_ID")
-    for host_email, room_id in host_room_map.items():
-        add_room(room_id, f"CHATWORK_ROOM_ID_BY_HOST[{host_email}]")
-    for salesperson, room_id in person_room_map.items():
-        add_room(room_id, f"CHATWORK_ROOM_ID_BY_SALES_PERSON[{salesperson}]")
-    for index, room_id in enumerate(explicit_empty_room_ids, start=1):
-        add_room(room_id, f"CHATWORK_EMPTY_ROOM_IDS[{index}]")
-
-    messages: list[tuple[str, str]] = []
-    for room_id in room_ids:
-        warnings = room_warnings if room_id == default_room_id else []
-        messages.append((room_id, build_empty_message(warnings)))
-
-    return messages
-
-
 def _load_results(raw: str):
     if raw and os.path.exists(raw):
         raw = Path(raw).read_text(encoding="utf-8")
@@ -393,7 +321,7 @@ def main() -> None:
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", help="結果JSONファイルのパス or JSON文字列")
-    ap.add_argument("--empty", action="store_true", help="処理対象0件の通知")
+    ap.add_argument("--empty", action="store_true", help="後方互換用。処理対象0件では通知せず正常終了")
     ap.add_argument("--error", help="エラーメッセージ")
     ap.add_argument("--release-lock", action="store_true", help="通知後にRoutine重複防止ロックを解除")
     args = ap.parse_args()
@@ -403,7 +331,7 @@ def main() -> None:
             send(f"[info][title]営業フォローメール 自動生成 エラー[/title]{args.error}[/info]")
             return
         if args.empty:
-            send_many(build_empty_messages_by_room())
+            print("処理対象0件のためChatwork通知は送信しません。")
             return
 
         results, warnings = _load_results(args.results or "{}")

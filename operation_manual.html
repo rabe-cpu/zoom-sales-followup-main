@@ -331,7 +331,7 @@
           <td>通知がなければRoutineログの <code>Chatwork通知成功 room_id=...</code>、Chatwork認証、<code>CHATWORK_ROOM_ID_BY_HOST</code> のメールアドレスとルームIDを確認します。</td>
         </tr>
       </table>
-      <p>担当者別ルーム通知は、商談の <code>host_email</code> が <code>CHATWORK_ROOM_ID_BY_HOST</code> に一致した場合に分岐します。対応表にない担当者、エラー通知はデフォルトの <code>CHATWORK_ROOM_ID</code> に届きます。0件通知はデフォルトルームに加えて、担当者別ルーム設定に含まれる各ルーム、または <code>CHATWORK_EMPTY_ROOM_IDS</code> に指定したルームにも届きます。</p>
+      <p>担当者別ルーム通知は、商談の <code>host_email</code> が <code>CHATWORK_ROOM_ID_BY_HOST</code> に一致した場合に分岐します。対応表にない担当者、エラー通知はデフォルトの <code>CHATWORK_ROOM_ID</code> に届きます。処理対象が0件の場合、Chatwork通知は送られません。</p>
     </section>
 
     <section>
@@ -351,8 +351,8 @@
     </section>
 
     <section>
-      <h2>7. 0件通知の場合</h2>
-      <p>Chatworkに「処理対象の商談はありませんでした」と通知された場合、異常とは限りません。次の条件を確認してください。</p>
+      <h2>7. 処理対象が0件の場合</h2>
+      <p>処理対象が0件の場合、Chatwork通知は送られません。Routineログで0件だった場合は、次の条件を確認してください。</p>
       <ul>
         <li>本日JSTの対象商談がなかった。</li>
         <li>Zoom録画はあるが、VTT文字起こしがまだ生成されていない。</li>

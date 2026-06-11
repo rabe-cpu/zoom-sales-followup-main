@@ -65,7 +65,7 @@ cd scripts && python fetch_vtt.py
 - 営業担当別フォルダは `host_email` が取れる場合は `VTT_DRIVE_FOLDER_BY_HOST`、Zoomユーザー名で判定できる場合は `VTT_DRIVE_FOLDER_BY_SALES_PERSON`、どちらも合わない場合は `VTT_DRIVE_FALLBACK_FOLDER_ID` または既定の未割当フォルダを使う。
 - 復旧などで過去分を処理したい場合だけ、環境変数 `LOOKBACK_DAYS` と `ONLY_TODAY=0` を一時的に設定する。
 - `warnings` があれば記録しておき、Step4の通知に含める。
-- `count` が 0 でも**ここで打ち切らない**。Step2/3は0件ループで自動スキップされ、Step4で1回だけ `--empty` 通知される。Step1で `--empty` を呼ぶと Step4 と重複して通知が2件届くので絶対にやらない。
+- `count` が 0 の場合は、Step2/3を0件ループで自動スキップし、Step4でロック解除だけ行う。Chatworkの0件通知は送らない。
 - スクリプトがエラー終了したら: `python scripts/notify_chatwork.py --error "Step1 VTT取得失敗: <内容>" --release-lock` で通知して終了。
 
 ## Step 2: 各商談のメールを生成（1件ずつ直列）
@@ -155,9 +155,12 @@ python scripts/save_to_gdrive.py \
 
 ## Step 4: Chatwork通知
 
-全商談の処理が終わったら、**1回だけ**通知する（Step1で `--empty` を呼ばないこと。Step1とStep4の両方で呼ぶと2件届く）：
-- **0件のとき**: `python scripts/notify_chatwork.py --empty --release-lock`
-- **1件以上のとき**: 下記コマンドで `--results` を通知
+全商談の処理が終わったら、処理件数に応じて次のどちらかを実行する：
+- **0件のとき**: Chatwork通知は送らず、ロック解除だけ行う。
+```
+python scripts/routine_lock.py release
+```
+- **1件以上のとき**: 下記コマンドで `--results` を通知し、通知後にロック解除する。
 ```
 python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 ```
@@ -184,8 +187,7 @@ python scripts/notify_chatwork.py --results '<results JSON>' --release-lock
 - `topic` / `duration_min`: Step1のJSONからそのまま引き継ぐ
 - `host_email` / `host_name` / `salesperson_name`: Step1のJSONからそのまま引き継ぐ。`notify_chatwork.py` は `CHATWORK_ROOM_ID_BY_HOST` または `CHATWORK_ROOM_ID_BY_SALES_PERSON` が設定されている場合、担当者別のChatworkルームへ結果通知を分ける。未設定の担当者は従来通り `CHATWORK_ROOM_ID` へ通知する。
 - `CHATWORK_ROOM_ID` はデフォルト通知先グループチャットID。エラー通知、担当者別ルーム未設定の結果、全体警告はここに通知する。担当者メンションには使えない。
-- 0件通知は `CHATWORK_ROOM_ID` に加えて、`CHATWORK_ROOM_ID_BY_HOST` / `CHATWORK_ROOM_ID_BY_SALES_PERSON` に設定されている担当者別ルーム、さらに `CHATWORK_EMPTY_ROOM_IDS` に設定されているルームにも送る。笠井・栗原など担当者別Chatworkを分けている場合も「処理対象の商談はありませんでした。」が届く。
-- 0件通知だけ必ず追加送信したいルームがある場合は `CHATWORK_EMPTY_ROOM_IDS` を使う。例: `CHATWORK_EMPTY_ROOM_IDS=424053694` または `CHATWORK_EMPTY_ROOM_IDS=437933333,424053694`
+- 0件通知は送らない。`CHATWORK_EMPTY_ROOM_IDS` は後方互換のため残っていても無視する。
 - 担当者別ルーム用の環境変数例:
   - `CHATWORK_ROOM_ID_BY_HOST={"morita@example.com":"111111111","new-sales@example.com":"222222222"}`
   - `CHATWORK_ROOM_ID_BY_SALES_PERSON={"森田":"111111111","新担当":"222222222"}`
