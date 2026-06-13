@@ -15,6 +15,7 @@ vtt/
 output/
 *.vtt
 processed_meetings.json
+scripts/*.log
 knowledge/rag/generated/
 knowledge/rag/suzue_vector_store_state.json
 
