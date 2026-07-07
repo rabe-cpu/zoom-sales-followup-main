@@ -4,7 +4,7 @@ fetch_vtt.py - 未処理の商談録画VTTを取得（Routine Step1）
 ==========================================================
 処理の流れ:
   1. 共有ドライブの処理済み台帳 processed_meetings.json を読む
-  2. 全営業担当の本日分録画を取得（管理者権限）
+  2. 全営業担当の直近録画を取得（管理者権限）
   3. 台帳にない（=未処理の）録画だけを抽出
   4. shouldProcess でフィルタ（パーソナルMTG/10分未満/キャンセル/TRANSCRIPT無し を除外）
   5. 顧客名を抽出し、VTTを /tmp/vtt/ に保存
@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+from typing import Optional
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -24,9 +25,10 @@ from zoom_client import ZoomClient, get_transcript_file
 from gdrive_client import GoogleDriveClient
 
 JST = timezone(timedelta(hours=9))
-# 標準はJSTの本日分だけ。再処理や復旧時だけ環境変数で遡る。
-LOOKBACK_DAYS = int(os.getenv("LOOKBACK_DAYS", "0"))
-ONLY_TODAY = os.getenv("ONLY_TODAY", "1").lower() not in {"0", "false", "no"}
+# 標準は直近2日分。Zoomの文字起こし生成遅延を次回実行で拾う。
+LOOKBACK_DAYS = int(os.getenv("LOOKBACK_DAYS", "2"))
+ONLY_TODAY = os.getenv("ONLY_TODAY", "0").lower() in {"1", "true", "yes"}
+SKIPPED_SAMPLE_LIMIT = int(os.getenv("SKIPPED_SAMPLE_LIMIT", "30"))
 VTT_DIR = Path(os.getenv("VTT_DIR", "/tmp/vtt"))
 ALLOWED_HOST_EMAILS = {
     email.strip().lower()
@@ -70,21 +72,64 @@ def extract_customer_name(topic: str) -> str:
     return re.sub(r"\s+", "", _safe(topic))[:40]
 
 
-def should_process(meeting: dict) -> bool:
-    """処理対象判定（extractors.js shouldProcess から移植）"""
+def skip_reason(meeting: dict) -> Optional[str]:
+    """処理対象外の理由を返す。処理対象ならNone。"""
     topic = meeting.get("topic", "")
     if "パーソナルミーティングルーム" in topic:
-        return False
+        return "personal_meeting_room"
     if "アクセス無料オンライン説明会" in topic:
         # 合同説明会は個人商談向けフォローメールの対象外
-        return False
+        return "group_webinar"
     if meeting.get("duration", 0) < 10:
-        return False
+        return "short_duration"
     if "キャンセル済み" in topic:
-        return False
+        return "cancelled_topic"
     if get_transcript_file(meeting) is None:
+        return "transcript_not_ready"
+    return None
+
+
+def should_process(meeting: dict) -> bool:
+    """処理対象判定（extractors.js shouldProcess から移植）"""
+    return skip_reason(meeting) is None
+
+
+def date_in_processing_window(start_date: str, from_date: str, today_jst: str) -> bool:
+    """録画開始日が今回の処理対象日に含まれるか判定。"""
+    if not start_date:
         return False
-    return True
+    if ONLY_TODAY:
+        return start_date == today_jst
+    return from_date <= start_date <= today_jst
+
+
+def add_skip(
+    skipped_summary: dict,
+    skipped_samples: list[dict],
+    reason: str,
+    meeting: dict,
+    extra: Optional[dict] = None,
+) -> None:
+    """除外理由の集計と、調査用サンプルを残す。"""
+    skipped_summary[reason] = skipped_summary.get(reason, 0) + 1
+    if len(skipped_samples) >= SKIPPED_SAMPLE_LIMIT:
+        return
+
+    sample = {
+        "reason": reason,
+        "meeting_id": meeting.get("id"),
+        "uuid": meeting.get("uuid"),
+        "topic": meeting.get("topic"),
+        "start_time": meeting.get("start_time"),
+        "start_date_jst": meeting_start_date_jst(meeting),
+        "duration_min": meeting.get("duration"),
+        "host_email": meeting_host_email(meeting),
+        "host_name": meeting_host_name(meeting),
+        "has_transcript": get_transcript_file(meeting) is not None,
+    }
+    if extra:
+        sample.update(extra)
+    skipped_samples.append(sample)
 
 
 def _safe(name: str) -> str:
@@ -180,23 +225,43 @@ def main() -> None:
 
     VTT_DIR.mkdir(parents=True, exist_ok=True)
     results = []
+    skipped_summary = {}
+    skipped_samples = []
     for m in meetings:
         meeting_id = m.get("uuid") or str(m.get("id"))
         if meeting_id in processed:
+            add_skip(skipped_summary, skipped_samples, "processed_ledger", m)
             continue
         host_email = meeting_host_email(m)
         if ALLOWED_HOST_EMAILS and host_email not in ALLOWED_HOST_EMAILS:
+            add_skip(
+                skipped_summary,
+                skipped_samples,
+                "disallowed_host_email",
+                m,
+                {"allowed_host_email_count": len(ALLOWED_HOST_EMAILS)},
+            )
             continue
         start_date = meeting_start_date_jst(m)
-        if ONLY_TODAY and start_date != today_jst:
+        if not date_in_processing_window(start_date, from_date, today_jst):
+            add_skip(
+                skipped_summary,
+                skipped_samples,
+                "outside_processing_window",
+                m,
+                {"from_date_jst": from_date, "to_date_jst": today_jst},
+            )
             continue
-        if not should_process(m):
+        reason = skip_reason(m)
+        if reason:
+            add_skip(skipped_summary, skipped_samples, reason, m)
             continue
         transcript = get_transcript_file(m)
         try:
             vtt_text = zoom.download_vtt_text(transcript["download_url"])
         except RuntimeError as e:
             warnings.append(f"VTT取得失敗 [{m.get('topic', '')}]: {e}")
+            add_skip(skipped_summary, skipped_samples, "vtt_download_failed", m, {"error": str(e)})
             continue
         customer = extract_customer_name(m.get("topic", ""))
         vtt_path = VTT_DIR / f"{start_date}_{_safe(customer)}.vtt"
@@ -240,8 +305,24 @@ def main() -> None:
             "vtt_drive_folder_source": folder_source,
         })
 
+    diagnostics = {
+        "lookback_days": LOOKBACK_DAYS,
+        "only_today": ONLY_TODAY,
+        "from_date_jst": from_date,
+        "to_date_jst": today_jst,
+        "zoom_recordings_fetched": len(meetings),
+        "processed_ledger_count": len(processed),
+        "allowed_host_emails_count": len(ALLOWED_HOST_EMAILS),
+        "skipped_summary": skipped_summary,
+        "skipped_samples": skipped_samples,
+    }
     print(json.dumps(
-        {"unprocessed": results, "count": len(results), "warnings": warnings},
+        {
+            "unprocessed": results,
+            "count": len(results),
+            "warnings": warnings,
+            "diagnostics": diagnostics,
+        },
         ensure_ascii=False,
         indent=2,
     ))
