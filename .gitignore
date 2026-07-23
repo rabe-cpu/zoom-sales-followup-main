@@ -33,3 +33,6 @@ node_modules/
 *.swp
 .idea/
 .vscode/
+
+# Routine 実行時の一時ログ
+scripts/err.log
