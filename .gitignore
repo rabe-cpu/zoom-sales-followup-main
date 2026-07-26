@@ -10,6 +10,8 @@ token.json
 oauth_token*.json
 
 # === 処理中の一時データ ===
+*.log
+err*.log
 /tmp/
 vtt/
 output/
