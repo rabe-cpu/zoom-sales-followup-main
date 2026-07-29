@@ -18,6 +18,9 @@ processed_meetings.json
 knowledge/rag/generated/
 knowledge/rag/suzue_vector_store_state.json
 
+# === ログ ===
+*.log
+
 # === Python ===
 __pycache__/
 *.pyc
