@@ -18,6 +18,10 @@ processed_meetings.json
 knowledge/rag/generated/
 knowledge/rag/suzue_vector_store_state.json
 
+# Routine実行時の一時ログ・出力ダンプ
+*.log
+scripts/fetch_out.json
+
 # === Python ===
 __pycache__/
 *.pyc
